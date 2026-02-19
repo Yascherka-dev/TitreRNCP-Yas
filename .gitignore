@@ -1,0 +1,17 @@
+# Fichier de contexte Claude Code — ne pas commiter
+claude.md
+CLAUDE.md
+
+# IDE & outils
+.vscode/
+.idea/
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets & env
+.env
+.env.*
+*.secret
