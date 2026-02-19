@@ -1,0 +1,62 @@
+.mm-header {
+  background-color: var(--mm-primary);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+
+  &__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #fff;
+
+    &-icon {
+      font-size: 1.4rem;
+    }
+
+    &-text {
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 0.25rem;
+
+    a {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: background 0.2s, color 0.2s;
+
+      &:hover,
+      &.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+    }
+  }
+}
+
+.mm-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}

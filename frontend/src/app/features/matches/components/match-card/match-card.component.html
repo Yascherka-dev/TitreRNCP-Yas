@@ -1,0 +1,65 @@
+<mat-card class="match-card">
+  <mat-card-content>
+
+    <!-- Compétition -->
+    <div class="match-card__league">
+      <img [src]="match().league.logo" [alt]="match().league.name" class="league-logo" />
+      <span class="league-name">{{ match().league.name }}</span>
+      <span class="league-round">{{ match().league.round }}</span>
+    </div>
+
+    <!-- Statut -->
+    <span class="match-card__status match-card__status--{{ statusConfig().cssClass }}">
+      @if (statusConfig().cssClass === 'live') {
+        <span class="live-dot"></span>
+      }
+      {{ statusConfig().label }}
+    </span>
+
+    <!-- Équipes -->
+    <div class="match-card__teams">
+      <!-- Équipe domicile -->
+      <div class="match-card__team">
+        <img [src]="match().home.logo" [alt]="match().home.name" class="team-logo" />
+        <span class="team-name">{{ match().home.name }}</span>
+        <div class="team-country">
+          <img [src]="match().home.flag" [alt]="match().home.countryName" class="team-flag" />
+          <span>{{ match().home.countryName }}</span>
+        </div>
+      </div>
+
+      <!-- Score / heure -->
+      <div class="match-card__score">
+        @if (isStarted()) {
+          <span class="score-val">{{ match().home.goals }}</span>
+          <span class="score-sep">—</span>
+          <span class="score-val">{{ match().away.goals }}</span>
+        } @else {
+          <span class="match-time">{{ match().date | date:'HH:mm' }}</span>
+          <span class="match-vs">VS</span>
+        }
+      </div>
+
+      <!-- Équipe extérieur -->
+      <div class="match-card__team match-card__team--away">
+        <img [src]="match().away.logo" [alt]="match().away.name" class="team-logo" />
+        <span class="team-name">{{ match().away.name }}</span>
+        <div class="team-country">
+          <img [src]="match().away.flag" [alt]="match().away.countryName" class="team-flag" />
+          <span>{{ match().away.countryName }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="match-card__actions">
+      <a mat-flat-button color="primary" [routerLink]="['/matches', match().id]">
+        Voir les recettes 🍽️
+      </a>
+      <button mat-icon-button class="fav-btn" aria-label="Ajouter aux favoris">
+        <mat-icon>favorite_border</mat-icon>
+      </button>
+    </div>
+
+  </mat-card-content>
+</mat-card>

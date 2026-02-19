@@ -1,0 +1,38 @@
+<div class="match-list">
+
+  <header class="match-list__header">
+    <h1>Matchs du jour</h1>
+    <p class="match-list__date">{{ today | date:"EEEE d MMMM yyyy" }}</p>
+  </header>
+
+  <!-- Filtres compétition -->
+  <div class="match-list__filters">
+    <mat-chip-listbox aria-label="Filtrer par compétition">
+      <mat-chip-option
+        [selected]="isSelected('all')"
+        (click)="selectLeague('all')"
+      >
+        Tous
+      </mat-chip-option>
+      @for (league of leagues(); track league.id) {
+        <mat-chip-option
+          [selected]="isSelected(league.id)"
+          (click)="selectLeague(league.id)"
+        >
+          {{ league.name }}
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
+
+  <!-- Grille de matchs -->
+  <div class="match-list__grid">
+    @for (match of filteredMatches(); track match.id) {
+      <app-match-card [match]="match" />
+    }
+    @empty {
+      <p class="match-list__empty">Aucun match pour cette compétition.</p>
+    }
+  </div>
+
+</div>

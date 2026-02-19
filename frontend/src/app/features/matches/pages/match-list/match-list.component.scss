@@ -1,0 +1,43 @@
+.match-list {
+  &__header {
+    margin-bottom: 1.75rem;
+
+    h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--mm-primary);
+    }
+  }
+
+  &__date {
+    margin: 0;
+    color: #888;
+    font-size: 0.9rem;
+    text-transform: capitalize;
+  }
+
+  &__filters {
+    margin-bottom: 2rem;
+
+    mat-chip-listbox {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  &__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #bbb;
+    padding: 3rem 0;
+    font-size: 1rem;
+  }
+}
