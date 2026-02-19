@@ -1,11 +1,11 @@
-# Fichier de contexte Claude Code — ne pas commiter
+# Fichiers de contexte local — ne pas commiter
 claude.md
 CLAUDE.md
+.claude/
 
 # IDE & outils
 .vscode/
 .idea/
-.claude/
 
 # OS
 .DS_Store
