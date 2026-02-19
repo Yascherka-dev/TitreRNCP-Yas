@@ -94,11 +94,23 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
+  margin-bottom: 1rem;
 
   mat-chip {
     font-size: 0.72rem !important;
     height: 24px !important;
     background: #f0f4ff !important;
     color: var(--mm-primary) !important;
+  }
+}
+
+// CTA
+.recipe-card__action {
+  padding-top: 0.25rem;
+
+  button {
+    width: 100%;
+    border-radius: 8px;
+    font-size: 0.85rem;
   }
 }

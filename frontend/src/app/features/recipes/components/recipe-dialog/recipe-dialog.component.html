@@ -1,0 +1,102 @@
+<div class="recipe-dialog">
+
+  <!-- Image hero -->
+  <div class="recipe-dialog__hero">
+    <img [src]="recipe.imageUrl" [alt]="recipe.title" />
+    <div class="recipe-dialog__hero-overlay">
+      <div class="country-badge">
+        <img [src]="recipe.flag" [alt]="recipe.country" />
+        <span>{{ recipe.country }}</span>
+      </div>
+      <button mat-icon-button class="close-btn" (click)="dialogRef.close()" aria-label="Fermer">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+
+    <!-- Titre + tags -->
+    <div class="recipe-dialog__title-row">
+      <h2>{{ recipe.title }}</h2>
+      <div class="tags">
+        @for (tag of recipe.tags; track tag) {
+          <mat-chip>{{ tag }}</mat-chip>
+        }
+      </div>
+    </div>
+
+    <p class="recipe-dialog__desc">{{ recipe.description }}</p>
+
+    <!-- Méta infos -->
+    <div class="recipe-dialog__meta">
+      <div class="meta-item">
+        <mat-icon>schedule</mat-icon>
+        <div>
+          <span class="meta-label">Préparation</span>
+          <span class="meta-value">{{ recipe.prepTime }} min</span>
+        </div>
+      </div>
+      <div class="meta-item">
+        <mat-icon>local_fire_department</mat-icon>
+        <div>
+          <span class="meta-label">Cuisson</span>
+          <span class="meta-value">{{ recipe.cookTime }} min</span>
+        </div>
+      </div>
+      <div class="meta-item">
+        <mat-icon>group</mat-icon>
+        <div>
+          <span class="meta-label">Portions</span>
+          <span class="meta-value">{{ recipe.servings }} pers.</span>
+        </div>
+      </div>
+      <div class="meta-item">
+        <mat-icon>bar_chart</mat-icon>
+        <div>
+          <span class="meta-label">Difficulté</span>
+          <span class="meta-value">{{ recipe.difficulty }}</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider />
+
+    <!-- Ingrédients -->
+    <div class="recipe-dialog__section">
+      <h3>
+        <mat-icon>grocery</mat-icon>
+        Ingrédients
+      </h3>
+      <ul class="ingredients-list">
+        @for (item of recipe.ingredients; track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    </div>
+
+    <mat-divider />
+
+    <!-- Étapes -->
+    <div class="recipe-dialog__section">
+      <h3>
+        <mat-icon>format_list_numbered</mat-icon>
+        Préparation
+      </h3>
+      <ol class="steps-list">
+        @for (step of recipe.steps; track step) {
+          <li>
+            <span class="step-num">{{ $index + 1 }}</span>
+            <span>{{ step }}</span>
+          </li>
+        }
+      </ol>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="dialogRef.close()">Fermer</button>
+  </mat-dialog-actions>
+
+</div>
