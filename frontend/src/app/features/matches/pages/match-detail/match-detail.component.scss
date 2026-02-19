@@ -1,0 +1,320 @@
+.match-detail {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-btn {
+  margin-bottom: 1.5rem;
+  color: var(--mm-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+// Header match
+.match-detail__header {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  margin-bottom: 2.5rem;
+}
+
+.match-detail__league {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: #666;
+
+  img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  span:first-of-type {
+    font-weight: 600;
+    color: var(--mm-text);
+  }
+
+  .round {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+}
+
+.match-detail__teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+
+  &--away {
+    // identique
+  }
+
+  .team-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--mm-primary);
+  }
+
+  .team-country {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #888;
+    font-size: 0.8rem;
+
+    img {
+      width: 20px;
+      height: 14px;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+  }
+}
+
+// Score / VS
+.match-detail__score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+
+  .score {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--mm-primary);
+    line-height: 1;
+  }
+
+  .vs-time {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--mm-primary);
+  }
+
+  .vs-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #bbb;
+    letter-spacing: 0.1em;
+  }
+
+  .match-date {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-transform: capitalize;
+  }
+
+  .status-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+
+    &.finished {
+      background: #f4f4f4;
+      color: #888;
+    }
+
+    &.live {
+      background: #fff0f0;
+      color: var(--mm-error);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--mm-error);
+        animation: pulse 1.2s ease infinite;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+// Section recettes
+.match-detail__recipes {
+  .recipes-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--mm-primary);
+    }
+
+    .regenerate-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 8px;
+
+      mat-icon {
+        font-size: 1.1rem;
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+    }
+  }
+
+  .recipes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .recipes-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem;
+    color: #aaa;
+  }
+}
+
+// Sections partenaires
+.match-detail__partners {
+  margin-top: 2.5rem;
+
+  h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--mm-primary);
+  }
+
+  .partners-sub {
+    margin: 0 0 1.25rem;
+    font-size: 0.88rem;
+    color: #888;
+  }
+
+  .partners-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+.partner-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  color: var(--mm-text);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.4rem;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .partner-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--mm-text);
+  }
+
+  .partner-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--mm-secondary);
+    color: #fff;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .partner-tagline {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .partner-cta {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--mm-primary);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+.match-detail__streaming {
+  margin-bottom: 3rem;
+}
+
+.match-detail__not-found {
+  text-align: center;
+  padding: 4rem;
+  color: #aaa;
+}

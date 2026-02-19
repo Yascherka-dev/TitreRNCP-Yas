@@ -9,6 +9,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'matches/:id',
+    loadComponent: () =>
+      import('./features/matches/pages/match-detail/match-detail.component').then(
+        m => m.MatchDetailComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

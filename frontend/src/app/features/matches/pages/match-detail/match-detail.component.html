@@ -1,0 +1,144 @@
+@if (match(); as m) {
+  <div class="match-detail">
+
+    <!-- Retour -->
+    <a mat-button routerLink="/" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+      Retour aux matchs
+    </a>
+
+    <!-- Header match -->
+    <section class="match-detail__header">
+      <div class="match-detail__league">
+        <img [src]="m.league.logo" [alt]="m.league.name" />
+        <span>{{ m.league.name }}</span>
+        <span class="round">{{ m.league.round }}</span>
+      </div>
+
+      <div class="match-detail__teams">
+        <!-- Équipe domicile -->
+        <div class="team">
+          <img [src]="m.home.logo" [alt]="m.home.name" class="team-logo" />
+          <h2>{{ m.home.name }}</h2>
+          <div class="team-country">
+            <img [src]="m.home.flag" [alt]="m.home.countryName" />
+            <span>{{ m.home.countryName }}</span>
+          </div>
+        </div>
+
+        <!-- Score / VS -->
+        <div class="match-detail__score">
+          @if (m.status.short !== 'NS' && m.status.short !== 'TBD') {
+            <span class="score">{{ m.home.goals }} — {{ m.away.goals }}</span>
+            @if (m.status.short === 'FT') {
+              <span class="status-label finished">Terminé</span>
+            } @else {
+              <span class="status-label live">
+                <span class="dot"></span>{{ m.status.elapsed }}'
+              </span>
+            }
+          } @else {
+            <span class="vs-time">{{ m.date | date:'HH:mm' }}</span>
+            <span class="vs-label">VS</span>
+            <span class="match-date">{{ m.date | date:'d MMM' }}</span>
+          }
+        </div>
+
+        <!-- Équipe extérieur -->
+        <div class="team team--away">
+          <img [src]="m.away.logo" [alt]="m.away.name" class="team-logo" />
+          <h2>{{ m.away.name }}</h2>
+          <div class="team-country">
+            <img [src]="m.away.flag" [alt]="m.away.countryName" />
+            <span>{{ m.away.countryName }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section voir le match -->
+    <section class="match-detail__partners match-detail__streaming">
+      <h2>📺 Voir le match</h2>
+      <p class="partners-sub">Retrouvez le match en direct sur ces plateformes.</p>
+      <div class="partners-grid">
+        @for (p of streamingPartners; track p.name) {
+          <a [href]="p.url" class="partner-card" target="_blank" rel="noopener">
+            <div class="partner-card__icon" [style.background]="p.color">
+              <span>{{ p.emoji }}</span>
+            </div>
+            <div class="partner-card__body">
+              <div class="partner-card__top">
+                <span class="partner-name">{{ p.name }}</span>
+                @if (p.badge) {
+                  <span class="partner-badge">{{ p.badge }}</span>
+                }
+              </div>
+              <p class="partner-tagline">{{ p.tagline }}</p>
+            </div>
+            <span class="partner-cta">{{ p.ctaLabel }} →</span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- Section recettes -->
+    <section class="match-detail__recipes">
+      <div class="recipes-header">
+        <h2>🍽️ Ce soir on mange quoi ?</h2>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="regenerate-btn"
+          (click)="onRegenerate()"
+          [disabled]="regenerating()"
+        >
+          <mat-icon>refresh</mat-icon>
+          {{ regenerating() ? 'Génération...' : 'Regénérer' }}
+        </button>
+      </div>
+
+      @if (suggestion(); as s) {
+        <div class="recipes-grid">
+          <app-recipe-card [recipe]="s.recipeA" />
+          <app-recipe-card [recipe]="s.recipeB" />
+        </div>
+      } @else {
+        <div class="recipes-loading">
+          <mat-spinner diameter="40" />
+          <p>Sélection des recettes…</p>
+        </div>
+      }
+    </section>
+
+    <!-- Section commander -->
+    <section class="match-detail__partners">
+      <h2>🛒 Commander ce soir</h2>
+      <p class="partners-sub">Nos partenaires vous livrent les ingrédients ou le plat directement chez vous.</p>
+      <div class="partners-grid">
+        @for (p of foodPartners; track p.name) {
+          <a [href]="p.url" class="partner-card" target="_blank" rel="noopener">
+            <div class="partner-card__icon" [style.background]="p.color">
+              <span>{{ p.emoji }}</span>
+            </div>
+            <div class="partner-card__body">
+              <div class="partner-card__top">
+                <span class="partner-name">{{ p.name }}</span>
+                @if (p.badge) {
+                  <span class="partner-badge">{{ p.badge }}</span>
+                }
+              </div>
+              <p class="partner-tagline">{{ p.tagline }}</p>
+            </div>
+            <span class="partner-cta">{{ p.ctaLabel }} →</span>
+          </a>
+        }
+      </div>
+    </section>
+
+  </div>
+} @else {
+  <div class="match-detail__not-found">
+    <p>Match introuvable.</p>
+    <a mat-flat-button color="primary" routerLink="/">Retour</a>
+  </div>
+}
