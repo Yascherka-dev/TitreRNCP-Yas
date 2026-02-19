@@ -1,1 +1,67 @@
-/* You can add global styles to this file, and also import other style files */
+// Custom Theming for Angular Material — Match & Munch
+// https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+// ── Tokens de couleur du Design System ─────────────────────────────────────
+$color-primary:   #1E3A5F;   // Bleu nuit — header, titres, boutons primaires
+$color-secondary: #F4801A;   // Orange vif — accents, badges, CTA
+$color-bg:        #F9F9F9;   // Fond global
+$color-surface:   #FFFFFF;   // Fond cartes
+$color-text:      #333333;   // Texte principal
+$color-success:   #28A745;
+$color-error:     #DC3545;
+
+// ── Thème Angular Material M3 ───────────────────────────────────────────────
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: Inter,
+    density: 0,
+  ));
+}
+
+// ── Override des tokens de couleur avec les valeurs de la marque ────────────
+:root {
+  --mat-sys-primary:             #{$color-primary};
+  --mat-sys-on-primary:          #FFFFFF;
+  --mat-sys-primary-container:   #D6E4FF;
+  --mat-sys-secondary:           #{$color-secondary};
+  --mat-sys-on-secondary:        #FFFFFF;
+  --mat-sys-secondary-container: #FFE0B2;
+  --mat-sys-surface:             #{$color-surface};
+  --mat-sys-on-surface:          #{$color-text};
+  --mat-sys-background:          #{$color-bg};
+  --mat-sys-error:               #{$color-error};
+
+  // Variables CSS globales utilisables dans les composants
+  --mm-primary:   #{$color-primary};
+  --mm-secondary: #{$color-secondary};
+  --mm-bg:        #{$color-bg};
+  --mm-surface:   #{$color-surface};
+  --mm-text:      #{$color-text};
+  --mm-success:   #{$color-success};
+  --mm-error:     #{$color-error};
+}
+
+// ── Reset & globals ─────────────────────────────────────────────────────────
+html, body {
+  height: 100%;
+  margin: 0;
+  background-color: $color-bg;
+  color: $color-text;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+// ── Utilitaires globaux ─────────────────────────────────────────────────────
+.text-primary   { color: $color-primary; }
+.text-secondary { color: $color-secondary; }
+.bg-primary     { background-color: $color-primary; }
+.bg-secondary   { background-color: $color-secondary; }
