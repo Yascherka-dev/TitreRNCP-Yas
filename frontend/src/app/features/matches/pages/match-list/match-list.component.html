@@ -1,38 +1,55 @@
-<div class="match-list">
+<div class="dashboard">
 
-  <header class="match-list__header">
-    <h1>Matchs du jour</h1>
-    <p class="match-list__date">{{ today | date:"EEEE d MMMM yyyy" }}</p>
-  </header>
+  <!-- En-tête -->
+  <div class="dashboard__header">
+    <div>
+      <h1 class="dashboard__title">Matchs du soir</h1>
+      <p class="dashboard__date">{{ today | date:"EEEE d MMMM" }}</p>
+    </div>
+    <span class="dashboard__count">
+      {{ filteredMatches().length }}&nbsp;match{{ filteredMatches().length > 1 ? 's' : '' }}
+    </span>
+  </div>
 
-  <!-- Filtres compétition -->
-  <div class="match-list__filters">
-    <mat-chip-listbox aria-label="Filtrer par compétition">
-      <mat-chip-option
-        [selected]="isSelected('all')"
-        (click)="selectLeague('all')"
+  <!-- Filtres compétition — pill buttons custom (sans Material chips) -->
+  <div class="dashboard__filters" role="group" aria-label="Filtrer par compétition">
+    <button
+      class="filter-pill"
+      [class.filter-pill--active]="isSelected('all')"
+      (click)="selectLeague('all')"
+    >
+      Tous
+    </button>
+    @for (league of leagues(); track league.id) {
+      <button
+        class="filter-pill"
+        [class.filter-pill--active]="isSelected(league.id)"
+        (click)="selectLeague(league.id)"
       >
-        Tous
-      </mat-chip-option>
-      @for (league of leagues(); track league.id) {
-        <mat-chip-option
-          [selected]="isSelected(league.id)"
-          (click)="selectLeague(league.id)"
-        >
-          {{ league.name }}
-        </mat-chip-option>
-      }
-    </mat-chip-listbox>
+        {{ league.name }}
+      </button>
+    }
   </div>
 
   <!-- Grille de matchs -->
-  <div class="match-list__grid">
-    @for (match of filteredMatches(); track match.id) {
-      <app-match-card [match]="match" />
+  <div class="dashboard__grid">
+
+    @if (loading()) {
+      @for (item of skeletonItems; track $index) {
+        <app-skeleton-match-card />
+      }
+    } @else {
+      @for (match of filteredMatches(); track match.id) {
+        <app-match-card [match]="match" />
+      }
+      @empty {
+        <div class="dashboard__empty">
+          <span>🏟️</span>
+          <p>Aucun match pour cette compétition.</p>
+        </div>
+      }
     }
-    @empty {
-      <p class="match-list__empty">Aucun match pour cette compétition.</p>
-    }
+
   </div>
 
 </div>

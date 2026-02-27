@@ -1,87 +1,85 @@
+// ══════════════════════════════════════════════
+//  MATCH CARD — Airbnb-style
+//  Fond blanc · bord léger · ombres douces
+// ══════════════════════════════════════════════
+
 .match-card {
-  border-radius: 12px !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07) !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--mm-radius-xl) !important;
+  border: 1px solid var(--mm-border) !important;
+  box-shadow: var(--mm-shadow-xs) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  background: #fff !important;
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: var(--mm-shadow-md) !important;
+    transform: translateY(-2px);
   }
 
   mat-card-content {
-    padding: 1.25rem !important;
+    padding: 1.5rem !important;
   }
 }
 
-// Compétition
+// ── Compétition ───────────────────────────────
 .match-card__league {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 
   .league-logo {
     width: 20px;
     height: 20px;
     object-fit: contain;
+    opacity: 0.85;
   }
 
   .league-name {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--mm-text);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--mm-text-sub);
+    letter-spacing: 0.01em;
   }
 
   .league-round {
     font-size: 0.72rem;
-    color: #999;
+    color: #bbb;
     margin-left: auto;
   }
 }
 
-// Statut badge
+// ── Statut ────────────────────────────────────
 .match-card__status {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 3px 10px;
-  border-radius: 20px;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: var(--mm-radius-pill);
   margin-bottom: 1rem;
 
-  &--live {
-    background: #fff0f0;
-    color: var(--mm-error);
-  }
-
-  &--upcoming {
-    background: #eaf7ee;
-    color: var(--mm-success);
-  }
-
-  &--finished {
-    background: #f4f4f4;
-    color: #888;
-  }
+  &--live    { background: #fef2f2; color: #b91c1c; }
+  &--upcoming { background: #f0fdf4; color: #15803d; }
+  &--finished { background: #f3f4f6; color: #6b7280; }
 }
 
 .live-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--mm-error);
-  animation: pulse 1.2s ease infinite;
+  background: #b91c1c;
+  animation: pulse 1.4s ease infinite;
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.85); }
 }
 
-// Équipes
+// ── Équipes ───────────────────────────────────
 .match-card__teams {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -94,22 +92,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   text-align: center;
 
-  &--away {
-    // identique, alignement centré
-  }
-
   .team-logo {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
     object-fit: contain;
   }
 
   .team-name {
     font-size: 0.82rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--mm-text);
     line-height: 1.2;
   }
@@ -118,19 +112,19 @@
     display: flex;
     align-items: center;
     gap: 0.3rem;
-    color: #888;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
+    color: var(--mm-text-sub);
 
     .team-flag {
-      width: 18px;
-      height: 12px;
+      width: 16px;
+      height: 11px;
       object-fit: cover;
       border-radius: 2px;
     }
   }
 }
 
-// Score / heure
+// ── Score / heure ─────────────────────────────
 .match-card__score {
   display: flex;
   flex-direction: column;
@@ -138,50 +132,56 @@
   gap: 2px;
 
   .score-val {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: var(--mm-primary);
+    letter-spacing: -0.04em;
     line-height: 1;
   }
 
   .score-sep {
-    font-size: 1rem;
-    color: #ccc;
+    font-size: 0.85rem;
+    color: #ddd;
   }
 
   .match-time {
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 800;
     color: var(--mm-primary);
+    letter-spacing: -0.03em;
   }
 
   .match-vs {
-    font-size: 0.7rem;
-    color: #bbb;
+    font-size: 0.65rem;
+    color: #ccc;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 }
 
-// Actions
+// ── Actions ───────────────────────────────────
 .match-card__actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--mm-border);
   padding-top: 1rem;
+  margin-top: 0.25rem;
 
   a[mat-flat-button] {
+    font-family: var(--mm-font) !important;
     font-size: 0.82rem;
-    border-radius: 8px;
+    font-weight: 700 !important;
+    border-radius: var(--mm-radius-md) !important;
+    padding: 0 1rem !important;
+    height: 36px !important;
   }
 
   .fav-btn {
-    color: #ccc;
+    color: #d1d5db;
     transition: color 0.2s;
 
-    &:hover {
-      color: var(--mm-secondary);
-    }
+    &:hover { color: var(--mm-accent); }
   }
 }

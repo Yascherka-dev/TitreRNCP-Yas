@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatchCardComponent } from '../../components/match-card/match-card.component';
+import { SkeletonMatchCardComponent } from '../../../../shared/components/skeleton-match-card/skeleton-match-card.component';
 import { MatchesService } from '../../../../core/services/matches.service';
 import { Match } from '../../../../core/models/fixture.model';
 
@@ -13,7 +13,7 @@ interface LeagueFilter {
 @Component({
   selector: 'app-match-list',
   standalone: true,
-  imports: [DatePipe, MatChipsModule, MatchCardComponent],
+  imports: [DatePipe, MatchCardComponent, SkeletonMatchCardComponent],
   templateUrl: './match-list.component.html',
   styleUrl: './match-list.component.scss',
 })
@@ -21,6 +21,14 @@ export class MatchListComponent implements OnInit {
   today = new Date();
   matches = signal<Match[]>([]);
   selectedLeague = signal<number | 'all'>('all');
+
+  // Signal de chargement : true jusqu'à ce que les données arrivent.
+  // Permet d'afficher les skeleton cards à la place de la grille vide.
+  loading = signal(true);
+
+  // Tableau fixe pour générer les N skeleton cards dans le @for du template.
+  // On en affiche 8 pour correspondre au nombre de matchs mockés.
+  skeletonItems = Array(8);
 
   leagues = computed<LeagueFilter[]>(() => {
     const seen = new Set<number>();
@@ -43,7 +51,10 @@ export class MatchListComponent implements OnInit {
   constructor(private matchesService: MatchesService) {}
 
   ngOnInit() {
-    this.matchesService.getFixtures().subscribe(data => this.matches.set(data));
+    this.matchesService.getFixtures().subscribe(data => {
+      this.matches.set(data);
+      this.loading.set(false); // Masque les skeletons une fois les données reçues
+    });
   }
 
   selectLeague(id: number | 'all') {
