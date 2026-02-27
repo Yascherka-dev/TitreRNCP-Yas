@@ -1,0 +1,78 @@
+// ── Animation shimmer (identique au skeleton MatchCard) ───────────────────────
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.sk {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 4px;
+}
+
+// ── Carte conteneur ────────────────────────────────────────────────────────────
+.skeleton-recipe-card {
+  border-radius: 14px !important;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08) !important;
+  height: 100%;
+
+  mat-card-content {
+    padding: 1.25rem !important;
+  }
+}
+
+// ── Blocs spécifiques à RecipeCard ─────────────────────────────────────────────
+
+// Hero image — même hauteur que la vraie image dans RecipeCard
+.sk--image {
+  width: 100%;
+  height: 200px;
+  border-radius: 0; // Pas de radius ici, la carte a overflow:hidden
+}
+
+// Titre recette
+.sk--bar { border-radius: 6px; }
+.sk--title { height: 16px; width: 75%; margin-bottom: 0.75rem; }
+
+// Lignes de description
+.sk--desc-line1 { height: 10px; width: 100%; margin-bottom: 6px; }
+.sk--desc-line2 { height: 10px; width: 65%; margin-bottom: 1rem; }
+
+// Méta-infos (temps, portions, difficulté) — rangée de chips
+.sk-meta {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.sk--chip {
+  height: 20px;
+  width: 72px;
+  border-radius: 12px;
+}
+
+// Tags (chips colorées)
+.sk-tags {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.sk--tag    { height: 22px; width: 60px;  border-radius: 20px; }
+.sk--tag-sm { height: 22px; width: 48px;  border-radius: 20px; }
+.sk--tag-xs { height: 22px; width: 36px;  border-radius: 20px; }
+
+// Bouton CTA pleine largeur
+.sk--btn-full {
+  height: 36px;
+  width: 100%;
+  border-radius: 8px;
+}

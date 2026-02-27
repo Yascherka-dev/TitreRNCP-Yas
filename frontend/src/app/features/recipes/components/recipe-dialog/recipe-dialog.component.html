@@ -93,6 +93,83 @@
       </ol>
     </div>
 
+    <mat-divider />
+
+    <!-- ── Section Avis & Notes ────────────────────────────────────────────── -->
+    <div class="recipe-dialog__section recipe-dialog__reviews">
+
+      <h3>
+        <mat-icon>rate_review</mat-icon>
+        Avis & notes
+        <!-- Affiche la note existante à côté du titre si la recette a déjà été notée -->
+        @if (currentRating() > 0) {
+          <span class="current-rating-badge">{{ currentRating() }}/5</span>
+        }
+      </h3>
+
+      <!-- ── Formulaire de saisie d'un avis ──────────────────────────────── -->
+      <div class="review-form">
+
+        <p class="review-form__label">Votre note :</p>
+
+        <!-- Composant étoiles en mode interactif → émet ratingChange au clic -->
+        <app-star-rating
+          [value]="pendingRating()"
+          (ratingChange)="pendingRating.set($event)"
+        />
+
+        <!-- Zone de texte pour l'avis écrit -->
+        <textarea
+          class="review-form__textarea"
+          placeholder="Partagez votre expérience avec cette recette... (min. 10 caractères)"
+          [value]="commentText()"
+          (input)="commentText.set($any($event.target).value)"
+          rows="3"
+        ></textarea>
+
+        <!-- Message d'erreur affiché si la validation échoue -->
+        @if (submitError()) {
+          <p class="review-form__error">
+            <mat-icon>error_outline</mat-icon>
+            {{ submitError() }}
+          </p>
+        }
+
+        <button mat-flat-button color="primary" class="review-form__submit" (click)="submitReview()">
+          <mat-icon>send</mat-icon>
+          Publier mon avis
+        </button>
+
+      </div>
+
+      <!-- ── Liste des commentaires existants ────────────────────────────── -->
+      @if (comments().length > 0) {
+        <div class="comments-list">
+          @for (comment of comments(); track comment.id) {
+            <div class="comment-item">
+
+              <div class="comment-item__header">
+                <!-- Nom de l'auteur -->
+                <span class="comment-item__author">{{ comment.author }}</span>
+                <!-- Étoiles en lecture seule pour afficher la note du commentaire -->
+                <app-star-rating [value]="comment.rating" [readonly]="true" />
+                <!-- Date formatée en français -->
+                <span class="comment-item__date">{{ comment.date | date:'dd/MM/yyyy' }}</span>
+              </div>
+
+              <p class="comment-item__content">{{ comment.content }}</p>
+
+            </div>
+          }
+        </div>
+
+      } @else {
+        <!-- Message si aucun avis n'a encore été posté -->
+        <p class="no-comments">Soyez le premier à donner votre avis !</p>
+      }
+
+    </div>
+
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

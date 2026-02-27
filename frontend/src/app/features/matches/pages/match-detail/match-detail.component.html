@@ -98,14 +98,17 @@
       </div>
 
       @if (suggestion(); as s) {
+        <!-- Recettes chargées → vraies RecipeCards -->
         <div class="recipes-grid">
           <app-recipe-card [recipe]="s.recipeA" />
           <app-recipe-card [recipe]="s.recipeB" />
         </div>
       } @else {
-        <div class="recipes-loading">
-          <mat-spinner diameter="40" />
-          <p>Sélection des recettes…</p>
+        <!-- En attente des recettes (chargement initial ou regénération) →
+             2 skeleton cards qui ont la même mise en page que les vraies cartes -->
+        <div class="recipes-grid">
+          <app-skeleton-recipe-card />
+          <app-skeleton-recipe-card />
         </div>
       }
     </section>

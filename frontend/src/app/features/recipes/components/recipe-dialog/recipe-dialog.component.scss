@@ -237,3 +237,133 @@ mat-divider {
 mat-dialog-actions {
   padding: 0.75rem 1.5rem 1rem !important;
 }
+
+// ── Section Avis & Notes ──────────────────────────────────────────────────────
+
+// Badge "X/5" affiché à côté du titre de la section si déjà noté
+.current-rating-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--mm-secondary);
+  background: #fff4e5;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 0.25rem;
+}
+
+// Formulaire de saisie d'un avis
+.review-form {
+  background: #f8f9ff;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+
+  &__label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--mm-primary);
+    margin: 0 0 0.4rem;
+  }
+
+  // Zone de texte stylisée (sans Material pour garder le contrôle)
+  &__textarea {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #dde1ee;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--mm-text);
+    background: #fff;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: var(--mm-primary);
+    }
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+
+  // Message d'erreur de validation
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    color: var(--mm-error);
+    margin: 0.4rem 0 0;
+
+    mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  // Bouton de soumission
+  &__submit {
+    margin-top: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+}
+
+// Liste des commentaires
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+// Carte d'un commentaire individuel
+.comment-item {
+  border: 1px solid #eaecf0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  background: #fff;
+
+  // Ligne d'en-tête : auteur + étoiles + date
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  &__author {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--mm-primary);
+  }
+
+  // Date repoussée à droite automatiquement
+  &__date {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-left: auto;
+  }
+
+  &__content {
+    margin: 0;
+    font-size: 0.83rem;
+    color: var(--mm-text);
+    line-height: 1.5;
+  }
+}
+
+// Texte affiché quand aucun commentaire n'existe encore
+.no-comments {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #aaa;
+  font-style: italic;
+  padding: 1rem 0;
+}

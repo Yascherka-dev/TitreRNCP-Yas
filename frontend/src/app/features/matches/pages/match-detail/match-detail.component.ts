@@ -9,6 +9,7 @@ import { SuggestionsService } from '../../../../core/services/suggestions.servic
 import { Match } from '../../../../core/models/fixture.model';
 import { MatchSuggestion } from '../../../../core/models/recipe.model';
 import { RecipeCardComponent } from '../../../recipes/components/recipe-card/recipe-card.component';
+import { SkeletonRecipeCardComponent } from '../../../../shared/components/skeleton-recipe-card/skeleton-recipe-card.component';
 
 interface PartnerLink {
   name: string;
@@ -84,8 +85,9 @@ const STREAMING_PARTNERS: PartnerLink[] = [
     RouterLink,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
+    MatProgressSpinnerModule, // Conservé au cas où, même si on utilise les skeletons maintenant
     RecipeCardComponent,
+    SkeletonRecipeCardComponent, // Skeleton affiché pendant le chargement des recettes
   ],
   templateUrl: './match-detail.component.html',
   styleUrl: './match-detail.component.scss',

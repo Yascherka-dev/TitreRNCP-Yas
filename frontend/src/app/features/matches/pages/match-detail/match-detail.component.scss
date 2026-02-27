@@ -18,6 +18,12 @@
   padding: 2rem;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
   margin-bottom: 2.5rem;
+
+  // Réduit le padding interne sur mobile pour que la bannière équipes soit lisible
+  @media (max-width: 480px) {
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.75rem;
+  }
 }
 
 .match-detail__league {
@@ -51,6 +57,11 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 1.5rem;
+
+  // Réduit l'écart entre les colonnes sur mobile
+  @media (max-width: 480px) {
+    gap: 0.75rem;
+  }
 }
 
 .team {
@@ -68,6 +79,12 @@
     width: 80px;
     height: 80px;
     object-fit: contain;
+
+    // Logo plus petit sur mobile pour libérer de l'espace au score central
+    @media (max-width: 480px) {
+      width: 56px;
+      height: 56px;
+    }
   }
 
   h2 {
@@ -75,6 +92,11 @@
     font-size: 1rem;
     font-weight: 700;
     color: var(--mm-primary);
+
+    // Réduit légèrement pour éviter les retours à la ligne fréquents
+    @media (max-width: 480px) {
+      font-size: 0.82rem;
+    }
   }
 
   .team-country {
@@ -83,6 +105,11 @@
     gap: 0.4rem;
     color: #888;
     font-size: 0.8rem;
+
+    // Masque le pays sur très petit écran pour économiser de l'espace
+    @media (max-width: 360px) {
+      display: none;
+    }
 
     img {
       width: 20px;
@@ -105,12 +132,21 @@
     font-weight: 800;
     color: var(--mm-primary);
     line-height: 1;
+
+    // Réduit le score sur mobile pour qu'il reste proportionnel aux logos réduits
+    @media (max-width: 480px) {
+      font-size: 1.6rem;
+    }
   }
 
   .vs-time {
     font-size: 1.8rem;
     font-weight: 800;
     color: var(--mm-primary);
+
+    @media (max-width: 480px) {
+      font-size: 1.4rem;
+    }
   }
 
   .vs-label {
@@ -169,11 +205,22 @@
     justify-content: space-between;
     margin-bottom: 1.5rem;
 
+    // Sur mobile, empile le titre et le bouton Regénérer verticalement
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
     h2 {
       margin: 0;
       font-size: 1.4rem;
       font-weight: 700;
       color: var(--mm-primary);
+
+      @media (max-width: 480px) {
+        font-size: 1.2rem;
+      }
     }
 
     .regenerate-btn {
@@ -214,11 +261,20 @@
 .match-detail__partners {
   margin-top: 2.5rem;
 
+  // Réduit la marge supérieure sur mobile
+  @media (max-width: 480px) {
+    margin-top: 1.75rem;
+  }
+
   h2 {
     margin: 0 0 0.35rem;
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--mm-primary);
+
+    @media (max-width: 480px) {
+      font-size: 1.2rem;
+    }
   }
 
   .partners-sub {

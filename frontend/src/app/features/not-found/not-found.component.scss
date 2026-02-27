@@ -1,0 +1,72 @@
+// Page 404 — centrée verticalement et horizontalement dans l'espace disponible
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  min-height: 60vh; // Occupe la majorité de l'écran même sur desktop
+}
+
+// Bloc emoji + numéro 404 superposés
+.not-found__visual {
+  position: relative;
+  margin-bottom: 1.5rem;
+  line-height: 1;
+}
+
+// Emoji assiette — positionné en avant-plan, légèrement au-dessus du chiffre
+.not-found__emoji {
+  display: block;
+  font-size: 5rem;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -0.5rem;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+}
+
+// Grand "404" en arrière-plan, très léger
+.not-found__code {
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--mm-primary);
+  opacity: 0.07;       // Quasi transparent — effet de watermark
+  margin: 0;
+  letter-spacing: -4px;
+  line-height: 1;
+  user-select: none;   // Non sélectionnable, c'est purement décoratif
+}
+
+// Titre "Cette page n'existe pas"
+.not-found__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--mm-primary);
+  margin: 0 0 0.75rem;
+}
+
+// Phrase d'accroche avec le ton du projet
+.not-found__subtitle {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.6;
+  max-width: 380px;
+  margin: 0 0 2rem;
+}
+
+// Bouton de retour → accent orange pour attirer l'œil
+.not-found__cta {
+  border-radius: 10px;
+  padding: 0 1.5rem;
+  height: 46px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  background-color: var(--mm-secondary) !important; // Orange #F4801A
+  color: #fff !important;
+
+  mat-icon {
+    margin-right: 0.3rem;
+  }
+}
