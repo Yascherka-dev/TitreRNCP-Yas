@@ -1,17 +1,33 @@
-<header class="mm-header">
-  <div class="mm-header__inner">
-    <a class="mm-header__logo" routerLink="/">
-      <span class="mm-header__logo-icon">🍽️</span>
-      <span class="mm-header__logo-text">Match & Munch</span>
-    </a>
-    <nav class="mm-header__nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-        Matchs
-      </a>
-    </nav>
-  </div>
-</header>
+<!-- Header Airbnb-style — masqué sur la landing page -->
+@if (!isLanding()) {
+  <header class="mm-header">
+    <div class="mm-header__inner">
 
-<main class="mm-main">
+      <a class="mm-header__logo" routerLink="/">
+        <span class="mm-header__logo-icon">🍽️</span>
+        <span class="mm-header__logo-text">Match &amp; Munch</span>
+      </a>
+
+      <nav class="mm-header__nav">
+        <a routerLink="/matches" routerLinkActive="active">
+          <mat-icon>sports_soccer</mat-icon>
+          <span class="nav-label">Matchs</span>
+        </a>
+        <a routerLink="/favorites" routerLinkActive="active">
+          <mat-icon>bookmark_border</mat-icon>
+          <span class="nav-label">Favoris</span>
+        </a>
+      </nav>
+
+      <button class="mm-header__login" mat-stroked-button>
+        <mat-icon>person_outline</mat-icon>
+        <span class="login-label">Connexion</span>
+      </button>
+
+    </div>
+  </header>
+}
+
+<main [class.mm-main]="!isLanding()">
   <router-outlet />
 </main>
