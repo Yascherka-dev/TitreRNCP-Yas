@@ -1,17 +1,19 @@
 // Custom Theming for Angular Material — Match & Munch
-// https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
-// ── Tokens de couleur du Design System ─────────────────────────────────────
-$color-primary:   #1E3A5F;   // Bleu nuit — header, titres, boutons primaires
-$color-secondary: #F4801A;   // Orange vif — accents, badges, CTA
-$color-bg:        #F9F9F9;   // Fond global
-$color-surface:   #FFFFFF;   // Fond cartes
-$color-text:      #333333;   // Texte principal
-$color-success:   #28A745;
-$color-error:     #DC3545;
+// ── Palette ────────────────────────────────────────────────────────────────
+$color-primary:   #1E3A5F;
+$color-accent:    #F4801A;
+$color-bg:        #FFFFFF;
+$color-bg-soft:   #F7F6F3;   // Airbnb warm off-white pour sections alternées
+$color-surface:   #FFFFFF;
+$color-text:      #1A1A1A;
+$color-text-sub:  #717171;   // Airbnb's secondary text exact
+$color-border:    #DDDDDD;   // Airbnb's border exact
+$color-success:   #008A05;
+$color-error:     #C13515;
 
-// ── Thème Angular Material M3 ───────────────────────────────────────────────
+// ── Material theme ─────────────────────────────────────────────────────────
 html {
   @include mat.theme((
     color: (
@@ -19,17 +21,16 @@ html {
       primary: mat.$azure-palette,
       tertiary: mat.$orange-palette,
     ),
-    typography: Inter,
+    typography: Roboto,
     density: 0,
   ));
 }
 
-// ── Override des tokens de couleur avec les valeurs de la marque ────────────
 :root {
   --mat-sys-primary:             #{$color-primary};
   --mat-sys-on-primary:          #FFFFFF;
   --mat-sys-primary-container:   #D6E4FF;
-  --mat-sys-secondary:           #{$color-secondary};
+  --mat-sys-secondary:           #{$color-accent};
   --mat-sys-on-secondary:        #FFFFFF;
   --mat-sys-secondary-container: #FFE0B2;
   --mat-sys-surface:             #{$color-surface};
@@ -37,31 +38,65 @@ html {
   --mat-sys-background:          #{$color-bg};
   --mat-sys-error:               #{$color-error};
 
-  // Variables CSS globales utilisables dans les composants
-  --mm-primary:   #{$color-primary};
-  --mm-secondary: #{$color-secondary};
-  --mm-bg:        #{$color-bg};
-  --mm-surface:   #{$color-surface};
-  --mm-text:      #{$color-text};
-  --mm-success:   #{$color-success};
-  --mm-error:     #{$color-error};
+  // ── Tokens globaux ────────────────────────────────────────────────────
+  --mm-primary:     #{$color-primary};
+  --mm-accent:      #{$color-accent};
+  --mm-bg:          #{$color-bg};
+  --mm-bg-soft:     #{$color-bg-soft};
+  --mm-surface:     #{$color-surface};
+  --mm-text:        #{$color-text};
+  --mm-text-sub:    #{$color-text-sub};
+  --mm-border:      #{$color-border};
+  --mm-success:     #{$color-success};
+  --mm-error:       #{$color-error};
+
+  // ── Typographie (Airbnb Cereal-like → Figtree) ────────────────────────
+  --mm-font: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  // ── Rayons — généreux, arrondis comme Airbnb ─────────────────────────
+  --mm-radius-sm:  8px;
+  --mm-radius-md:  12px;
+  --mm-radius-lg:  16px;
+  --mm-radius-xl:  24px;
+  --mm-radius-pill: 99px;
+
+  // ── Ombres Airbnb-style — douces et chaleureuses ──────────────────────
+  --mm-shadow-xs:  0 1px 2px rgba(0,0,0,0.08);
+  --mm-shadow-sm:  0 2px 8px rgba(0,0,0,0.08);
+  --mm-shadow-md:  0 6px 16px rgba(0,0,0,0.12);
+  --mm-shadow-lg:  0 14px 40px rgba(0,0,0,0.14);
+
+  // ── Secondary conservé pour compatibilité composants existants ────────
+  --mm-secondary:  #{$color-accent};
 }
 
-// ── Reset & globals ─────────────────────────────────────────────────────────
+// ── Reset ──────────────────────────────────────────────────────────────────
 html, body {
   height: 100%;
   margin: 0;
-  background-color: $color-bg;
-  color: $color-text;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  background: #{$color-bg};
+  color: #{$color-text};
+  font-family: var(--mm-font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
+* { box-sizing: border-box; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--mm-font);
+  margin: 0;
+  line-height: 1.2;
 }
 
-// ── Utilitaires globaux ─────────────────────────────────────────────────────
-.text-primary   { color: $color-primary; }
-.text-secondary { color: $color-secondary; }
-.bg-primary     { background-color: $color-primary; }
-.bg-secondary   { background-color: $color-secondary; }
+// ── Utilitaires ───────────────────────────────────────────────────────────
+.text-primary { color: $color-primary; }
+.text-accent  { color: $color-accent; }
+.text-sub     { color: $color-text-sub; }
+
+// ── Scrollbar ─────────────────────────────────────────────────────────────
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #{$color-border}; border-radius: 99px; }
