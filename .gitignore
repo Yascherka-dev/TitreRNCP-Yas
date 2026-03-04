@@ -3,6 +3,9 @@ claude.md
 CLAUDE.md
 .claude/
 
+# MCP & config local
+.mcp.json
+
 # IDE & outils
 .vscode/
 .idea/

@@ -22,12 +22,8 @@ export class MatchListComponent implements OnInit {
   matches = signal<Match[]>([]);
   selectedLeague = signal<number | 'all'>('all');
 
-  // Signal de chargement : true jusqu'à ce que les données arrivent.
-  // Permet d'afficher les skeleton cards à la place de la grille vide.
   loading = signal(true);
 
-  // Tableau fixe pour générer les N skeleton cards dans le @for du template.
-  // On en affiche 8 pour correspondre au nombre de matchs mockés.
   skeletonItems = Array(8);
 
   leagues = computed<LeagueFilter[]>(() => {
@@ -53,7 +49,7 @@ export class MatchListComponent implements OnInit {
   ngOnInit() {
     this.matchesService.getFixtures().subscribe(data => {
       this.matches.set(data);
-      this.loading.set(false); // Masque les skeletons une fois les données reçues
+      this.loading.set(false);
     });
   }
 

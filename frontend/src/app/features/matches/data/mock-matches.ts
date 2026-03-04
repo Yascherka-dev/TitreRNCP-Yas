@@ -1,8 +1,10 @@
 import { Match } from '../../../core/models/fixture.model';
 
 const FLAG = (code: string) => `https://media.api-sports.io/flags/${code}.svg`;
-const TEAM = (id: number) => `https://media.api-sports.io/football/teams/${id}.png`;
-const LEAGUE = (id: number) => `https://media.api-sports.io/football/leagues/${id}.png`;
+const TEAM = (id: number) =>
+  `https://media.api-sports.io/football/teams/${id}.png`;
+const LEAGUE = (id: number) =>
+  `https://media.api-sports.io/football/leagues/${id}.png`;
 
 const today = new Date();
 const d = (h: number, m: number) => {

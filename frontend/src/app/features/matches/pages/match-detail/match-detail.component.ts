@@ -3,7 +3,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatchesService } from '../../../../core/services/matches.service';
 import { SuggestionsService } from '../../../../core/services/suggestions.service';
 import { Match } from '../../../../core/models/fixture.model';
@@ -85,9 +84,8 @@ const STREAMING_PARTNERS: PartnerLink[] = [
     RouterLink,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule, // Conservé au cas où, même si on utilise les skeletons maintenant
     RecipeCardComponent,
-    SkeletonRecipeCardComponent, // Skeleton affiché pendant le chargement des recettes
+    SkeletonRecipeCardComponent,
   ],
   templateUrl: './match-detail.component.html',
   styleUrl: './match-detail.component.scss',
@@ -127,14 +125,11 @@ export class MatchDetailComponent implements OnInit {
     this.regenerating.set(true);
     this.suggestion.set(null);
 
-    // Simule un délai réseau (sera remplacé par l'appel réel à l'API Claude)
-    setTimeout(() => {
-      this.suggestionsService
-        .regenerate(m.id, m.home.countryCode, m.away.countryCode)
-        .subscribe(s => {
-          this.suggestion.set(s);
-          this.regenerating.set(false);
-        });
-    }, 800);
+    this.suggestionsService
+      .regenerate(m.id, m.home.countryCode, m.away.countryCode)
+      .subscribe(s => {
+        this.suggestion.set(s);
+        this.regenerating.set(false);
+      });
   }
 }

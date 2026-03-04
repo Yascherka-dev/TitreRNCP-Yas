@@ -1,4 +1,3 @@
-// Structure exacte de la réponse API-Football v3
 export interface ApiFixture {
   fixture: {
     id: number;
@@ -37,7 +36,6 @@ export interface ApiFixture {
   };
 }
 
-// Modèle interne utilisé par l'application
 export interface Match {
   id: number;
   date: Date;

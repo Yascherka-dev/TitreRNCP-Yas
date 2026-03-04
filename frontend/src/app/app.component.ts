@@ -12,7 +12,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  // true sur "/" → cache le header (la landing a son propre layout)
   isLanding = signal(true);
 
   constructor() {
