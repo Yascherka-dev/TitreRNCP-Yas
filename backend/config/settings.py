@@ -145,5 +145,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY', '')
 API_FOOTBALL_KEY = os.getenv('API_FOOTBALL_KEY', '')
-API_RUGBY_KEY = os.getenv('API_RUGBY_KEY', '')
-API_BASKETBALL_KEY = os.getenv('API_BASKETBALL_KEY', '')
