@@ -18,3 +18,8 @@ Thumbs.db
 .env
 .env.*
 *.secret
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
