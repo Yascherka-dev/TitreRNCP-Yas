@@ -37,9 +37,9 @@ export interface ApiFixture {
 }
 
 export interface Match {
-  id: number;
+  id: string | number;
   date: Date;
-  sport: 'football';
+  sport: string;
   status: {
     short: string;
     long: string;

@@ -30,6 +30,7 @@
 
       <!-- Score / heure -->
       <div class="match-card__score">
+        <span class="match-date">{{ match().date | date:'dd MMM' }}</span>
         @if (isStarted()) {
           <span class="score-val">{{ match().home.goals }}</span>
           <span class="score-sep">—</span>

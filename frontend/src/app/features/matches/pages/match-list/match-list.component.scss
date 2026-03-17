@@ -34,10 +34,10 @@
     padding-bottom: 4px;
   }
 
-  &__filters {
+  &__filters-zone {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 1rem;
     margin-bottom: 2rem;
   }
 
@@ -64,6 +64,127 @@
 
     span { font-size: 2.5rem; }
     p { margin: 0; font-size: 0.95rem; }
+  }
+}
+
+// ── Groupes de filtres ───────────────────────────
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--mm-text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 90px;
+  }
+
+  &__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+}
+
+.date-input {
+  padding: 0.42rem 0.75rem;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-pill);
+  font-family: var(--mm-font);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mm-text);
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: var(--mm-text);
+  }
+}
+
+// ── Country dropdown ─────────────────────────────
+.country-dropdown {
+  position: relative;
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+  }
+
+  &__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  &__arrow {
+    font-size: 0.65rem;
+    opacity: 0.6;
+  }
+
+  &__panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 20;
+    background: #fff;
+    border: 1px solid var(--mm-border);
+    border-radius: var(--mm-radius-md, 12px);
+    box-shadow: var(--mm-shadow-md, 0 8px 24px rgba(0,0,0,0.10));
+    width: 220px;
+    overflow: hidden;
+  }
+
+  &__search {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.6rem 0.85rem;
+    border: none;
+    border-bottom: 1px solid var(--mm-border);
+    font-family: var(--mm-font);
+    font-size: 0.85rem;
+    outline: none;
+    color: var(--mm-text);
+
+    &::placeholder { color: var(--mm-text-sub); }
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0.35rem 0;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  &__item {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--mm-text);
+    cursor: pointer;
+    transition: background 0.1s;
+    text-transform: capitalize;
+
+    &:hover { background: var(--mm-bg-soft, #f7f6f3); }
+
+    &--active {
+      font-weight: 700;
+      color: var(--mm-primary);
+    }
+  }
+
+  &__empty {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.85rem;
+    color: var(--mm-text-sub);
   }
 }
 

@@ -105,7 +105,7 @@ export class MatchDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id') ?? '';
     this.matchesService.getFixtureById(id).subscribe(m => {
       if (!m) return;
       this.match.set(m);

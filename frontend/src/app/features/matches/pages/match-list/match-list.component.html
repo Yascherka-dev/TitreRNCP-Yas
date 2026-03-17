@@ -11,29 +11,97 @@
     </span>
   </div>
 
-  <!-- Filtres compétition — pill buttons custom (sans Material chips) -->
-  <div class="dashboard__filters" role="group" aria-label="Filtrer par compétition">
-    <button
-      class="filter-pill"
-      [class.filter-pill--active]="isSelected('all')"
-      (click)="selectLeague('all')"
-    >
-      Tous
-    </button>
-    @for (league of leagues(); track league.id) {
-      <button
-        class="filter-pill"
-        [class.filter-pill--active]="isSelected(league.id)"
-        (click)="selectLeague(league.id)"
-      >
-        {{ league.name }}
-      </button>
-    }
+  <!-- Zone filtres -->
+  <div class="dashboard__filters-zone">
+
+    <!-- Filtre compétition -->
+    <div class="filter-group">
+      <span class="filter-group__label">Compétition</span>
+      <div class="filter-group__pills" role="group">
+        <button class="filter-pill" [class.filter-pill--active]="isLeagueSelected('all')" (click)="selectLeague('all')">Tous</button>
+        @for (league of leagues(); track league.id) {
+          <button class="filter-pill" [class.filter-pill--active]="isLeagueSelected(league.id)" (click)="selectLeague(league.id)">
+            {{ league.name }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Filtre pays -->
+    <div class="filter-group">
+      <span class="filter-group__label">Pays</span>
+      <div class="country-dropdown" [class.country-dropdown--open]="countryDropdown()">
+
+        <!-- Backdrop pour fermer au clic extérieur -->
+        @if (countryDropdown()) {
+          <div class="country-dropdown__backdrop" (click)="closeCountryDropdown()"></div>
+        }
+
+        <!-- Trigger -->
+        <button class="filter-pill country-dropdown__trigger"
+                [class.filter-pill--active]="selectedCountry() !== 'all'"
+                (click)="toggleCountryDropdown()">
+          {{ countryLabel() }}
+          <span class="country-dropdown__arrow">{{ countryDropdown() ? '▴' : '▾' }}</span>
+        </button>
+
+        <!-- Panel -->
+        @if (countryDropdown()) {
+          <div class="country-dropdown__panel">
+            <input
+              class="country-dropdown__search"
+              type="text"
+              placeholder="Rechercher un pays..."
+              [ngModel]="countrySearch()"
+              (ngModelChange)="countrySearch.set($event)"
+              autofocus
+            />
+            <ul class="country-dropdown__list">
+              <li class="country-dropdown__item"
+                  [class.country-dropdown__item--active]="isCountrySelected('all')"
+                  (click)="selectCountry('all')">
+                Tous les pays
+              </li>
+              @for (country of filteredCountries(); track country) {
+                <li class="country-dropdown__item"
+                    [class.country-dropdown__item--active]="isCountrySelected(country)"
+                    (click)="selectCountry(country)">
+                  {{ country }}
+                </li>
+              }
+              @empty {
+                <li class="country-dropdown__empty">Aucun résultat</li>
+              }
+            </ul>
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <!-- Filtre date -->
+    <div class="filter-group filter-group--date">
+      <span class="filter-group__label">Date</span>
+      <div class="filter-group__pills">
+        <button class="filter-pill" [class.filter-pill--active]="selectedDate() !== null" (click)="setToday()">
+          Aujourd'hui
+        </button>
+        <input
+          class="date-input"
+          type="date"
+          [ngModel]="selectedDate()"
+          (ngModelChange)="selectedDate.set($event)"
+        />
+        @if (selectedDate()) {
+          <button class="filter-pill filter-pill--clear" (click)="clearDate()">✕ Effacer</button>
+        }
+      </div>
+    </div>
+
   </div>
 
   <!-- Grille de matchs -->
   <div class="dashboard__grid">
-
     @if (loading()) {
       @for (item of skeletonItems; track $index) {
         <app-skeleton-match-card />
@@ -45,11 +113,10 @@
       @empty {
         <div class="dashboard__empty">
           <span>🏟️</span>
-          <p>Aucun match pour cette compétition.</p>
+          <p>Aucun match pour ces filtres.</p>
         </div>
       }
     }
-
   </div>
 
 </div>
