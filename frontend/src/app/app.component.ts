@@ -3,6 +3,7 @@ import { Router, NavigationEnd, RouterOutlet, RouterLink, RouterLinkActive } fro
 import { filter } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  isLanding = signal(true);
+  isLanding   = signal(true);
+  authService = inject(AuthService);
 
   constructor() {
     const router = inject(Router);

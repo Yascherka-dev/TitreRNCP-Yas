@@ -1,0 +1,50 @@
+<div class="auth-layout">
+
+  <div class="auth-layout__form">
+    <div class="auth-card">
+
+      <a routerLink="/" class="auth-card__logo">Match&Munch</a>
+      <h1 class="auth-card__title">Connexion</h1>
+      <p class="auth-card__sub">Content de te revoir 👋</p>
+
+      @if (error()) {
+        <div class="auth-card__error">{{ error() }}</div>
+      }
+
+      <form (ngSubmit)="onSubmit()" class="auth-form">
+
+        <div class="auth-form__field">
+          <label>Email</label>
+          <input type="email" [(ngModel)]="email" name="email" required placeholder="thomas@email.com" />
+        </div>
+
+        <div class="auth-form__field">
+          <label>Mot de passe</label>
+          <input type="password" [(ngModel)]="password" name="password" required />
+        </div>
+
+        <button type="submit" class="auth-form__submit" [disabled]="loading()">
+          {{ loading() ? 'Connexion...' : 'Se connecter' }}
+        </button>
+
+      </form>
+
+      <p class="auth-card__switch">
+        Pas encore de compte ? <a routerLink="/register">S'inscrire</a>
+      </p>
+
+    </div>
+  </div>
+
+  <div class="auth-layout__ad">
+    <div class="auth-ad">
+      <span class="auth-ad__label">Publicité</span>
+      <div class="auth-ad__placeholder">
+        <p>🍺 Livraison de bières artisanales</p>
+        <p>pour le match du soir</p>
+        <button>Voir les offres</button>
+      </div>
+    </div>
+  </div>
+
+</div>

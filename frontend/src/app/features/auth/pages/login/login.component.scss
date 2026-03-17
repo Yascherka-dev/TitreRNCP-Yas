@@ -1,0 +1,181 @@
+// Layout principal : 2 colonnes (formulaire | pub)
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  min-height: 100vh;
+  background: var(--mm-bg-soft);
+
+  // Sur mobile : 1 seule colonne
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  // Colonne gauche : centre la carte verticalement
+  &__form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  // Colonne droite : fond navy, cache sur mobile
+  &__ad {
+    background: var(--mm-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+
+    @media (max-width: 768px) { display: none; }
+  }
+}
+
+// La carte blanche avec le formulaire
+.auth-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 440px;
+
+  &__logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--mm-primary);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--mm-text);
+    margin: 0 0 0.35rem;
+  }
+
+  &__sub {
+    color: var(--mm-text-sub);
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem;
+  }
+
+  // Bandeau rouge en cas d'erreur
+  &__error {
+    background: #fff0f0;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+  // Lien "Déjà un compte ?"
+  &__switch {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--mm-text-sub);
+    margin-top: 1.25rem;
+
+    a {
+      color: var(--mm-primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+  }
+}
+
+// Le formulaire
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  // Ligne Prénom + Nom côte à côte
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  // Chaque champ (label + input)
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--mm-text);
+
+      span { font-weight: 400; color: var(--mm-text-sub); }
+    }
+
+    input {
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--mm-border);
+      border-radius: 8px;
+      font-family: var(--mm-font);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+
+      &:focus { border-color: var(--mm-primary); }
+    }
+  }
+
+  // Bouton de soumission
+  &__submit {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: var(--mm-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mm-font);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover:not(:disabled) { background: #16305a; }
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+  }
+}
+
+// Encadré pub dans la colonne navy
+.auth-ad {
+  text-align: center;
+  color: #fff;
+
+  &__label {
+    font-size: 0.7rem;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  &__placeholder {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 2rem;
+
+    p { margin: 0.25rem 0; font-size: 1rem; opacity: 0.8; }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1.5rem;
+      background: var(--mm-accent);
+      border: none;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  }
+}

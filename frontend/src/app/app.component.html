@@ -19,10 +19,17 @@
         </a>
       </nav>
 
-      <button class="mm-header__login" mat-stroked-button>
-        <mat-icon>person_outline</mat-icon>
-        <span class="login-label">Connexion</span>
-      </button>
+      @if (authService.isLoggedIn()) {
+        <button class="mm-header__login" mat-stroked-button (click)="authService.logout()">
+          <mat-icon>logout</mat-icon>
+          <span class="login-label">Déconnexion</span>
+        </button>
+      } @else {
+        <a class="mm-header__login" mat-stroked-button routerLink="/login">
+          <mat-icon>person_outline</mat-icon>
+          <span class="login-label">Connexion</span>
+        </a>
+      }
 
     </div>
   </header>

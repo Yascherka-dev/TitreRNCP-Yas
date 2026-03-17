@@ -1,0 +1,69 @@
+<div class="auth-layout">
+
+  <!-- Colonne gauche : le formulaire -->
+  <div class="auth-layout__form">
+    <div class="auth-card">
+
+      <!-- Logo cliquable qui ramène à l'accueil -->
+      <a routerLink="/" class="auth-card__logo">Match&Munch</a>
+
+      <h1 class="auth-card__title">Créer un compte</h1>
+      <p class="auth-card__sub">Rejoins la communauté et sauvegarde tes recettes préférées.</p>
+
+      <!-- Message d'erreur — visible uniquement si error() contient quelque chose -->
+      @if (error()) {
+        <div class="auth-card__error">{{ error() }}</div>
+      }
+
+      <!-- (ngSubmit) appelle onSubmit() quand on clique sur le bouton -->
+      <form (ngSubmit)="onSubmit()" class="auth-form">
+
+        <!-- Prénom + Nom côte à côte -->
+        <div class="auth-form__row">
+          <div class="auth-form__field">
+            <label>Prénom</label>
+            <input type="text" [(ngModel)]="prenom" name="prenom" required placeholder="Thomas" />
+          </div>
+          <div class="auth-form__field">
+            <label>Nom</label>
+            <input type="text" [(ngModel)]="nom" name="nom" required placeholder="Dupont" />
+          </div>
+        </div>
+
+        <div class="auth-form__field">
+          <label>Email</label>
+          <input type="email" [(ngModel)]="email" name="email" required placeholder="thomas@email.com" />
+        </div>
+
+        <div class="auth-form__field">
+          <label>Mot de passe <span>(8 caractères minimum)</span></label>
+          <input type="password" [(ngModel)]="password" name="password" required minlength="8" />
+        </div>
+
+        <!-- [disabled] désactive le bouton pendant le chargement -->
+        <button type="submit" class="auth-form__submit" [disabled]="loading()">
+          {{ loading() ? 'Création...' : 'Créer mon compte' }}
+        </button>
+
+      </form>
+
+      <p class="auth-card__switch">
+        Déjà un compte ? <a routerLink="/login">Se connecter</a>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Colonne droite : pub fictive -->
+  <div class="auth-layout__ad">
+    <div class="auth-ad">
+      <span class="auth-ad__label">Publicité</span>
+      <div class="auth-ad__placeholder">
+        <p>🍕 Commandez vos ingrédients</p>
+        <p>directement depuis la recette</p>
+        <button>Découvrir</button>
+      </div>
+    </div>
+  </div>
+
+</div>
