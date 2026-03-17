@@ -36,14 +36,27 @@ L'app tourne sur `http://localhost:4200`, l'API sur `http://localhost:8000`.
 
 ## Variables d'environnement
 
-Fichier `backend/.env` :
+Copier `backend/.env.example` en `backend/.env` et remplir les valeurs :
 
 ```
 SECRET_KEY=
-DATABASE_URL=
+DEBUG=True
+
+# PostgreSQL (locale ou Railway)
+DB_NAME=matchmuunch
+DB_USER=postgres
+DB_PASSWORD=
+DB_HOST=localhost
+DB_PORT=5432
+
+CORS_ALLOWED_ORIGINS=http://localhost:4200
+ALLOWED_HOSTS=localhost,127.0.0.1
+
 API_FOOTBALL_KEY=       # football-data.org
-ANTHROPIC_API_KEY=      # Claude API (suggestions)
+ANTHROPIC_API_KEY=      # Claude API (suggestions, optionnel en dev)
 ```
+
+> PostgreSQL doit tourner en local avec une base `matchmuunch` créée au préalable (`createdb matchmuunch`).
 
 ## Endpoints principaux
 
