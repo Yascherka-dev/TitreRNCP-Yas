@@ -23,3 +23,7 @@ Thumbs.db
 __pycache__/
 *.pyc
 *.pyo
+
+# Angular build & cache
+frontend/dist/
+frontend/.angular/
