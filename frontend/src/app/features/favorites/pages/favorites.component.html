@@ -1,1 +1,80 @@
-<p>Favoris</p>
+<div class="fav-page">
+
+  <header class="fav-header">
+    <h1 class="fav-header__title">Mes favoris</h1>
+    <p class="fav-header__sub">Retrouvez vos matchs, recettes et équipes sauvegardés</p>
+  </header>
+
+  <div class="fav-columns">
+
+  <!-- Matchs -->
+  <section class="fav-section">
+    <div class="fav-section__head">
+      <span class="fav-section__label">Matchs</span>
+      <span class="fav-section__count">{{ favoriteMatches().length }}</span>
+    </div>
+
+    @if (favoriteMatches().length === 0) {
+      <div class="fav-empty">
+        <span class="fav-empty__icon">⚽</span>
+        <p>Aucun match sauvegardé</p>
+        <a routerLink="/matches" class="fav-empty__link">Explorer les matchs</a>
+      </div>
+    } @else {
+      <div class="fav-grid">
+        @for (match of favoriteMatches(); track match.id) {
+          <a class="match-tile" [routerLink]="['/matches', match.id]">
+            <div class="match-tile__body">
+
+              <div class="match-tile__team">
+                <img class="match-tile__logo" [src]="match.home.logo" [alt]="match.home.name" />
+                <span class="match-tile__name">{{ match.home.name }}</span>
+              </div>
+
+              <div class="match-tile__center">
+                <span class="match-tile__vs">VS</span>
+                <span class="match-tile__date">{{ match.date | date:'dd MMM' }}</span>
+              </div>
+
+              <div class="match-tile__team match-tile__team--away">
+                <img class="match-tile__logo" [src]="match.away.logo" [alt]="match.away.name" />
+                <span class="match-tile__name">{{ match.away.name }}</span>
+              </div>
+
+            </div>
+            <div class="match-tile__footer">
+              <span>Voir le match →</span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Recettes -->
+  <section class="fav-section">
+    <div class="fav-section__head">
+      <span class="fav-section__label">Recettes</span>
+      <span class="fav-section__count">0</span>
+    </div>
+    <div class="fav-empty">
+      <span class="fav-empty__icon">🍽️</span>
+      <p>Bientôt disponible</p>
+    </div>
+  </section>
+
+  <!-- Équipes -->
+  <section class="fav-section">
+    <div class="fav-section__head">
+      <span class="fav-section__label">Équipes</span>
+      <span class="fav-section__count">0</span>
+    </div>
+    <div class="fav-empty">
+      <span class="fav-empty__icon">🏟️</span>
+      <p>Bientôt disponible</p>
+    </div>
+  </section>
+
+  </div><!-- /fav-columns -->
+
+</div>
