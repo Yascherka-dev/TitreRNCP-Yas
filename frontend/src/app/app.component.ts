@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from './core/services/auth.service';
+import { FavoritesService } from './core/services/favorites.service';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,9 @@ import { AuthService } from './core/services/auth.service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  isLanding   = signal(true);
-  authService = inject(AuthService);
+  isLanding        = signal(true);
+  authService      = inject(AuthService);
+  favoritesService = inject(FavoritesService);
 
   constructor() {
     const router = inject(Router);
@@ -23,5 +25,9 @@ export class AppComponent {
       .subscribe((e: NavigationEnd) => {
         this.isLanding.set(e.urlAfterRedirects === '/');
       });
+
+    if (this.authService.isLoggedIn()) {
+      this.favoritesService.loadFavorites().subscribe();
+    }
   }
 }

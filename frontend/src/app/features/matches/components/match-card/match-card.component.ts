@@ -1,10 +1,12 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Match } from '../../../../core/models/fixture.model';
+import { FavoritesService } from '../../../../core/services/favorites.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-match-card',
@@ -15,6 +17,33 @@ import { Match } from '../../../../core/models/fixture.model';
 })
 export class MatchCardComponent {
   match = input.required<Match>();
+
+  private favoritesService = inject(FavoritesService);
+  private authService      = inject(AuthService);
+  private router           = inject(Router);
+
+  isFavorite = computed(() =>
+    this.favoritesService.isFavorite('match', parseInt(String(this.match().id).replace('football_', ''), 10))
+  );
+
+  toggleFavorite(event: Event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    //console.log('match id:', this.match().id, typeof this.match().id);
+
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (this.isFavorite()) {
+      const favId = this.favoritesService.getFavoriteId('match', parseInt(String(this.match().id).replace('football_', ''), 10));
+      if (favId) this.favoritesService.removeFavorite(favId).subscribe();
+    } else {
+      this.favoritesService.addFavorite('match', parseInt(String(this.match().id).replace('football_', ''), 10)).subscribe();
+    }
+  }
 
   statusConfig = computed(() => {
     const s = this.match().status.short;
