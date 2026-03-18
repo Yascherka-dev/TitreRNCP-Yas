@@ -2,6 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,19 +14,34 @@ export class AuthService {
 
   currentUser = signal<{ email: string; nom: string; prenom: string } | null>(null);
 
-  login(email: string, password: string) {
-    return this.http
-      .post<{ access: string; refresh: string }>(
-        `${this.apiUrl}/auth/login/`, { email, password }
-      )
-      .pipe(
-        tap(res => {
-          localStorage.setItem('access_token', res.access);
-          localStorage.setItem('refresh_token', res.refresh);
-          this.isLoggedIn.set(true);
-        })
-      );
+  constructor() {
+    if (this.isLoggedIn()) {
+      this.http.get<{ email: string; nom: string; prenom: string }>(
+        `${this.apiUrl}/auth/me/`
+      ).subscribe(user => this.currentUser.set(user));
+    }
   }
+login(email: string, password: string) {
+  return this.http
+    .post<{ access: string; refresh: string }>(
+      `${this.apiUrl}/auth/login/`, { email, password }
+    )
+    .pipe(
+      tap(res => {
+        localStorage.setItem('access_token', res.access);
+        localStorage.setItem('refresh_token', res.refresh);
+        this.isLoggedIn.set(true);
+      }),
+      switchMap(() =>
+        this.http.get<{ email: string; nom: string; prenom: string }>(
+          `${this.apiUrl}/auth/me/`
+        )
+      ),
+      tap(user => {
+        this.currentUser.set(user);
+      })
+    );
+}
 
   register(email: string, password: string, nom: string, prenom: string) {
     return this.http.post(

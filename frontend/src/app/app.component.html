@@ -2,7 +2,6 @@
 @if (!isLanding()) {
   <header class="mm-header">
     <div class="mm-header__inner">
-
       <a class="mm-header__logo" routerLink="/">
         <span class="mm-header__logo-icon">🍽️</span>
         <span class="mm-header__logo-text">Match &amp; Munch</span>
@@ -20,7 +19,14 @@
       </nav>
 
       @if (authService.isLoggedIn()) {
-        <button class="mm-header__login" mat-stroked-button (click)="authService.logout()">
+        <span class="mm-header__username"> Bonjour,
+          {{ authService.currentUser()?.prenom }}
+        </span>
+        <button
+          class="mm-header__login"
+          mat-stroked-button
+          (click)="authService.logout()"
+        >
           <mat-icon>logout</mat-icon>
           <span class="login-label">Déconnexion</span>
         </button>
@@ -30,7 +36,6 @@
           <span class="login-label">Connexion</span>
         </a>
       }
-
     </div>
   </header>
 }
