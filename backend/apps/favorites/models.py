@@ -7,7 +7,7 @@ class Favorite(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    reference_id = models.PositiveIntegerField()
+    reference_id = models.CharField(max_length=100)
     date_ajout = models.DateTimeField(auto_now_add=True)
 
     class Meta:
