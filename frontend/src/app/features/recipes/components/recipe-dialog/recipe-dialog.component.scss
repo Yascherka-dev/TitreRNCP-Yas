@@ -8,7 +8,7 @@
 // Hero image
 .recipe-dialog__hero {
   position: relative;
-  height: 220px;
+  height: 240px;
   overflow: hidden;
   border-radius: 4px 4px 0 0;
   flex-shrink: 0;
@@ -17,12 +17,17 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.02);
   }
 
   &-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 50%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 60%);
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -40,7 +45,8 @@
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  letter-spacing: 0.3px;
 
   img {
     width: 18px;
@@ -50,22 +56,54 @@
   }
 }
 
-.close-btn {
+.hero-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.hero-btn {
   color: #fff !important;
   background: rgba(0, 0, 0, 0.4) !important;
-  width: 32px !important;
-  height: 32px !important;
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.65) !important;
+  }
 
   mat-icon {
-    font-size: 1.1rem;
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
 // Contenu
 mat-dialog-content {
-  padding: 1.5rem 1.5rem 0.5rem !important;
-  max-height: 65vh;
+  padding: 1.5rem 1.5rem 1.5rem !important;
+  max-height: 62vh;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 4px;
+  }
 }
 
 .recipe-dialog__title-row {
@@ -73,9 +111,12 @@ mat-dialog-content {
 
   h2 {
     margin: 0 0 0.5rem;
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-family: var(--mm-font);
+    font-size: 1.5rem;
+    font-weight: 800;
     color: var(--mm-primary);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
   }
 
   .tags {
@@ -95,15 +136,15 @@ mat-dialog-content {
 .recipe-dialog__desc {
   margin: 0 0 1.25rem;
   font-size: 0.88rem;
-  color: #666;
-  line-height: 1.6;
+  color: var(--mm-text-sub);
+  line-height: 1.65;
 }
 
 // Méta
 .recipe-dialog__meta {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
+  gap: 0.6rem;
   margin-bottom: 1.25rem;
 
   @media (max-width: 480px) {
@@ -115,15 +156,16 @@ mat-dialog-content {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #f8f9ff;
-  border-radius: 8px;
+  background: var(--mm-bg-soft);
+  border-radius: 10px;
   padding: 0.6rem 0.75rem;
+  border: 1px solid var(--mm-border);
 
   mat-icon {
-    font-size: 1.1rem;
-    width: 1.1rem;
-    height: 1.1rem;
-    color: var(--mm-secondary);
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+    color: var(--mm-accent);
     flex-shrink: 0;
   }
 
@@ -133,14 +175,14 @@ mat-dialog-content {
   }
 
   .meta-label {
-    font-size: 0.65rem;
-    color: #aaa;
+    font-size: 0.62rem;
+    color: var(--mm-text-sub);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
   }
 
   .meta-value {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--mm-text);
   }
@@ -148,6 +190,7 @@ mat-dialog-content {
 
 mat-divider {
   margin: 1.25rem 0 !important;
+  border-color: var(--mm-border) !important;
 }
 
 // Sections
@@ -159,15 +202,17 @@ mat-divider {
     align-items: center;
     gap: 0.4rem;
     margin: 0 0 0.75rem;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--mm-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 
     mat-icon {
-      font-size: 1.1rem;
-      width: 1.1rem;
-      height: 1.1rem;
-      color: var(--mm-secondary);
+      font-size: 1.05rem;
+      width: 1.05rem;
+      height: 1.05rem;
+      color: var(--mm-accent);
     }
   }
 }
@@ -190,13 +235,16 @@ mat-divider {
     color: var(--mm-text);
     padding-left: 1rem;
     position: relative;
+    line-height: 1.5;
 
     &::before {
-      content: '•';
+      content: '·';
       position: absolute;
       left: 0;
-      color: var(--mm-secondary);
+      color: var(--mm-accent);
       font-weight: 700;
+      font-size: 1.2rem;
+      line-height: 1.1;
     }
   }
 }
@@ -208,7 +256,7 @@ mat-divider {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.65rem;
 
   li {
     display: flex;
@@ -216,7 +264,7 @@ mat-divider {
     align-items: flex-start;
     font-size: 0.85rem;
     color: var(--mm-text);
-    line-height: 1.5;
+    line-height: 1.6;
   }
 }
 
@@ -226,53 +274,48 @@ mat-divider {
   border-radius: 50%;
   background: var(--mm-primary);
   color: #fff;
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
-mat-dialog-actions {
-  padding: 0.75rem 1.5rem 1rem !important;
-}
-
-// ── Section Avis & Notes ──────────────────────────────────────────────────────
-
-// Badge "X/5" affiché à côté du titre de la section si déjà noté
+// Avis & Notes
 .current-rating-badge {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--mm-secondary);
+  color: var(--mm-accent);
   background: #fff4e5;
   padding: 2px 8px;
   border-radius: 20px;
   margin-left: 0.25rem;
+  border: 1px solid rgba(244, 128, 26, 0.2);
 }
 
-// Formulaire de saisie d'un avis
 .review-form {
-  background: #f8f9ff;
-  border-radius: 10px;
-  padding: 1rem;
+  background: var(--mm-bg-soft);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
   margin-bottom: 1.25rem;
+  border: 1px solid var(--mm-border);
 
   &__label {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: var(--mm-primary);
     margin: 0 0 0.4rem;
   }
 
-  // Zone de texte stylisée (sans Material pour garder le contrôle)
   &__textarea {
     width: 100%;
     margin-top: 0.75rem;
-    padding: 0.6rem 0.75rem;
-    border: 1px solid #dde1ee;
+    padding: 0.65rem 0.75rem;
+    border: 1.5px solid var(--mm-border);
     border-radius: 8px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--mm-font);
     font-size: 0.85rem;
     color: var(--mm-text);
     background: #fff;
@@ -287,17 +330,16 @@ mat-dialog-actions {
     }
 
     &::placeholder {
-      color: #aaa;
+      color: #bbb;
     }
   }
 
-  // Message d'erreur de validation
   &__error {
     display: flex;
     align-items: center;
     gap: 0.3rem;
     font-size: 0.8rem;
-    color: var(--mm-error);
+    color: #e53935;
     margin: 0.4rem 0 0;
 
     mat-icon {
@@ -307,29 +349,27 @@ mat-dialog-actions {
     }
   }
 
-  // Bouton de soumission
   &__submit {
     margin-top: 0.75rem;
-    border-radius: 8px;
+    border-radius: 8px !important;
     font-size: 0.85rem;
+    font-family: var(--mm-font) !important;
+    font-weight: 600 !important;
   }
 }
 
-// Liste des commentaires
 .comments-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
-// Carte d'un commentaire individuel
 .comment-item {
-  border: 1px solid #eaecf0;
+  border: 1px solid var(--mm-border);
   border-radius: 10px;
   padding: 0.75rem 1rem;
   background: #fff;
 
-  // Ligne d'en-tête : auteur + étoiles + date
   &__header {
     display: flex;
     align-items: center;
@@ -344,10 +384,9 @@ mat-dialog-actions {
     color: var(--mm-primary);
   }
 
-  // Date repoussée à droite automatiquement
   &__date {
-    font-size: 0.75rem;
-    color: #aaa;
+    font-size: 0.72rem;
+    color: var(--mm-text-sub);
     margin-left: auto;
   }
 
@@ -355,15 +394,14 @@ mat-dialog-actions {
     margin: 0;
     font-size: 0.83rem;
     color: var(--mm-text);
-    line-height: 1.5;
+    line-height: 1.55;
   }
 }
 
-// Texte affiché quand aucun commentaire n'existe encore
 .no-comments {
   text-align: center;
   font-size: 0.85rem;
-  color: #aaa;
+  color: var(--mm-text-sub);
   font-style: italic;
   padding: 1rem 0;
 }

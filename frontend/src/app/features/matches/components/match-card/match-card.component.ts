@@ -23,7 +23,7 @@ export class MatchCardComponent {
   private router           = inject(Router);
 
   isFavorite = computed(() =>
-    this.favoritesService.isFavorite('match', parseInt(String(this.match().id).replace('football_', ''), 10))
+    this.favoritesService.isFavorite('match', this.match().id)
   );
 
   toggleFavorite(event: Event) {
@@ -38,10 +38,10 @@ export class MatchCardComponent {
     }
 
     if (this.isFavorite()) {
-      const favId = this.favoritesService.getFavoriteId('match', parseInt(String(this.match().id).replace('football_', ''), 10));
+      const favId = this.favoritesService.getFavoriteId('match', this.match().id);
       if (favId) this.favoritesService.removeFavorite(favId).subscribe();
     } else {
-      this.favoritesService.addFavorite('match', parseInt(String(this.match().id).replace('football_', ''), 10)).subscribe();
+      this.favoritesService.addFavorite('match', this.match().id).subscribe();
     }
   }
 

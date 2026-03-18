@@ -1,6 +1,6 @@
 <div class="recipe-dialog">
 
-  <!-- Image hero -->
+  <!-- Image hero avec actions intégrées -->
   <div class="recipe-dialog__hero">
     <img [src]="recipe.imageUrl" [alt]="recipe.title" />
     <div class="recipe-dialog__hero-overlay">
@@ -8,9 +8,16 @@
         <img [src]="recipe.flag" [alt]="recipe.country" />
         <span>{{ recipe.country }}</span>
       </div>
-      <button mat-icon-button class="close-btn" (click)="dialogRef.close()" aria-label="Fermer">
-        <mat-icon>close</mat-icon>
-      </button>
+      <div class="hero-actions">
+        <button mat-icon-button class="hero-btn" (click)="toggleFavorite()" [attr.aria-label]="isFavorite() ? 'Retirer des favoris' : 'Ajouter aux favoris'">
+          <mat-icon [style.color]="isFavorite() ? '#F4801A' : '#fff'">
+            {{ isFavorite() ? 'favorite' : 'favorite_border' }}
+          </mat-icon>
+        </button>
+        <button mat-icon-button class="hero-btn" (click)="dialogRef.close()" aria-label="Fermer">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -95,30 +102,23 @@
 
     <mat-divider />
 
-    <!-- ── Section Avis & Notes ────────────────────────────────────────────── -->
+    <!-- Avis & Notes -->
     <div class="recipe-dialog__section recipe-dialog__reviews">
 
       <h3>
         <mat-icon>rate_review</mat-icon>
         Avis & notes
-        <!-- Affiche la note existante à côté du titre si la recette a déjà été notée -->
         @if (currentRating() > 0) {
           <span class="current-rating-badge">{{ currentRating() }}/5</span>
         }
       </h3>
 
-      <!-- ── Formulaire de saisie d'un avis ──────────────────────────────── -->
       <div class="review-form">
-
         <p class="review-form__label">Votre note :</p>
-
-        <!-- Composant étoiles en mode interactif → émet ratingChange au clic -->
         <app-star-rating
           [value]="pendingRating()"
           (ratingChange)="pendingRating.set($event)"
         />
-
-        <!-- Zone de texte pour l'avis écrit -->
         <textarea
           class="review-form__textarea"
           placeholder="Partagez votre expérience avec cette recette... (min. 10 caractères)"
@@ -126,54 +126,37 @@
           (input)="commentText.set($any($event.target).value)"
           rows="3"
         ></textarea>
-
-        <!-- Message d'erreur affiché si la validation échoue -->
         @if (submitError()) {
           <p class="review-form__error">
             <mat-icon>error_outline</mat-icon>
             {{ submitError() }}
           </p>
         }
-
         <button mat-flat-button color="primary" class="review-form__submit" (click)="submitReview()">
           <mat-icon>send</mat-icon>
           Publier mon avis
         </button>
-
       </div>
 
-      <!-- ── Liste des commentaires existants ────────────────────────────── -->
       @if (comments().length > 0) {
         <div class="comments-list">
           @for (comment of comments(); track comment.id) {
             <div class="comment-item">
-
               <div class="comment-item__header">
-                <!-- Nom de l'auteur -->
                 <span class="comment-item__author">{{ comment.author }}</span>
-                <!-- Étoiles en lecture seule pour afficher la note du commentaire -->
                 <app-star-rating [value]="comment.rating" [readonly]="true" />
-                <!-- Date formatée en français -->
                 <span class="comment-item__date">{{ comment.date | date:'dd/MM/yyyy' }}</span>
               </div>
-
               <p class="comment-item__content">{{ comment.content }}</p>
-
             </div>
           }
         </div>
-
       } @else {
-        <!-- Message si aucun avis n'a encore été posté -->
         <p class="no-comments">Soyez le premier à donner votre avis !</p>
       }
 
     </div>
 
   </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="dialogRef.close()">Fermer</button>
-  </mat-dialog-actions>
 
 </div>

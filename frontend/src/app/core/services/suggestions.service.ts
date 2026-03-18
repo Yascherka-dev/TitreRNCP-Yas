@@ -35,13 +35,24 @@ export class SuggestionsService {
       );
   }
 
+  private flagUrl(pays: string): string {
+    const map: Record<string, string> = {
+      'france': 'fr', 'england': 'gb-eng', 'germany': 'de', 'spain': 'es',
+      'italy': 'it', 'portugal': 'pt', 'netherlands': 'nl', 'belgium': 'be',
+      'brazil': 'br', 'argentina': 'ar', 'japan': 'jp', 'morocco': 'ma',
+      'senegal': 'sn', 'nigeria': 'ng', 'usa': 'us', 'mexico': 'mx',
+    };
+    const code = map[pays.toLowerCase()] ?? pays.toLowerCase();
+    return `https://flagcdn.com/w40/${code}.png`;
+  }
+
   private toRecipe(r: any): Recipe {
     return {
       id: String(r.id ?? Math.random().toString(36).slice(2)),
       title: r.titre ?? '',
       country: r.pays ?? '',
       countryCode: r.pays ?? '',
-      flag: '',
+      flag: this.flagUrl(r.pays ?? ''),
       description: r.description ?? '',
       prepTime: r.temps_preparation ?? 30,
       cookTime: r.temps_cuisson ?? 0,

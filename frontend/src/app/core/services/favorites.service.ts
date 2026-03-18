@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 export interface Favorite {
   id: number;
   type: 'match' | 'recette' | 'equipe';
-  reference_id: number;
+  reference_id: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,7 +22,7 @@ export class FavoritesService {
     );
   }
 
-  addFavorite(type: Favorite['type'], referenceId: number) {
+  addFavorite(type: Favorite['type'], referenceId: string) {
     return this.http.post<Favorite>(`${this.apiUrl}/favorites/`, {
       type,
       reference_id: referenceId
@@ -37,11 +37,11 @@ export class FavoritesService {
     );
   }
 
-  isFavorite(type: Favorite['type'], referenceId: number): boolean {
+  isFavorite(type: Favorite['type'], referenceId: string): boolean {
     return this.favorites().some(f => f.type === type && f.reference_id === referenceId);
   }
 
-  getFavoriteId(type: Favorite['type'], referenceId: number): number | undefined {
+  getFavoriteId(type: Favorite['type'], referenceId: string): number | undefined {
     return this.favorites().find(f => f.type === type && f.reference_id === referenceId)?.id;
   }
 }

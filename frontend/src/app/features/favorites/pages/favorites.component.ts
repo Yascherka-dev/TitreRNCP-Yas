@@ -25,7 +25,7 @@ export class FavoritesComponent implements OnInit {
       .filter(f => f.type === 'match')
       .map(f => f.reference_id);
     return this.allMatches().filter(m =>
-      favIds.includes(parseInt(String(m.id).replace('football_', ''), 10))
+      favIds.includes(m.id)
     );
   });
 
