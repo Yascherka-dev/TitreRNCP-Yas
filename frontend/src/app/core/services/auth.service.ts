@@ -11,6 +11,14 @@ export class AuthService {
 
   // Au démarrage : vérifie si un token existe déjà (session précédente)
   isLoggedIn = signal<boolean>(!!localStorage.getItem('access_token'));
+  
+  refreshToken() {
+  const refresh = localStorage.getItem('refresh_token');
+  return this.http
+    .post<{ access: string }>(`${this.apiUrl}/auth/token/refresh/`, { refresh })
+    .pipe(tap(res => localStorage.setItem('access_token', res.access)));
+}
+
 
   currentUser = signal<{ email: string; nom: string; prenom: string } | null>(null);
 

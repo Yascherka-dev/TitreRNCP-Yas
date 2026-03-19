@@ -55,13 +55,41 @@
   <section class="fav-section">
     <div class="fav-section__head">
       <span class="fav-section__label">Recettes</span>
-      <span class="fav-section__count">0</span>
+      <span class="fav-section__count">{{ favoriteRecipes().length }}</span>
     </div>
-    <div class="fav-empty">
-      <span class="fav-empty__icon">🍽️</span>
-      <p>Bientôt disponible</p>
-    </div>
+
+    @if (favoriteRecipes().length === 0) {
+      <div class="fav-empty">
+        <span class="fav-empty__icon">🍽️</span>
+        <p>Aucune recette sauvegardée</p>
+      </div>
+    } @else {
+      <div class="fav-grid">
+        @for (recipe of favoriteRecipes(); track recipe.id) {
+          <div class="recipe-tile">
+            <div class="recipe-tile__img-wrap">
+              @if (recipe.imageUrl) {
+                <img [src]="recipe.imageUrl" [alt]="recipe.title" />
+              } @else {
+                <span class="recipe-tile__fallback">🍴</span>
+              }
+              <span class="recipe-tile__country-badge">{{ recipe.country }}</span>
+            </div>
+            <div class="recipe-tile__body">
+              <p class="recipe-tile__title">{{ recipe.title }}</p>
+              <div class="recipe-tile__meta">
+                <span>⏱ {{ recipe.prepTime + recipe.cookTime }} min</span>
+                <span class="recipe-tile__dot">·</span>
+                <span>{{ recipe.difficulty }}</span>
+              </div>
+            </div>
+            <div class="recipe-tile__footer">Voir la recette →</div>
+          </div>
+        }
+      </div>
+    }
   </section>
+
 
   <!-- Équipes -->
   <section class="fav-section">
