@@ -8,6 +8,8 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { RecipeDialogComponent } from '../../../features/recipes/components/recipe-dialog/recipe-dialog.component';
 
 @Component({
   selector: 'app-favorites',
@@ -20,9 +22,19 @@ export class FavoritesComponent implements OnInit {
   private favoritesService = inject(FavoritesService);
   private matchesService   = inject(MatchesService);
   private recipesService   = inject(RecipesService);
+  private dialog = inject(MatDialog);
 
   allMatches = signal<Match[]>([]);
   allRecipes = signal<Recipe[]>([]);
+
+  openRecipe(recipe: Recipe) {
+  this.dialog.open(RecipeDialogComponent, {
+    data: recipe,
+    width: '680px',
+    maxHeight: '90vh',
+  });
+}
+
 
   favoriteMatches = computed(() => {
     const favIds = this.favoritesService.favorites()
