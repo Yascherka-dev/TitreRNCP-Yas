@@ -86,14 +86,12 @@
       <div class="recipes-header">
         <h2>🍽️ Ce soir on mange quoi ?</h2>
         <button
-          mat-stroked-button
-          color="primary"
-          class="regenerate-btn"
+          class="mm-regen-btn"
           (click)="onRegenerate()"
           [disabled]="regenerating()"
         >
-          <mat-icon>refresh</mat-icon>
-          {{ regenerating() ? 'Génération...' : 'Regénérer' }}
+          <mat-icon [class.spinning]="regenerating()">refresh</mat-icon>
+          <span>{{ regenerating() ? 'Génération...' : 'Regénérer' }}</span>
         </button>
       </div>
 

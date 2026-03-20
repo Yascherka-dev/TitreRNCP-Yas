@@ -215,26 +215,84 @@
     h2 {
       margin: 0;
       font-size: 1.4rem;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--mm-primary);
+      position: relative;
+      padding-bottom: 0.45rem;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 36px;
+        height: 3px;
+        background: var(--mm-accent);
+        border-radius: 2px;
+      }
 
       @media (max-width: 480px) {
         font-size: 1.2rem;
       }
     }
 
-    .regenerate-btn {
+    .mm-regen-btn {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      border-radius: 8px;
+      gap: 0.45rem;
+      padding: 0.55rem 1rem;
+      background: transparent;
+      color: var(--mm-primary);
+      border: 1.5px solid var(--mm-primary);
+      border-radius: 10px;
+      font-family: var(--mm-font);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      white-space: nowrap;
 
       mat-icon {
         font-size: 1.1rem;
         width: 1.1rem;
         height: 1.1rem;
+        line-height: 1.1rem;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+
+        &.spinning {
+          animation: spin-icon 0.75s linear infinite;
+        }
+      }
+
+      &:hover:not(:disabled) {
+        background: var(--mm-primary);
+        color: #fff;
+        transform: translateY(-1px);
+      }
+
+      &:active:not(:disabled) {
+        transform: scale(0.97);
+      }
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        border-color: var(--mm-text-sub);
+        color: var(--mm-text-sub);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--mm-primary);
+        outline-offset: 2px;
       }
     }
+  }
+
+  @keyframes spin-icon {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
   }
 
   .recipes-grid {
