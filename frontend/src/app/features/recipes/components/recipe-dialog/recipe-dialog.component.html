@@ -1,4 +1,4 @@
-<div class="recipe-dialog">
+<div class="recipe-dialog" id="print-section">
 
   <!-- Image hero avec actions intégrées -->
   <div class="recipe-dialog__hero">
@@ -30,6 +30,14 @@
         @for (tag of recipe.tags; track tag) {
           <mat-chip>{{ tag }}</mat-chip>
         }
+      </div>
+      <div class="title-actions">
+        <button mat-icon-button class="hero-btn" (click)="share()" aria-label="Share">
+          <mat-icon>share</mat-icon>
+        </button>
+        <button mat-icon-button class="hero-btn" aria-label="Print" (click)="print()">
+          <mat-icon>print</mat-icon>
+        </button>
       </div>
     </div>
 
@@ -103,7 +111,7 @@
     <mat-divider />
 
     <!-- Avis & Notes -->
-    <div class="recipe-dialog__section recipe-dialog__reviews">
+    <div class="recipe-dialog__section recipe-dialog__reviews hide-on-print">
 
       <h3>
         <mat-icon>rate_review</mat-icon>
@@ -139,7 +147,7 @@
       </div>
 
       @if (comments().length > 0) {
-        <div class="comments-list">
+        <div class="comments-list" >
           @for (comment of comments(); track comment.id) {
             <div class="comment-item">
               <div class="comment-item__header">

@@ -100,3 +100,312 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #{$color-border}; border-radius: 99px; }
+
+// ── Impression recette — style magazine/cookbook ───────────────────────────
+
+@media print {
+
+  // @page contrôle les marges physiques de la feuille A4.
+  // margin: 0 supprime la zone où Chrome affiche sa date, son titre et son URL.
+  // Sans cette zone, le navigateur n'a nulle part où les rendre → ils disparaissent.
+  // On compense avec du padding directement sur .recipe-dialog ci-dessous.
+  @page {
+    margin: 0;
+    size: A4 portrait;
+  }
+
+  // ── 1. MASQUER TOUT SAUF LE DIALOG ──────────────────────────────────────
+
+  // body > * = tous les enfants directs du body
+  // :not(.cdk-overlay-container) = "tout sauf le conteneur des dialogs Angular"
+  body > *:not(.cdk-overlay-container) {
+    display: none !important;
+  }
+
+  .cdk-overlay-backdrop {
+    display: none !important;
+  }
+
+  // Sort les wrappers Material du flux "position:fixed" → blocs normaux imprimables
+  .cdk-overlay-container,
+  .cdk-global-overlay-wrapper,
+  .cdk-overlay-pane {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    display: block !important;
+  }
+
+  mat-dialog-container {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-height: none !important;
+    height: auto !important;
+    padding: 0 !important;
+    position: static !important;
+    background: transparent !important;
+  }
+
+  mat-dialog-content {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  // ── 2. ÉLÉMENTS À MASQUER SUR PAPIER ────────────────────────────────────
+
+  .recipe-dialog__hero-overlay,
+  .recipe-dialog__title-row > div:last-child,
+  .hide-on-print {
+    display: none !important;
+  }
+
+  // ── 3. BRANDING HEADER + FOOTER ─────────────────────────────────────────
+
+  // ::before injecte du contenu AVANT le premier enfant de .recipe-dialog
+  // C'est notre wordmark "MATCH & MUNCH" en haut à droite
+  .recipe-dialog::before {
+    content: 'MATCH & MUNCH';
+    display: block !important;
+    font-family: 'Figtree', sans-serif !important;
+    font-size: 0.58rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 3px !important;
+    color: #F4801A !important;
+    text-align: center !important;
+    margin-bottom: 0.65rem !important;
+    padding-bottom: 0.5rem !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  // ── 4. LAYOUT ───────────────────────────────────────────────────────────
+
+  .recipe-dialog {
+    max-width: 100% !important;
+    width: 100% !important;
+    font-family: 'Figtree', sans-serif !important;
+    // Padding pour compenser margin: 0 sur @page
+    // Sans ça le contenu collerait au bord physique de la feuille
+    padding: 12mm 14mm !important;
+  }
+
+  // ── 5. IMAGE HERO ───────────────────────────────────────────────────────
+
+  .recipe-dialog__hero {
+    height: 190px !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .recipe-dialog__hero img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  // ── 6. TITRE ────────────────────────────────────────────────────────────
+
+  .recipe-dialog__title-row {
+    margin-bottom: 0.6rem !important;
+
+    h2 {
+      font-family: 'Figtree', sans-serif !important;
+      font-size: 2rem !important;
+      font-weight: 800 !important;
+      color: #1E3A5F !important;
+      margin: 0 0 0.5rem !important;
+      letter-spacing: -0.5px !important;
+      line-height: 1.15 !important;
+      // Ligne orange sous le titre — séparation élégante style magazine
+      padding-bottom: 0.4rem !important;
+      border-bottom: 3px solid #F4801A !important;
+      display: inline-block !important;
+      print-color-adjust: exact !important;
+      -webkit-print-color-adjust: exact !important;
+    }
+  }
+
+  // Tags : on re-stylise mat-chip en pills navy propres
+  // mat-chip perd tous ses styles Material dans le contexte print
+  .tags {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.3rem !important;
+    margin-top: 0.45rem !important;
+  }
+
+  mat-chip,
+  mat-chip-row,
+  .mat-mdc-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 1px 9px !important;
+    border: 1px solid #1E3A5F !important;
+    border-radius: 99px !important;
+    font-family: 'Figtree', sans-serif !important;
+    font-size: 0.65rem !important;
+    font-weight: 600 !important;
+    color: #1E3A5F !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  // ── 7. DESCRIPTION — style citation magazine ─────────────────────────────
+
+  .recipe-dialog__desc {
+    font-size: 0.82rem !important;
+    color: #555 !important;
+    line-height: 1.6 !important;
+    margin: 0 0 0.85rem !important;
+    font-style: italic !important;
+    border-left: 3px solid #F4801A !important;
+    padding-left: 0.75rem !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  // ── 8. MÉTA (prépa / cuisson / portions / difficulté) ───────────────────
+
+  .recipe-dialog__meta {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.4rem !important;
+    margin-bottom: 0.85rem !important;
+  }
+
+  .meta-item {
+    background: #F7F6F3 !important;
+    border: 1px solid #e8e8e8 !important;
+    border-radius: 7px !important;
+    padding: 0.45rem 0.6rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+
+    mat-icon {
+      font-size: 0.85rem !important;
+      width: 0.85rem !important;
+      height: 0.85rem !important;
+      color: #F4801A !important;
+      margin-bottom: 0.15rem !important;
+      print-color-adjust: exact !important;
+      -webkit-print-color-adjust: exact !important;
+    }
+  }
+
+  .meta-label {
+    font-size: 0.55rem !important;
+    color: #999 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .meta-value {
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    color: #1E3A5F !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  // ── 9. DIVIDERS ──────────────────────────────────────────────────────────
+
+  mat-divider {
+    display: block !important;
+    border: none !important;
+    border-top: 1px solid #eeeeee !important;
+    margin: 0.65rem 0 !important;
+  }
+
+  // ── 10. TITRES DE SECTION ────────────────────────────────────────────────
+
+  .recipe-dialog__section h3 {
+    font-family: 'Figtree', sans-serif !important;
+    font-size: 0.7rem !important;
+    font-weight: 800 !important;
+    color: #1E3A5F !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    margin: 0 0 0.6rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+
+    mat-icon {
+      font-size: 0.9rem !important;
+      width: 0.9rem !important;
+      height: 0.9rem !important;
+      color: #F4801A !important;
+      print-color-adjust: exact !important;
+      -webkit-print-color-adjust: exact !important;
+    }
+  }
+
+  // ── 11. INGRÉDIENTS — encadré fond crème ─────────────────────────────────
+
+  // :has(.ingredients-list) = la section parente qui contient la liste
+  .recipe-dialog__section:has(.ingredients-list) {
+    background: #FAFAF8 !important;
+    border: 1px solid #eeeeee !important;
+    border-radius: 8px !important;
+    padding: 0.65rem 0.9rem !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .ingredients-list {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.28rem 1.5rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+
+    li {
+      font-size: 0.78rem !important;
+      line-height: 1.45 !important;
+      padding-left: 0.85rem !important;
+
+      &::before {
+        color: #F4801A !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+      }
+    }
+  }
+
+  // ── 12. ÉTAPES ───────────────────────────────────────────────────────────
+
+  .steps-list {
+    gap: 0.45rem !important;
+
+    li {
+      font-size: 0.8rem !important;
+      line-height: 1.55 !important;
+      // page-break-inside: avoid = une étape ne sera jamais coupée entre 2 pages
+      page-break-inside: avoid !important;
+    }
+  }
+
+  .step-num {
+    min-width: 21px !important;
+    width: 21px !important;
+    height: 21px !important;
+    background: #1E3A5F !important;
+    color: #ffffff !important;
+    font-size: 0.65rem !important;
+    border-radius: 50% !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+}
