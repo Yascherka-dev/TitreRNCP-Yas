@@ -1,5 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog'; // service Angular Material pour ouvrir des dialogs
+import { RecipeDialogComponent } from '../../../recipes/components/recipe-dialog/recipe-dialog.component'; // le dialog qu'on va ouvrir automatiquement
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -102,6 +104,7 @@ export class MatchDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private matchesService: MatchesService,
     private suggestionsService: SuggestionsService,
+    private dialog: MatDialog, // on injecte MatDialog pour pouvoir ouvrir le RecipeDialog depuis le code
   ) {}
 
   ngOnInit() {
@@ -116,7 +119,34 @@ export class MatchDetailComponent implements OnInit {
   loadSuggestion(m: Match) {
     this.suggestionsService
       .getSuggestion(m.id, m.home.countryCode, m.away.countryCode)
-      .subscribe(s => this.suggestion.set(s));
+      .subscribe(s => {
+        this.suggestion.set(s); // on stocke la suggestion (les 2 recettes) dans le signal
+
+        if (!s) return; // si la suggestion est vide on s'arrête là, rien à ouvrir
+
+        // On lit le param ?recipe= dans l'URL (ex: "/matches/5?recipe=42" → donne "42")
+        // queryParamMap = la map de tous les params de l'URL après le ?
+        // .get('recipe') = on récupère spécifiquement la valeur du param "recipe"
+        const recipeId = this.route.snapshot.queryParamMap.get('recipe');
+
+        // Si le param n'existe pas dans l'URL (lien normal sans share) → on ne fait rien
+        if (!recipeId) return;
+
+        // On cherche dans les 2 recettes de la suggestion laquelle a cet id
+        // String(r.id) = on convertit l'id en texte au cas où il serait un nombre, pour comparer avec recipeId qui est toujours un string
+        const recette = [s.recipeA, s.recipeB].find(r => String(r.id) === recipeId);
+
+        // Si aucune recette ne correspond à l'id (id invalide ou recette pas dans ce match) → on s'arrête
+        if (!recette) return;
+
+        // On ouvre le dialog avec la recette trouvée, exactement comme le fait RecipeCard
+        this.dialog.open(RecipeDialogComponent, {
+          data: recette,       // la recette complète passée au dialog
+          maxWidth: '560px',   // largeur max sur desktop
+          width: '95vw',       // largeur sur mobile (95% de la fenêtre)
+          panelClass: 'recipe-dialog-panel', // classe CSS custom pour le style du dialog
+        });
+      });
   }
 
   onRegenerate() {
