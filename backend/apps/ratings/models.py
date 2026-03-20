@@ -7,7 +7,7 @@ class Rating(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ratings')
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    reference_id = models.PositiveIntegerField()
+    reference_id = models.CharField(max_length=100)
     valeur = models.PositiveSmallIntegerField()  # 1 à 5
     date = models.DateTimeField(auto_now_add=True)
 
