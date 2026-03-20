@@ -1,6 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { tap, catchError, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { switchMap } from 'rxjs/operators';
 
@@ -23,12 +23,16 @@ export class AuthService {
   currentUser = signal<{ email: string; nom: string; prenom: string } | null>(null);
 
   constructor() {
-    if (this.isLoggedIn()) {
-      this.http.get<{ email: string; nom: string; prenom: string }>(
-        `${this.apiUrl}/auth/me/`
-      ).subscribe(user => this.currentUser.set(user));
-    }
+  if (this.isLoggedIn()) {
+    this.http.get<{ email: string; nom: string; prenom: string }>(
+      `${this.apiUrl}/auth/me/`
+    ).pipe(
+      catchError(() => of(null))
+    ).subscribe(user => this.currentUser.set(user));
   }
+}
+
+
 login(email: string, password: string) {
   return this.http
     .post<{ access: string; refresh: string }>(
