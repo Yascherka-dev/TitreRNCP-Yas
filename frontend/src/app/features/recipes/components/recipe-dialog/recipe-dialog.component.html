@@ -9,8 +9,8 @@
         <span>{{ recipe.country }}</span>
       </div>
       <div class="hero-actions">
-        <button mat-icon-button class="hero-btn" (click)="toggleFavorite()" [attr.aria-label]="isFavorite() ? 'Retirer des favoris' : 'Ajouter aux favoris'">
-          <mat-icon [style.color]="isFavorite() ? '#F4801A' : '#fff'">
+        <button mat-icon-button class="hero-btn" [class.hero-btn--fav-active]="isFavorite()" (click)="toggleFavorite()" [attr.aria-label]="isFavorite() ? 'Retirer des favoris' : 'Ajouter aux favoris'">
+          <mat-icon>
             {{ isFavorite() ? 'favorite' : 'favorite_border' }}
           </mat-icon>
         </button>
@@ -140,9 +140,9 @@
             {{ submitError() }}
           </p>
         }
-        <button mat-flat-button color="primary" class="review-form__submit" (click)="submitReview()">
+        <button class="mm-submit-btn" (click)="submitReview()">
           <mat-icon>send</mat-icon>
-          Publier mon avis
+          <span>Publier mon avis</span>
         </button>
       </div>
 
