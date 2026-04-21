@@ -2,7 +2,10 @@
 
   <!-- Photo -->
   <div class="recipe-card__image">
-    <img [src]="recipe().imageUrl" [alt]="recipe().title" />
+    <div class="recipe-card__img-placeholder">
+      <span class="placeholder-icon">🧑‍🍳</span>
+      <span class="placeholder-brand">Marco · Match & Munch</span>
+    </div>
     <div class="recipe-card__country-badge">
       <img [src]="recipe().flag" [alt]="recipe().country" class="badge-flag" />
       <span>{{ recipe().country }}</span>
