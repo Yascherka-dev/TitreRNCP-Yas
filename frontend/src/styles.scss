@@ -150,8 +150,19 @@ h1, h2, h3, h4, h5, h6 {
 
   mat-dialog-content {
     max-height: none !important;
+    height: auto !important;
+    min-height: 0 !important;
     overflow: visible !important;
     padding: 0 !important;
+  }
+
+  // Wrappers internes Angular Material M3 — gardent une height fixe sans ce reset
+  .mat-mdc-dialog-content,
+  .mat-mdc-dialog-inner-scroll-container {
+    max-height: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
   }
 
   // ── 2. ÉLÉMENTS À MASQUER SUR PAPIER ────────────────────────────────────

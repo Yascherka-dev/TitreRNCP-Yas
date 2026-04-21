@@ -1,6 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from './core/services/auth.service';
@@ -21,7 +22,7 @@ export class AppComponent {
   constructor() {
     const router = inject(Router);
     router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
+      .pipe(filter(e => e instanceof NavigationEnd), takeUntilDestroyed())
       .subscribe((e: NavigationEnd) => {
         this.isLanding.set(e.urlAfterRedirects === '/');
       });

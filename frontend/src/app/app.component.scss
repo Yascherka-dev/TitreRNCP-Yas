@@ -4,7 +4,7 @@
 // ══════════════════════════════════════════════
 
 .mm-header {
-  background: #fff;
+  background: var(--mm-bg);
   border-bottom: 1px solid var(--mm-border);
   position: sticky;
   top: 0;

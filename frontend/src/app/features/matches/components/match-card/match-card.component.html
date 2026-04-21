@@ -87,7 +87,7 @@
       <button
         mat-icon-button
         class="fav-btn"
-        aria-label="Ajouter aux favoris"
+        [attr.aria-label]="isFavorite() ? 'Retirer des favoris' : 'Ajouter aux favoris'"
         (click)="toggleFavorite($event)"
       >
         <mat-icon>{{ isFavorite() ? "favorite" : "favorite_border" }}</mat-icon>
