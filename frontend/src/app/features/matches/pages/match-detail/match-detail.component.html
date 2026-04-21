@@ -2,7 +2,7 @@
   <div class="match-detail">
 
     <!-- Retour -->
-    <a mat-button routerLink="/" class="back-btn">
+    <a mat-button routerLink="/matches" class="back-btn">
       <mat-icon>arrow_back</mat-icon>
       Retour aux matchs
     </a>
@@ -84,29 +84,41 @@
     <!-- Section recettes -->
     <section class="match-detail__recipes">
       <div class="recipes-header">
-        <h2>🍽️ Ce soir on mange quoi ?</h2>
+        <div>
+          <h2>🍽️ Ce soir, Marco cuisine</h2>
+          <p class="recipes-byline">Recettes générées à la demande · inspirées des deux pays</p>
+        </div>
         <button
           class="mm-regen-btn"
           (click)="onRegenerate()"
           [disabled]="regenerating()"
         >
           <mat-icon [class.spinning]="regenerating()">refresh</mat-icon>
-          <span>{{ regenerating() ? 'Génération...' : 'Regénérer' }}</span>
+          <span>{{ regenerating() ? 'Marco cuisine...' : 'Nouvelle idée' }}</span>
         </button>
       </div>
 
       @if (suggestion(); as s) {
-        <!-- Recettes chargées → vraies RecipeCards -->
         <div class="recipes-grid">
           <app-recipe-card [recipe]="s.recipeA" />
           <app-recipe-card [recipe]="s.recipeB" />
         </div>
+      } @else if (suggestionError()) {
+        <div class="recipes-feedback recipes-feedback--error">
+          <span class="feedback-icon">😕</span>
+          <p class="feedback-title">Aïe, une erreur s'est glissée !</p>
+          <p class="feedback-sub">Marco a brûlé sa recette. Réessaie dans un instant.</p>
+          <button class="mm-regen-btn" (click)="onRegenerate()">
+            <mat-icon>refresh</mat-icon><span>Réessayer</span>
+          </button>
+        </div>
       } @else {
-        <!-- En attente des recettes (chargement initial ou regénération) →
-             2 skeleton cards qui ont la même mise en page que les vraies cartes -->
-        <div class="recipes-grid">
-          <app-skeleton-recipe-card />
-          <app-skeleton-recipe-card />
+        <div class="recipes-feedback recipes-feedback--loading">
+          <div class="feedback-chef">🧑‍🍳</div>
+          <p class="feedback-msg">{{ loadingMsg() }}</p>
+          <div class="feedback-dots">
+            <span></span><span></span><span></span>
+          </div>
         </div>
       }
     </section>

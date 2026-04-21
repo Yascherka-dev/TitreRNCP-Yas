@@ -1,4 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, EMPTY, of } from 'rxjs';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog'; // service Angular Material pour ouvrir des dialogs
 import { RecipeDialogComponent } from '../../../recipes/components/recipe-dialog/recipe-dialog.component'; // le dialog qu'on va ouvrir automatiquement
@@ -93,33 +95,70 @@ const STREAMING_PARTNERS: PartnerLink[] = [
   styleUrl: './match-detail.component.scss',
 })
 export class MatchDetailComponent implements OnInit {
-  match = signal<Match | null>(null);
-  suggestion = signal<MatchSuggestion | null>(null);
-  regenerating = signal(false);
+  match           = signal<Match | null>(null);
+  suggestion      = signal<MatchSuggestion | null>(null);
+  suggestionError = signal(false);
+  regenerating    = signal(false);
+  loadingMsg      = signal('');
+
+  private readonly LOADING_MSGS = [
+    '🧑‍🍳 Marco est aux fourneaux...',
+    '🌍 On explore les cuisines du monde...',
+    '🔪 Sélection des meilleures recettes...',
+    '🍷 Accord mets et match en cours...',
+    '📖 Consultation du livre de recettes...',
+  ];
+  private msgTimer?: ReturnType<typeof setInterval>;
 
   foodPartners = FOOD_PARTNERS;
   streamingPartners = STREAMING_PARTNERS;
+
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private route: ActivatedRoute,
     private matchesService: MatchesService,
     private suggestionsService: SuggestionsService,
-    private dialog: MatDialog, // on injecte MatDialog pour pouvoir ouvrir le RecipeDialog depuis le code
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
-    this.matchesService.getFixtureById(id).subscribe(m => {
+    this.matchesService.getFixtureById(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(m => {
       if (!m) return;
       this.match.set(m);
       this.loadSuggestion(m);
     });
   }
 
+  private startLoadingMsgs() {
+    this.loadingMsg.set(this.LOADING_MSGS[0]);
+    let i = 1;
+    this.msgTimer = setInterval(() => {
+      this.loadingMsg.set(this.LOADING_MSGS[i % this.LOADING_MSGS.length]);
+      i++;
+    }, 2000);
+  }
+
+  private stopLoadingMsgs() {
+    clearInterval(this.msgTimer);
+  }
+
   loadSuggestion(m: Match) {
+    this.suggestionError.set(false);
+    this.startLoadingMsgs();
     this.suggestionsService
-      .getSuggestion(m.id, m.home.countryCode, m.away.countryCode)
+      .getSuggestion(m.id, m.home.countryCode, m.away.countryCode, m.home.name, m.away.name)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.stopLoadingMsgs();
+          this.suggestionError.set(true);
+          return EMPTY;
+        }),
+      )
       .subscribe(s => {
+        this.stopLoadingMsgs();
         this.suggestion.set(s); // on stocke la suggestion (les 2 recettes) dans le signal
 
         if (!s) return; // si la suggestion est vide on s'arrête là, rien à ouvrir
@@ -155,9 +194,21 @@ export class MatchDetailComponent implements OnInit {
     this.regenerating.set(true);
     this.suggestion.set(null);
 
+    this.suggestionError.set(false);
+    this.startLoadingMsgs();
     this.suggestionsService
-      .regenerate(m.id, m.home.countryCode, m.away.countryCode)
+      .regenerate(m.id, m.home.countryCode, m.away.countryCode, m.home.name, m.away.name)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.stopLoadingMsgs();
+          this.regenerating.set(false);
+          this.suggestionError.set(true);
+          return EMPTY;
+        }),
+      )
       .subscribe(s => {
+        this.stopLoadingMsgs();
         this.suggestion.set(s);
         this.regenerating.set(false);
       });
