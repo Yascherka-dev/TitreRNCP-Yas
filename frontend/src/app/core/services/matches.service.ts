@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, shareReplay } from 'rxjs';
 import { Match } from '../models/fixture.model';
 import { environment } from '../../../environments/environment';
 
@@ -9,9 +9,17 @@ export class MatchesService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
+  private fixtures$ = this.http
+    .get<any[]>(`${this.apiUrl}/matches/`)
+    .pipe(map(items => items.map(this.toMatch)), shareReplay(1));
+
   getFixtures(): Observable<Match[]> {
+    return this.fixtures$;
+  }
+
+  getFixturesByDate(date: string): Observable<Match[]> {
     return this.http
-      .get<any[]>(`${this.apiUrl}/matches/`)
+      .get<any[]>(`${this.apiUrl}/matches/?date=${date}`)
       .pipe(map(items => items.map(this.toMatch)));
   }
 
@@ -58,36 +66,102 @@ export class MatchesService {
   // Génère une URL de drapeau à partir du nom de pays (ex: "france" → drapeau FR)
   private flagUrl(countryName: string): string {
     const map: Record<string, string> = {
-      'france':         'fr',
-      'england':        'gb-eng',
-      'germany':        'de',
-      'spain':          'es',
-      'italy':          'it',
-      'portugal':       'pt',
-      'netherlands':    'nl',
-      'belgium':        'be',
-      'norway':         'no',
-      'scotland':       'gb-sct',
-      'austria':        'at',
-      'switzerland':    'ch',
-      'denmark':        'dk',
-      'sweden':         'se',
-      'czechia':        'cz',
-      'czech republic': 'cz',
-      'slovakia':       'sk',
-      'poland':         'pl',
-      'ukraine':        'ua',
-      'turkey':         'tr',
-      'greece':         'gr',
-      'croatia':        'hr',
-      'serbia':         'rs',
-      'romania':        'ro',
-      'hungary':        'hu',
-      'russia':         'ru',
-      'israel':         'il',
-      'monaco':         'mc',
-      'azerbaijan':     'az',
-      'europe':         'eu',
+      // Europe occidentale
+      'france':                   'fr',
+      'england':                  'gb-eng',
+      'scotland':                 'gb-sct',
+      'wales':                    'gb-wls',
+      'northern ireland':         'gb-nir',
+      'germany':                  'de',
+      'spain':                    'es',
+      'italy':                    'it',
+      'portugal':                 'pt',
+      'netherlands':              'nl',
+      'belgium':                  'be',
+      'austria':                  'at',
+      'switzerland':              'ch',
+      'denmark':                  'dk',
+      'sweden':                   'se',
+      'norway':                   'no',
+      'finland':                  'fi',
+      'ireland':                  'ie',
+      'luxembourg':               'lu',
+      'monaco':                   'mc',
+      'liechtenstein':            'li',
+      'malta':                    'mt',
+      'san marino':               'sm',
+      'andorra':                  'ad',
+      'iceland':                  'is',
+      // Europe centrale et orientale
+      'czechia':                  'cz',
+      'czech republic':           'cz',
+      'slovakia':                 'sk',
+      'poland':                   'pl',
+      'hungary':                  'hu',
+      'romania':                  'ro',
+      'bulgaria':                 'bg',
+      'slovenia':                 'si',
+      'croatia':                  'hr',
+      'serbia':                   'rs',
+      'bosnia and herzegovina':   'ba',
+      'bosnia & herzegovina':     'ba',
+      'north macedonia':          'mk',
+      'macedonia':                'mk',
+      'montenegro':               'me',
+      'albania':                  'al',
+      'kosovo':                   'xk',
+      'moldova':                  'md',
+      'ukraine':                  'ua',
+      'belarus':                  'by',
+      'russia':                   'ru',
+      'latvia':                   'lv',
+      'lithuania':                'lt',
+      'estonia':                  'ee',
+      'cyprus':                   'cy',
+      'greece':                   'gr',
+      // Moyen-Orient / Asie occidentale
+      'turkey':                   'tr',
+      'israel':                   'il',
+      'palestine':                'ps',
+      'azerbaijan':               'az',
+      'armenia':                  'am',
+      'georgia':                  'ge',
+      'kazakhstan':               'kz',
+      // Amérique
+      'brazil':                   'br',
+      'argentina':                'ar',
+      'colombia':                 'co',
+      'chile':                    'cl',
+      'uruguay':                  'uy',
+      'mexico':                   'mx',
+      'usa':                      'us',
+      'united states':            'us',
+      'canada':                   'ca',
+      // Afrique
+      'morocco':                  'ma',
+      'senegal':                  'sn',
+      'nigeria':                  'ng',
+      'ghana':                    'gh',
+      'egypt':                    'eg',
+      'ivory coast':              'ci',
+      "côte d'ivoire":            'ci',
+      'cameroon':                 'cm',
+      'south africa':             'za',
+      'algeria':                  'dz',
+      'tunisia':                  'tn',
+      // Asie / Océanie
+      'japan':                    'jp',
+      'south korea':              'kr',
+      'korea republic':           'kr',
+      'china':                    'cn',
+      'australia':                'au',
+      'saudi arabia':             'sa',
+      'iran':                     'ir',
+      'qatar':                    'qa',
+      'united arab emirates':     'ae',
+      // Divers
+      'europe':                   'eu',
+      'world':                    'un',
     };
     const code = map[countryName.toLowerCase()] ?? countryName.toLowerCase();
     return `https://flagcdn.com/w40/${code}.png`;

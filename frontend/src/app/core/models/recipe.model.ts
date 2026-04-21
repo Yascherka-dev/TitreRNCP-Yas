@@ -16,7 +16,7 @@ export interface Recipe {
 }
 
 export interface MatchSuggestion {
-  matchId: number;
+  matchId: string;
   recipeA: Recipe;
   recipeB: Recipe;
   generatedAt: Date;
