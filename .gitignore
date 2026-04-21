@@ -28,3 +28,6 @@ __pycache__/
 # Angular build & cache
 frontend/dist/
 frontend/.angular/
+
+# Docs internes
+docs/
