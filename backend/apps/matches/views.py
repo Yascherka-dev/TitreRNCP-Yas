@@ -23,7 +23,7 @@ class MatchListView(APIView):
         qs = qs.annotate(
             ordre=Case(
                 When(statut__in=['IN_PLAY', 'PAUSED', 'HALFTIME'], then=Value(0)),
-                When(statut='SCHEDULED', then=Value(1)),
+                When(statut__in=['SCHEDULED', 'TIMED'], then=Value(1)),
                 default=Value(2),
                 output_field=IntegerField(),
             )
