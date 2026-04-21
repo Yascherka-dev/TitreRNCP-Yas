@@ -5,25 +5,35 @@
     <div class="hero__inner">
 
       <div class="hero__text">
+        <p class="hero__eyebrow">⚽ Football · 🍽️ Cuisine</p>
         <h1 class="hero__title">
-          Ce soir, on mange<br>
-          <span class="hero__title-accent">quoi ?</span>
+          Le match commence.<br>
+          <span class="hero__title-accent">Et ce soir, on mange bien.</span>
         </h1>
         <p class="hero__subtitle">
-          Pour chaque match du soir, Match&nbsp;&amp;&nbsp;Munch suggère deux
-          recettes inspirées des pays en jeu — une par équipe. 
-          <br>Football et cuisine enfin réunis.
+          Choisissez un match, Marco vous concocte deux recettes
+          inspirées des pays en jeu — une par équipe. Régénérez à volonté,
+          sauvegardez vos favoris, et transformez chaque soirée foot en expérience culinaire.
         </p>
-        <a routerLink="/matches" class="hero__cta">
-          Voir les matchs du soir →
-        </a>
+        <div class="hero__cta-group">
+          <a routerLink="/matches" class="hero__cta">
+            Voir les matchs du soir →
+          </a>
+          <a routerLink="/register" class="hero__cta-secondary">
+            Créer un compte gratuit
+          </a>
+        </div>
         <div class="hero__social-proof">
           <div class="hero__faces">
             <div class="face" style="background:#dbeafe"></div>
             <div class="face" style="background:#fce7d6"></div>
             <div class="face" style="background:#d1fae5"></div>
           </div>
-          <span>8 matchs ce soir · Gratuit · Sans inscription</span>
+          @if (todayMatchCount() !== null && todayMatchCount()! > 0) {
+            <span>{{ todayMatchCount() }} match{{ todayMatchCount()! > 1 ? 's' : '' }} ce soir · Gratuit · Favoris avec un compte</span>
+          } @else {
+            <span>Matchs disponibles ce soir · Gratuit · Favoris avec un compte</span>
+          }
         </div>
       </div>
 
@@ -112,15 +122,15 @@
         </div>
 
         <div class="how__step">
-          <div class="how__step-icon">🍳</div>
-          <h3>Découvrez deux recettes</h3>
-          <p>Une recette par pays en jeu, inspirée des spécialités culinaires locales. Regénérez à volonté.</p>
+          <div class="how__step-icon">🧑‍🍳</div>
+          <h3>Marco cuisine pour vous</h3>
+          <p>Notre agent IA passionné de foot génère à la demande deux recettes ancrées dans la cuisine régionale de chaque pays. Regénérez à volonté.</p>
         </div>
 
         <div class="how__step">
-          <div class="how__step-icon">🛒</div>
-          <h3>Cuisinez &amp; régalez-vous</h3>
-          <p>Commandez les ingrédients via HelloFresh ou Carrefour Drive, cuisinez et regardez le match.</p>
+          <div class="how__step-icon">⭐</div>
+          <h3>Sauvegardez vos favoris</h3>
+          <p>Créez un compte gratuit pour retrouver vos recettes préférées, noter les plats de Marco et ne plus jamais perdre une bonne idée.</p>
         </div>
 
       </div>
@@ -131,10 +141,15 @@
   <section class="banner">
     <div class="banner__inner">
       <h2 class="banner__title">Prêt pour le coup d'envoi ?</h2>
-      <p class="banner__sub">Ce soir, on mange bien.</p>
-      <a routerLink="/matches" class="banner__btn">
-        Voir les matchs →
-      </a>
+      <p class="banner__sub">Ce soir, on mange bien. Créez un compte pour sauvegarder vos recettes et ne plus jamais chercher quoi cuisiner.</p>
+      <div class="banner__cta-group">
+        <a routerLink="/register" class="banner__btn">
+          Créer un compte gratuit →
+        </a>
+        <a routerLink="/matches" class="banner__btn-ghost">
+          Voir les matchs d'abord
+        </a>
+      </div>
     </div>
   </section>
 
