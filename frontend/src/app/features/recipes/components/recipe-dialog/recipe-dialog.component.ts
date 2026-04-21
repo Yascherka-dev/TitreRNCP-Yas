@@ -79,37 +79,27 @@ export class RecipeDialogComponent {
   }
 
   print() {
-    // Le problème : mat-dialog-content a max-height: 62vh + overflow: auto
-    // Le navigateur imprime uniquement la portion visible du scroll — pas tout le contenu
-    // Solution : on enlève ces contraintes AVANT d'imprimer, on restaure APRÈS
+    // On cible mat-dialog-content ET le wrapper interne M3 qui peut avoir sa propre hauteur fixe
+    const content     = document.querySelector('mat-dialog-content') as HTMLElement;
+    const innerScroll = document.querySelector('.mat-mdc-dialog-inner-scroll-container') as HTMLElement;
 
-    // document.querySelector cherche le premier élément mat-dialog-content dans la page
-    // "as HTMLElement" dit à TypeScript "traite ce résultat comme un élément HTML"
-    const content = document.querySelector('mat-dialog-content') as HTMLElement;
+    // Reset scroll + suppression des contraintes de hauteur — synchrone, avant window.print()
+    [content, innerScroll].forEach(el => {
+      if (!el) return;
+      el.scrollTop = 0;
+      el.style.setProperty('max-height', 'none',    'important');
+      el.style.setProperty('overflow',   'visible', 'important');
+    });
 
-    if (content) {
-      // scrollTop = position verticale du scroll (0 = tout en haut)
-      // On remonte en haut pour être sûr que le contenu part depuis le début
-      content.scrollTop = 0;
-
-      // setProperty avec 'important' écrase tous les autres styles (même Material)
-      content.style.setProperty('max-height', 'none', 'important');
-      content.style.setProperty('overflow', 'visible', 'important');
-    }
-
-    // window.addEventListener écoute l'événement 'afterprint'
-    // afterprint se déclenche quand l'utilisateur ferme la fenêtre d'impression
-    // { once: true } = l'écouteur se supprime automatiquement après un seul déclenchement
     window.addEventListener('afterprint', () => {
-      if (content) {
-        // removeProperty enlève les styles inline qu'on avait ajoutés
-        // → mat-dialog-content retrouve ses styles SCSS d'origine (62vh + scroll)
-        content.style.removeProperty('max-height');
-        content.style.removeProperty('overflow');
-      }
+      [content, innerScroll].forEach(el => {
+        if (!el) return;
+        el.style.removeProperty('max-height');
+        el.style.removeProperty('overflow');
+      });
     }, { once: true });
 
-    // On ouvre la fenêtre d'impression du navigateur
+    // Appel synchrone — pas de setTimeout qui laisserait le temps au scroll de se réinitialiser
     window.print();
   }
 

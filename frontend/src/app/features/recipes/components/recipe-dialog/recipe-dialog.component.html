@@ -26,6 +26,7 @@
     <!-- Titre + tags -->
     <div class="recipe-dialog__title-row">
       <h2>{{ recipe.title }}</h2>
+      <p class="recipe-dialog__marco-credit">🧑‍🍳 Recette générée par Marco</p>
       <div class="tags">
         @for (tag of recipe.tags; track tag) {
           <mat-chip>{{ tag }}</mat-chip>
