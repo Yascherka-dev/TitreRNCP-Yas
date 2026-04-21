@@ -12,7 +12,7 @@ class Recipe(models.Model):
     ingredients       = models.JSONField(default=list)
     etapes            = models.JSONField(default=list)
     tags              = models.JSONField(default=list)
-    image_url         = models.URLField(blank=True)
+    image_url         = models.URLField(max_length=500, blank=True)
 
     def __str__(self):
         return f"{self.titre} ({self.pays})"
