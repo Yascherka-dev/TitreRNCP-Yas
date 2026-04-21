@@ -28,12 +28,21 @@ export class FavoritesComponent implements OnInit {
   allRecipes = signal<Recipe[]>([]);
 
   openRecipe(recipe: Recipe) {
-  this.dialog.open(RecipeDialogComponent, {
-    data: recipe,
-    width: '680px',
-    maxHeight: '90vh',
-  });
-}
+    this.dialog.open(RecipeDialogComponent, {
+      data: recipe,
+      width: '680px',
+      maxHeight: '90vh',
+    });
+  }
+
+  removeFavorite(type: 'match' | 'recette', refId: string, event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const favId = this.favoritesService.getFavoriteId(type, refId);
+    if (favId !== undefined) {
+      this.favoritesService.removeFavorite(favId).subscribe();
+    }
+  }
 
 
   favoriteMatches = computed(() => {

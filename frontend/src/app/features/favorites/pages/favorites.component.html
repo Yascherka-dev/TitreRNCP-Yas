@@ -24,6 +24,9 @@
       <div class="fav-grid">
         @for (match of favoriteMatches(); track match.id) {
           <a class="match-tile" [routerLink]="['/matches', match.id]">
+            <button class="tile-delete" (click)="removeFavorite('match', match.id, $event)" aria-label="Retirer des favoris">
+              <mat-icon>close</mat-icon>
+            </button>
             <div class="match-tile__body">
 
               <div class="match-tile__team">
@@ -66,7 +69,10 @@
     } @else {
       <div class="fav-grid">
         @for (recipe of favoriteRecipes(); track recipe.id) {
-          <div class="recipe-tile" (click)="openRecipe(recipe)">
+          <div class="recipe-tile" role="button" tabindex="0" (click)="openRecipe(recipe)">
+            <button class="tile-delete" (click)="removeFavorite('recette', recipe.id, $event)" aria-label="Retirer des favoris">
+              <mat-icon>close</mat-icon>
+            </button>
             <div class="recipe-tile__img-wrap">
               @if (recipe.imageUrl) {
                 <img [src]="recipe.imageUrl" [alt]="recipe.title" />
@@ -91,7 +97,8 @@
   </section>
 
 
-  <!-- Équipes -->
+  @if (false) {
+  <!-- Équipes — feature not yet available -->
   <section class="fav-section">
     <div class="fav-section__head">
       <span class="fav-section__label">Équipes</span>
@@ -102,6 +109,7 @@
       <p>Bientôt disponible</p>
     </div>
   </section>
+  }
 
   </div><!-- /fav-columns -->
 
