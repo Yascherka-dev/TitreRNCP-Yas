@@ -188,6 +188,48 @@
   }
 }
 
+// ── Pagination ───────────────────────────────────
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--mm-border);
+
+  &__btn {
+    padding: 0.5rem 1.25rem;
+    background: #fff;
+    border: 1px solid var(--mm-border);
+    border-radius: var(--mm-radius-pill);
+    font-family: var(--mm-font);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--mm-text);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+
+    &:hover:not(:disabled) {
+      border-color: var(--mm-text);
+      box-shadow: var(--mm-shadow-sm);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  &__info {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--mm-text-sub);
+    min-width: 80px;
+    text-align: center;
+  }
+}
+
 // ── Pill filter buttons ──────────────────────────
 .filter-pill {
   display: inline-flex;

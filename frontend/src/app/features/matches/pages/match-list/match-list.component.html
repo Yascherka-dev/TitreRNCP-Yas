@@ -90,7 +90,7 @@
           class="date-input"
           type="date"
           [ngModel]="selectedDate()"
-          (ngModelChange)="selectedDate.set($event)"
+          (ngModelChange)="setDate($event)"
         />
         @if (selectedDate()) {
           <button class="filter-pill filter-pill--clear" (click)="clearDate()">✕ Effacer</button>
@@ -107,7 +107,7 @@
         <app-skeleton-match-card />
       }
     } @else {
-      @for (match of filteredMatches(); track match.id) {
+      @for (match of paginatedMatches(); track match.id) {
         <app-match-card [match]="match" />
       }
       @empty {
@@ -118,5 +118,18 @@
       }
     }
   </div>
+
+  <!-- Pagination -->
+  @if (!loading() && totalPages() > 1) {
+    <div class="pagination">
+      <button class="pagination__btn" [disabled]="currentPage() === 1" (click)="prevPage()">
+        ← Précédent
+      </button>
+      <span class="pagination__info">Page {{ currentPage() }} / {{ totalPages() }}</span>
+      <button class="pagination__btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">
+        Suivant →
+      </button>
+    </div>
+  }
 
 </div>

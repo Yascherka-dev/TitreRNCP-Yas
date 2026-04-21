@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatchCardComponent } from '../../components/match-card/match-card.component';
@@ -22,13 +23,17 @@ export class MatchListComponent implements OnInit {
   today = new Date();
   matches = signal<Match[]>([]);
   loading = signal(true);
-  skeletonItems = Array(8);
+  skeletonItems = Array.from({ length: 8 });
 
   selectedLeague   = signal<number | 'all'>('all');
   selectedCountry  = signal<string | 'all'>('all');
   selectedDate     = signal<string | null>(null);  // format YYYY-MM-DD
   countrySearch    = signal('');
   countryDropdown  = signal(false);
+
+  readonly PAGE_SIZE = 10;
+  currentPage  = signal(1);
+  totalPages   = computed(() => Math.ceil(this.filteredMatches().length / this.PAGE_SIZE));
 
   // Compétitions uniques extraites des matchs chargés
   leagues = computed<LeagueFilter[]>(() => {
@@ -56,6 +61,11 @@ export class MatchListComponent implements OnInit {
   filteredCountries = computed<string[]>(() => {
     const q = this.countrySearch().toLowerCase().trim();
     return q ? this.countries().filter(c => c.toLowerCase().includes(q)) : this.countries();
+  });
+
+  paginatedMatches = computed<Match[]>(() => {
+    const start = (this.currentPage() - 1) * this.PAGE_SIZE;
+    return this.filteredMatches().slice(start, start + this.PAGE_SIZE);
   });
 
   // Applique les trois filtres en même temps
@@ -88,23 +98,36 @@ export class MatchListComponent implements OnInit {
       });
     }
 
-    return result;
+    // Live → à venir → terminés, puis par date croissante dans chaque groupe
+    const order = (m: Match) => {
+      const s = m.status.short;
+      if (s === 'LIVE' || s === 'HT') return 0;
+      if (s === 'NS') return 1;
+      return 2;
+    };
+    return result.slice().sort((a, b) => {
+      const diff = order(a) - order(b);
+      return diff !== 0 ? diff : a.date.getTime() - b.date.getTime();
+    });
   });
+
+  private destroyRef = inject(DestroyRef);
 
   constructor(private matchesService: MatchesService) {}
 
   ngOnInit() {
-    this.matchesService.getFixtures().subscribe({
+    this.matchesService.getFixtures().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: data => { this.matches.set(data); this.loading.set(false); },
       error: ()   => { this.loading.set(false); }
     });
   }
 
-  selectLeague(id: number | 'all')  { this.selectedLeague.set(id); }
+  selectLeague(id: number | 'all')  { this.selectedLeague.set(id); this.currentPage.set(1); }
   selectCountry(c: string | 'all') {
     this.selectedCountry.set(c);
     this.countryDropdown.set(false);
     this.countrySearch.set('');
+    this.currentPage.set(1);
   }
   isLeagueSelected(id: number | 'all') { return this.selectedLeague() === id; }
   isCountrySelected(c: string | 'all') { return this.selectedCountry() === c; }
@@ -122,7 +145,13 @@ export class MatchListComponent implements OnInit {
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
     this.selectedDate.set(`${d.getFullYear()}-${mm}-${dd}`);
+    this.currentPage.set(1);
   }
 
-  clearDate() { this.selectedDate.set(null); }
+  clearDate() { this.selectedDate.set(null); this.currentPage.set(1); }
+
+  setDate(value: string | null) { this.selectedDate.set(value); this.currentPage.set(1); }
+
+  prevPage() { this.currentPage.update(p => Math.max(1, p - 1)); }
+  nextPage() { this.currentPage.update(p => Math.min(this.totalPages(), p + 1)); }
 }
