@@ -21,8 +21,11 @@ export class RecipesService {
     return {
       id:          String(r.id),
       title:       r.titre ?? '',
-      country: this.countryNames[r.pays?.toLowerCase()] ?? r.pays ?? '',
+      country:     this.countryNames[r.pays?.toLowerCase()] ?? r.pays ?? '',
       countryCode: r.pays ?? '',
+      region:      r.region ?? '',
+      equipe:      r.equipe ?? '',
+      typePlat:    r.type_plat ?? 'salé',
       flag:        '',
       description: r.description ?? '',
       prepTime:    r.temps_preparation ?? 0,

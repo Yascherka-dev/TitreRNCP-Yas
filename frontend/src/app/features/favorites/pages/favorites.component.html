@@ -25,7 +25,7 @@
         @for (match of favoriteMatches(); track match.id) {
           <a class="match-tile" [routerLink]="['/matches', match.id]">
             <button class="tile-delete" (click)="removeFavorite('match', match.id, $event)" aria-label="Retirer des favoris">
-              <mat-icon>close</mat-icon>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
             <div class="match-tile__body">
 
@@ -71,7 +71,7 @@
         @for (recipe of favoriteRecipes(); track recipe.id) {
           <div class="recipe-tile" role="button" tabindex="0" (click)="openRecipe(recipe)">
             <button class="tile-delete" (click)="removeFavorite('recette', recipe.id, $event)" aria-label="Retirer des favoris">
-              <mat-icon>close</mat-icon>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
             <div class="recipe-tile__img-wrap">
               @if (recipe.imageUrl) {

@@ -3,6 +3,9 @@ export interface Recipe {
   title: string;
   country: string;
   countryCode: string;
+  region: string;
+  equipe: string;
+  typePlat: 'salé' | 'sucré';
   flag: string;
   description: string;
   prepTime: number;
@@ -15,10 +18,27 @@ export interface Recipe {
   tags: string[];
 }
 
+export interface Beer {
+  id: string;
+  nom: string;
+  brasserie: string;
+  pays: string;
+  region: string;
+  equipe: string;
+  style: string;
+  description: string;
+  degreAlcool: string | null;
+  imageUrl: string;
+}
+
 export interface MatchSuggestion {
   matchId: string;
-  recipeA: Recipe;
-  recipeB: Recipe;
+  recetteA: Recipe | null;
+  recetteB: Recipe | null;
+  pecheMignonA: Recipe | null;
+  pecheMignonB: Recipe | null;
+  biereA: Beer | null;
+  biereB: Beer | null;
   generatedAt: Date;
 }
 

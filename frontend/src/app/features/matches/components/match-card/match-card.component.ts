@@ -1,9 +1,6 @@
 import { Component, input, computed, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { Match } from '../../../../core/models/fixture.model';
 import { FavoritesService } from '../../../../core/services/favorites.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -11,7 +8,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 @Component({
   selector: 'app-match-card',
   standalone: true,
-  imports: [DatePipe, RouterLink, MatCardModule, MatButtonModule, MatIconModule],
+  imports: [DatePipe, RouterLink],
   templateUrl: './match-card.component.html',
   styleUrl: './match-card.component.scss',
 })

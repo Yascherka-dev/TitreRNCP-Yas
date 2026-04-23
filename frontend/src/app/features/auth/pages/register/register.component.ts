@@ -19,6 +19,7 @@ export class RegisterComponent {
   password = '';
   nom      = '';
   prenom   = '';
+  showPw   = false;
 
   // Signal pour désactiver le bouton pendant l'appel API
   loading = signal(false);

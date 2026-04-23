@@ -100,8 +100,8 @@
 
       @if (suggestion(); as s) {
         <div class="recipes-grid">
-          <app-recipe-card [recipe]="s.recipeA" />
-          <app-recipe-card [recipe]="s.recipeB" />
+          @if (s.recetteA) { <app-recipe-card [recipe]="s.recetteA" /> }
+          @if (s.recetteB) { <app-recipe-card [recipe]="s.recetteB" /> }
         </div>
       } @else if (suggestionError()) {
         <div class="recipes-feedback recipes-feedback--error">
@@ -122,6 +122,42 @@
         </div>
       }
     </section>
+
+    <!-- Section péché mignon -->
+    @if (suggestion(); as s) {
+      @if (s.pecheMignonA || s.pecheMignonB) {
+        <section class="match-detail__recipes match-detail__peche-mignon">
+          <div class="recipes-header">
+            <div>
+              <h2>🍰 Péché mignon</h2>
+              <p class="recipes-byline">La gourmandise régionale du soir — pour finir en beauté</p>
+            </div>
+          </div>
+          <div class="recipes-grid">
+            @if (s.pecheMignonA) { <app-recipe-card [recipe]="s.pecheMignonA" /> }
+            @if (s.pecheMignonB) { <app-recipe-card [recipe]="s.pecheMignonB" /> }
+          </div>
+        </section>
+      }
+    }
+
+    <!-- Section bières -->
+    @if (suggestion(); as s) {
+      @if (s.biereA || s.biereB) {
+        <section class="match-detail__recipes match-detail__bieres">
+          <div class="recipes-header">
+            <div>
+              <h2>🍺 La bière du match</h2>
+              <p class="recipes-byline">La brasserie locale de chaque équipe — pour trinquer comme un local</p>
+            </div>
+          </div>
+          <div class="recipes-grid">
+            @if (s.biereA) { <app-beer-card [beer]="s.biereA" /> }
+            @if (s.biereB) { <app-beer-card [beer]="s.biereB" /> }
+          </div>
+        </section>
+      }
+    }
 
     <!-- Section commander -->
     <section class="match-detail__partners">

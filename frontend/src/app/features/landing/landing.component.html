@@ -1,163 +1,186 @@
 <div class="landing">
 
+  <!-- ══ NAV ══ -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="logo" routerLink="/">
+        <span class="mark" aria-hidden="true"></span>
+        Match <span class="amp">&amp;</span> Munch
+      </a>
+      <nav class="nav-links" aria-label="Menu">
+        <a routerLink="/matches">Matchs</a>
+        <a routerLink="/favorites">Mes recettes</a>
+      </nav>
+      <div class="nav-spacer"></div>
+      <span class="nav-live"><span class="dot"></span>
+        @if (todayMatchCount() && todayMatchCount()! > 0) {
+          {{ todayMatchCount() }} en direct
+        } @else {
+          En direct
+        }
+      </span>
+      <a class="btn btn-primary" routerLink="/login">Connexion</a>
+    </div>
+  </header>
+
   <!-- ══ HERO ══ -->
   <section class="hero">
-    <div class="hero__inner">
+    <div class="hero-grad"></div>
+    <div class="hero-grid"></div>
+    <div class="motif-layer"></div>
+    <canvas class="hero-particles" #particlesCanvas></canvas>
+    <div class="hero-noise"></div>
 
-      <div class="hero__text">
-        <p class="hero__eyebrow">⚽ Football · 🍽️ Cuisine</p>
-        <h1 class="hero__title">
-          Le match commence.<br>
-          <span class="hero__title-accent">Et ce soir, on mange bien.</span>
-        </h1>
-        <p class="hero__subtitle">
-          Choisissez un match, Marco vous concocte deux recettes
-          inspirées des pays en jeu — une par équipe. Régénérez à volonté,
-          sauvegardez vos favoris, et transformez chaque soirée foot en expérience culinaire.
-        </p>
-        <div class="hero__cta-group">
-          <a routerLink="/matches" class="hero__cta">
-            Voir les matchs du soir →
+    <!-- Ballon décoratif -->
+    <svg class="hero-ball" viewBox="0 0 100 100" aria-hidden="true">
+      <defs><radialGradient id="ballg" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#d8d8d8"/></radialGradient></defs>
+      <circle cx="50" cy="50" r="44" fill="url(#ballg)" stroke="#111" stroke-width="2"/>
+      <path d="M50 8 L62 22 L56 42 L44 42 L38 22 Z" fill="#111"/>
+      <path d="M92 50 L78 56 L68 44 L76 30" fill="#111"/>
+      <path d="M8 50 L22 56 L32 44 L24 30" fill="#111"/>
+      <path d="M50 92 L38 78 L50 66 L62 78 Z" fill="#111"/>
+    </svg>
+
+    <div class="hero-stage">
+      <div class="hero-content">
+        <span class="hero-badge">
+          <span class="tick"><span></span><span></span><span></span><span></span></span>
+          Marco est en cuisine · 847 recettes générées aujourd'hui
+        </span>
+        <h1>Le match<br/>commence,<br/><span class="ital">le dîner aussi.</span></h1>
+        <p class="hero-lede">Choisis un match. Marco invente deux recettes — une par pays — en moins de 8 secondes. Tu regardes, tu manges, tu gagnes.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-orange btn-lg" routerLink="/matches">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg>
+            Choisir un match
           </a>
-          <a routerLink="/register" class="hero__cta-secondary">
-            Créer un compte gratuit
+          <a class="btn btn-ghost-dark btn-lg" routerLink="/register">
+            Créer un compte →
           </a>
         </div>
-        <div class="hero__social-proof">
-          <div class="hero__faces">
-            <div class="face" style="background:#dbeafe"></div>
-            <div class="face" style="background:#fce7d6"></div>
-            <div class="face" style="background:#d1fae5"></div>
-          </div>
-          @if (todayMatchCount() !== null && todayMatchCount()! > 0) {
-            <span>{{ todayMatchCount() }} match{{ todayMatchCount()! > 1 ? 's' : '' }} ce soir · Gratuit · Favoris avec un compte</span>
-          } @else {
-            <span>Matchs disponibles ce soir · Gratuit · Favoris avec un compte</span>
-          }
+        <div class="hero-stats">
+          <div class="stat"><span class="n">8<span class="ital">s</span></span><span class="l">Marco cuisine</span></div>
+          <div class="stat"><span class="n">124<span class="ital">k</span></span><span class="l">Recettes servies</span></div>
+          <div class="stat"><span class="n">62<span class="ital">pays</span></span><span class="l">Couverts</span></div>
         </div>
       </div>
 
-      <div class="hero__card-wrap">
-        <!-- Carte match principale -->
-        <div class="match-preview">
-
-          <div class="match-preview__league">
-            <img
-              src="https://media.api-sports.io/football/leagues/2.png"
-              alt="Champions League"
-            />
-            <span>Champions League · Round of 16</span>
+      <!-- Scoreboard flottant -->
+      <div class="hero-scoreboard">
+        <div class="score-card">
+          <div class="score-kicker">
+            <span class="live-dot"></span>
+            Champions League · ce soir
           </div>
-
-          <div class="match-preview__teams">
-            <div class="match-preview__team">
-              <div class="match-preview__logo-wrap">
+          <div class="score-teams">
+            <div class="st">
+              <div class="sc-crest">
                 <img src="https://media.api-sports.io/football/teams/85.png" alt="PSG" />
               </div>
-              <span class="match-preview__team-name">Paris SG</span>
-              <span class="match-preview__country">France</span>
+              <div class="nm">Paris SG</div>
             </div>
-
-            <div class="match-preview__vs">
-              <span class="match-preview__time">21:00</span>
-              <span class="match-preview__vs-label">vs</span>
-            </div>
-
-            <div class="match-preview__team">
-              <div class="match-preview__logo-wrap">
+            <div class="big-time">21:00<small>Coup d'envoi</small></div>
+            <div class="st">
+              <div class="sc-crest">
                 <img src="https://media.api-sports.io/football/teams/157.png" alt="Bayern" />
               </div>
-              <span class="match-preview__team-name">Bayern Munich</span>
-              <span class="match-preview__country">Allemagne</span>
+              <div class="nm">Bayern</div>
             </div>
           </div>
-
-          <div class="match-preview__divider"></div>
-
-          <div class="match-preview__suggestions">
-            <span class="match-preview__suggestions-label">Recettes du soir</span>
-            <div class="match-preview__pills">
-              <span class="pill">🥖 Bœuf Bourguignon</span>
-              <span class="pill">🥨 Schweinshaxe</span>
-            </div>
-          </div>
-
-          <button class="match-preview__btn" disabled>
-            Voir les recettes
-          </button>
-
-        </div>
-
-        <!-- Carte flottante décorative -->
-        <div class="float-card float-card--top">
-          <span class="float-card__icon">🍽️</span>
-          <div>
-            <div class="float-card__title">Soirée parfaite</div>
-            <div class="float-card__sub">Football + bonne bouffe</div>
-          </div>
-        </div>
-
-        <div class="float-card float-card--bottom">
-          <span class="float-card__icon">⚽</span>
-          <div>
-            <div class="float-card__title">8 matchs ce soir</div>
-            <div class="float-card__sub">Champions League, Ligue 1…</div>
+          <div class="score-hint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4"/><path d="M6 3h12v9a6 6 0 0 1-12 0V3z"/></svg>
+            Marco propose : <span class="ital">Confit de canard</span> × Knödel
           </div>
         </div>
       </div>
-
     </div>
-  </section>
 
-  <!-- ══ HOW ══ -->
-  <section class="how">
-    <div class="how__inner">
-      <h2 class="how__headline">Comment ça marche ?</h2>
-      <div class="how__steps">
-
-        <div class="how__step">
-          <div class="how__step-icon">📅</div>
-          <h3>Choisissez un match</h3>
-          <p>Tous les matchs du soir, filtrés par compétition. Champions League, Ligue 1, Premier League…</p>
-        </div>
-
-        <div class="how__step">
-          <div class="how__step-icon">🧑‍🍳</div>
-          <h3>Marco cuisine pour vous</h3>
-          <p>Notre agent IA passionné de foot génère à la demande deux recettes ancrées dans la cuisine régionale de chaque pays. Regénérez à volonté.</p>
-        </div>
-
-        <div class="how__step">
-          <div class="how__step-icon">⭐</div>
-          <h3>Sauvegardez vos favoris</h3>
-          <p>Créez un compte gratuit pour retrouver vos recettes préférées, noter les plats de Marco et ne plus jamais perdre une bonne idée.</p>
-        </div>
-
+    <!-- Ticker -->
+    <div class="hero-ticker" aria-hidden="true">
+      <div class="track">
+        <span>⚽ PSG <span class="ital">vs</span> Bayern</span><span class="sep">◆</span>
+        <span>🍲 Confit × Knödel</span><span class="sep">◆</span>
+        <span>⚽ Real Madrid <span class="ital">vs</span> Liverpool</span><span class="sep">◆</span>
+        <span>🍲 Paella × Fish &amp; chips</span><span class="sep">◆</span>
+        <span>⚽ Argentine <span class="ital">vs</span> Brésil</span><span class="sep">◆</span>
+        <span>🍲 Asado × Feijoada</span><span class="sep">◆</span>
+        <span>⚽ Japon <span class="ital">vs</span> Pays-Bas</span><span class="sep">◆</span>
+        <span>🍲 Ramen × Stamppot</span><span class="sep">◆</span>
+        <span>⚽ PSG <span class="ital">vs</span> Bayern</span><span class="sep">◆</span>
+        <span>🍲 Confit × Knödel</span><span class="sep">◆</span>
+        <span>⚽ Real Madrid <span class="ital">vs</span> Liverpool</span><span class="sep">◆</span>
+        <span>🍲 Paella × Fish &amp; chips</span><span class="sep">◆</span>
+        <span>⚽ Argentine <span class="ital">vs</span> Brésil</span><span class="sep">◆</span>
+        <span>🍲 Asado × Feijoada</span><span class="sep">◆</span>
+        <span>⚽ Japon <span class="ital">vs</span> Pays-Bas</span><span class="sep">◆</span>
+        <span>🍲 Ramen × Stamppot</span><span class="sep">◆</span>
       </div>
     </div>
   </section>
 
-  <!-- ══ CTA ══ -->
-  <section class="banner">
-    <div class="banner__inner">
-      <h2 class="banner__title">Prêt pour le coup d'envoi ?</h2>
-      <p class="banner__sub">Ce soir, on mange bien. Créez un compte pour sauvegarder vos recettes et ne plus jamais chercher quoi cuisiner.</p>
-      <div class="banner__cta-group">
-        <a routerLink="/register" class="banner__btn">
-          Créer un compte gratuit →
+  <!-- ══ COMMENT ÇA MARCHE ══ -->
+  <section class="hiw container">
+    <div class="hiw-head reveal">
+      <span class="kicker">Trois temps, un match, un dîner</span>
+      <h2>Du <span class="ital">coup de sifflet</span> à l'assiette.</h2>
+      <p>Pas de recette au hasard : Marco part des drapeaux, du contexte, de l'heure du match, et compose deux plats qui tiennent la route.</p>
+    </div>
+    <div class="hiw-steps">
+      <div class="hiw-step reveal">
+        <div class="step-num">1</div>
+        <div class="ico-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 13a5 5 0 1 1 10 0"/><path d="M14 9h7l-2 4 2 4h-7"/><circle cx="9" cy="13" r="1.5"/></svg>
+        </div>
+        <h3>Coup d'envoi</h3>
+        <p>Parcours le calendrier, filtre par compétition, date ou équipe. Tout le planning de la semaine est là.</p>
+      </div>
+      <div class="hiw-step reveal d1">
+        <div class="step-num">2</div>
+        <div class="ico-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 13v6a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-6"/><path d="M5 13a4 4 0 0 1-1-8 5 5 0 0 1 9-2 5 5 0 0 1 9 2 4 4 0 0 1-1 8"/><path d="M9 17h6"/></svg>
+        </div>
+        <h3>Marco cuisine</h3>
+        <p>Deux recettes ancrées dans les pays qui s'affrontent. Ingrédients listés, timing calé sur le coup d'envoi.</p>
+      </div>
+      <div class="hiw-step reveal d2">
+        <div class="step-num">3</div>
+        <div class="ico-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 15h18"/><path d="M4 15a8 8 0 0 1 16 0"/><path d="M12 7v-3M10 4h4"/><path d="M3 19h18"/></svg>
+        </div>
+        <h3>À table</h3>
+        <p>Tu sauvegardes tes favoris, tu régénères à l'envi, tu retrouves tout dans ton carnet Match &amp; Munch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ BANNER CTA ══ -->
+  <section class="banner container">
+    <div class="banner-inner reveal">
+      <span class="banner-eyebrow">Prêt pour ce soir ?</span>
+      <h2>Un match ce soir ?<br/><span class="ital">Marco a une idée.</span></h2>
+      <p>Gratuit, sans inscription. Créez un compte pour sauvegarder vos recettes préférées.</p>
+      <div class="banner-ctas">
+        <a class="btn btn-orange btn-lg" routerLink="/matches">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg>
+          Voir les matchs
         </a>
-        <a routerLink="/matches" class="banner__btn-ghost">
-          Voir les matchs d'abord
-        </a>
+        <a class="btn btn-ghost btn-lg" routerLink="/register">Créer un compte gratuit</a>
       </div>
     </div>
   </section>
 
   <!-- ══ FOOTER ══ -->
-  <footer class="landing-footer">
-    <div class="landing-footer__inner">
-      <span class="landing-footer__logo">🍽️ Match &amp; Munch</span>
-      <span class="landing-footer__copy">Projet étudiant · RNCP 37873 · 2025</span>
+  <footer>
+    <div class="container row">
+      <a class="logo" routerLink="/">
+        <span class="mark" aria-hidden="true"></span>
+        Match <span class="amp">&amp;</span> Munch
+      </a>
+      <div class="links">
+        <a href="#">Mentions</a>
+        <a href="#">À propos</a>
+        <a href="#">Contact</a>
+      </div>
     </div>
   </footer>
 

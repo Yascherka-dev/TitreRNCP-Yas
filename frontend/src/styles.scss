@@ -1,422 +1,425 @@
-// Custom Theming for Angular Material — Match & Munch
+// ═══════════════════════════════════════════════════════════
+//  MATCH & MUNCH — Design System v2 "Stadium"
+//  Navy nuit + Orange feu · Figtree + Instrument Serif
+// ═══════════════════════════════════════════════════════════
 @use '@angular/material' as mat;
 
-// ── Palette ────────────────────────────────────────────────────────────────
-$color-primary:   #1E3A5F;
-$color-accent:    #F4801A;
-$color-bg:        #FFFFFF;
-$color-bg-soft:   #F7F6F3;   // Airbnb warm off-white pour sections alternées
-$color-surface:   #FFFFFF;
-$color-text:      #1A1A1A;
-$color-text-sub:  #717171;   // Airbnb's secondary text exact
-$color-border:    #DDDDDD;   // Airbnb's border exact
-$color-success:   #008A05;
-$color-error:     #C13515;
-
-// ── Material theme ─────────────────────────────────────────────────────────
 html {
   @include mat.theme((
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$orange-palette,
-    ),
+    color: (theme-type: light, primary: mat.$azure-palette, tertiary: mat.$orange-palette),
     typography: Roboto,
     density: 0,
   ));
 }
 
+// ── Tokens ────────────────────────────────────────────────
 :root {
-  --mat-sys-primary:             #{$color-primary};
-  --mat-sys-on-primary:          #FFFFFF;
-  --mat-sys-primary-container:   #D6E4FF;
-  --mat-sys-secondary:           #{$color-accent};
-  --mat-sys-on-secondary:        #FFFFFF;
-  --mat-sys-secondary-container: #FFE0B2;
-  --mat-sys-surface:             #{$color-surface};
-  --mat-sys-on-surface:          #{$color-text};
-  --mat-sys-background:          #{$color-bg};
-  --mat-sys-error:               #{$color-error};
+  --navy-900:   #0A1C36;
+  --navy-800:   #0F2747;
+  --navy-700:   #153560;
+  --navy-600:   #1E3A5F;
+  --orange-600: #E86B00;
+  --orange-500: #F4801A;
+  --orange-400: #FFB547;
+  --orange-50:  #FFF3E4;
+  --field:      oklch(70% 0.15 145);
+  --cream:      #F7F6F3;
+  --paper:      #FFFFFF;
+  --ink:        #0B1220;
+  --ink-2:      #3F4A5E;
+  --ink-3:      #7C8599;
+  --line:       #E7E3DB;
+  --line-2:     #DDD6C7;
 
-  // ── Tokens globaux ────────────────────────────────────────────────────
-  --mm-primary:     #{$color-primary};
-  --mm-accent:      #{$color-accent};
-  --mm-bg:          #{$color-bg};
-  --mm-bg-soft:     #{$color-bg-soft};
-  --mm-surface:     #{$color-surface};
-  --mm-text:        #{$color-text};
-  --mm-text-sub:    #{$color-text-sub};
-  --mm-border:      #{$color-border};
-  --mm-success:     #{$color-success};
-  --mm-error:       #{$color-error};
+  --shadow-sm:   0 1px 0 rgba(15,39,71,.04), 0 2px 6px rgba(15,39,71,.05);
+  --shadow-md:   0 2px 0 rgba(15,39,71,.04), 0 18px 40px -18px rgba(15,39,71,.25);
+  --shadow-glow: 0 30px 80px -30px rgba(244,128,26,.55), 0 2px 0 rgba(15,39,71,.06);
 
-  // ── Typographie (Airbnb Cereal-like → Figtree) ────────────────────────
-  --mm-font: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
+  --r-sm:   10px;
+  --r-md:   16px;
+  --r-lg:   22px;
+  --r-xl:   28px;
+  --r-pill: 999px;
 
-  // ── Rayons — généreux, arrondis comme Airbnb ─────────────────────────
-  --mm-radius-sm:  8px;
-  --mm-radius-md:  12px;
-  --mm-radius-lg:  16px;
-  --mm-radius-xl:  24px;
-  --mm-radius-pill: 99px;
+  --font:  "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --serif: "Instrument Serif", ui-serif, Georgia, serif;
 
-  // ── Ombres Airbnb-style — douces et chaleureuses ──────────────────────
-  --mm-shadow-xs:  0 1px 2px rgba(0,0,0,0.08);
-  --mm-shadow-sm:  0 2px 8px rgba(0,0,0,0.08);
-  --mm-shadow-md:  0 6px 16px rgba(0,0,0,0.12);
-  --mm-shadow-lg:  0 14px 40px rgba(0,0,0,0.14);
+  // Backward-compat aliases (Angular Material overrides)
+  --mm-primary:     #0F2747;
+  --mm-accent:      #F4801A;
+  --mm-bg:          #FFFFFF;
+  --mm-bg-soft:     #F7F6F3;
+  --mm-surface:     #FFFFFF;
+  --mm-text:        #0B1220;
+  --mm-text-sub:    #7C8599;
+  --mm-border:      #E7E3DB;
+  --mm-font:        "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --mm-radius-sm:   10px;
+  --mm-radius-md:   16px;
+  --mm-radius-lg:   22px;
+  --mm-radius-xl:   28px;
+  --mm-radius-pill: 999px;
+  --mm-shadow-xs:   0 1px 2px rgba(0,0,0,.08);
+  --mm-shadow-sm:   var(--shadow-sm);
+  --mm-shadow-md:   var(--shadow-md);
+  --mm-shadow-lg:   0 14px 40px rgba(0,0,0,.14);
+  --mm-secondary:   #F4801A;
 
-  // ── Secondary conservé pour compatibilité composants existants ────────
-  --mm-secondary:  #{$color-accent};
+  --mat-sys-primary:           #0F2747;
+  --mat-sys-on-primary:        #FFFFFF;
+  --mat-sys-primary-container: #D6E4FF;
+  --mat-sys-secondary:         #F4801A;
+  --mat-sys-on-secondary:      #FFFFFF;
+  --mat-sys-surface:           #FFFFFF;
+  --mat-sys-on-surface:        #0B1220;
+  --mat-sys-background:        #F7F6F3;
+  --mat-sys-error:             #C13515;
 }
 
-// ── Reset ──────────────────────────────────────────────────────────────────
-html, body {
-  height: 100%;
-  margin: 0;
-  background: #{$color-bg};
-  color: #{$color-text};
-  font-family: var(--mm-font);
-  font-size: 16px;
-  line-height: 1.5;
+// ── Reset ─────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--cream);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01","cv11";
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+h1,h2,h3,h4,h5,h6 { margin: 0; line-height: 1.2; font-family: var(--font); }
+
+// ── Layout ────────────────────────────────────────────────
+.container { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+
+// ── Navbar ────────────────────────────────────────────────
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: saturate(1.2) blur(14px);
+  background: color-mix(in oklab, var(--cream) 82%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+}
+.nav-inner { display: flex; align-items: center; gap: 28px; padding: 14px 0; }
+
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 20px; letter-spacing: -.01em; cursor: pointer;
+
+  .mark {
+    width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--orange-500), var(--orange-400));
+    box-shadow: inset 0 0 0 1.5px rgba(0,0,0,.08), 0 6px 16px -6px rgba(244,128,26,.6);
+    display: grid; place-items: center; position: relative;
+    &::before {
+      content: ""; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--navy-800);
+      box-shadow: 8px 0 0 0 var(--paper);
+      transform: translateX(-4px);
+    }
+  }
+
+  .amp {
+    font-family: var(--serif); font-style: italic;
+    color: var(--orange-500); font-weight: 400;
+    margin: 0 1px; font-size: 22px; line-height: 1;
+  }
 }
 
-* { box-sizing: border-box; }
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--mm-font);
-  margin: 0;
-  line-height: 1.2;
+.nav-links {
+  display: flex; gap: 22px; margin-left: 8px;
+  a {
+    font-weight: 500; color: var(--ink-2); font-size: 14.5px;
+    position: relative; padding: 6px 2px; text-decoration: none;
+    &::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+      height: 2px; background: var(--orange-500); border-radius: 2px;
+      transform-origin: left; transform: scaleX(0);
+      transition: transform .35s cubic-bezier(.2,.8,.2,1);
+    }
+    &:hover { color: var(--ink); }
+    &:hover::after, &.active::after { transform: scaleX(1); }
+    &.active { color: var(--ink); font-weight: 700; }
+  }
 }
 
-// ── Utilitaires ───────────────────────────────────────────────────────────
-.text-primary { color: $color-primary; }
-.text-accent  { color: $color-accent; }
-.text-sub     { color: $color-text-sub; }
+.nav-spacer { flex: 1; }
 
-// ── Scrollbar ─────────────────────────────────────────────────────────────
+.nav-live {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  padding: 8px 12px; border-radius: var(--r-pill);
+  background: color-mix(in oklab, var(--field) 12%, white);
+  border: 1px solid color-mix(in oklab, var(--field) 35%, transparent);
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--field); animation: pulse 1.6s infinite;
+  }
+}
+
+.nav-hello { font-size: 14px; color: var(--ink-2); }
+.nav-hello strong { color: var(--ink); font-weight: 700; }
+
+// ── Buttons ───────────────────────────────────────────────
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 14.5px; font-family: var(--font);
+  padding: 11px 18px; border-radius: var(--r-pill);
+  border: 1px solid transparent; cursor: pointer;
+  transition: transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .25s, background .2s, color .2s;
+  will-change: transform;
+  svg { width: 16px; height: 16px; flex-shrink: 0; }
+}
+
+.btn-primary {
+  color: white; background: var(--navy-800);
+  box-shadow: 0 1px 0 rgba(255,255,255,.12) inset, 0 6px 18px -10px rgba(10,28,54,.7);
+  &:hover { transform: translateY(-1px); background: var(--navy-900); }
+  &:active { transform: translateY(0); }
+}
+
+.btn-orange {
+  color: white; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--orange-500), var(--orange-600));
+  box-shadow: var(--shadow-glow);
+  &::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%);
+    transform: translateX(-120%); transition: transform .8s cubic-bezier(.2,.8,.2,1);
+  }
+  &:hover::before { transform: translateX(120%); }
+  &:hover { transform: translateY(-1px); }
+}
+
+.btn-ghost {
+  background: transparent; color: var(--ink); border-color: var(--line-2);
+  &:hover { background: white; border-color: var(--navy-800); }
+}
+
+.btn-ghost-dark {
+  background: rgba(255,255,255,.05); color: white; border-color: rgba(255,255,255,.22);
+  &:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.35); }
+}
+
+.btn-white {
+  background: white; color: var(--navy-900);
+  box-shadow: 0 8px 24px -12px rgba(0,0,0,.4);
+  &:hover { transform: translateY(-1px); }
+}
+
+.btn-lg { padding: 15px 22px; font-size: 15.5px; }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+
+// ── Icon Button ───────────────────────────────────────────
+.icon-btn {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 1px solid var(--line-2); background: white;
+  transition: transform .2s, box-shadow .2s, background .2s, color .2s;
+  cursor: pointer; color: var(--ink-2); flex-shrink: 0;
+  &:hover { background: var(--navy-800); color: white; border-color: var(--navy-800); transform: translateY(-2px); }
+  &.fav:hover, &.fav.active {
+    background: var(--orange-500); color: white; border-color: var(--orange-500);
+  }
+}
+
+// ── Pills ─────────────────────────────────────────────────
+.pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: var(--r-pill);
+  background: white; border: 1.5px solid var(--line-2);
+  font-size: 13.5px; font-weight: 600; color: var(--ink-2);
+  cursor: pointer; transition: all .2s; font-family: var(--font);
+  &:hover { border-color: var(--navy-800); color: var(--ink); }
+  &.active { background: var(--navy-800); color: white; border-color: var(--navy-800); }
+  &.orange.active { background: var(--orange-500); border-color: var(--orange-500); }
+}
+
+// ── Scroll Reveal ─────────────────────────────────────────
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);
+  &.in { opacity: 1; transform: none; }
+}
+.reveal.d1 { transition-delay: .08s; }
+.reveal.d2 { transition-delay: .16s; }
+.reveal.d3 { transition-delay: .24s; }
+.reveal.d4 { transition-delay: .32s; }
+.reveal.d5 { transition-delay: .4s;  }
+
+// ── Animations ────────────────────────────────────────────
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--field) 60%, transparent); }
+  80%  { box-shadow: 0 0 0 10px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes pop {
+  0%   { transform: scale(.6); }
+  60%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+@keyframes spin   { to { transform: rotate(360deg); } }
+@keyframes halo {
+  0%   { box-shadow: 0 0 0 0 rgba(244,128,26,.55); }
+  80%  { box-shadow: 0 0 0 18px rgba(244,128,26,0); }
+  100% { box-shadow: 0 0 0 0 rgba(244,128,26,0); }
+}
+@keyframes blink  { 50% { opacity: 0; } }
+@keyframes rise {
+  0%   { opacity: 0; transform: translateY(10px); }
+  30%  { opacity: .7; }
+  100% { opacity: 0; transform: translateY(-30px); }
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes bar {
+  0%, 100% { transform: scaleY(.4); }
+  50%       { transform: scaleY(1); }
+}
+@keyframes drift {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(2%,-1%,0) scale(1.05); }
+  100% { transform: translate3d(-2%,1%,0) scale(1.02); }
+}
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes float   {
+  0%, 100% { transform: rotate(1.5deg) translateY(0); }
+  50%       { transform: rotate(1.5deg) translateY(-8px); }
+}
+@keyframes plateSpin { to { transform: rotate(360deg); } }
+@keyframes ballBounce {
+  0%, 100% { transform: translateY(0) rotate(-10deg); }
+  50%       { transform: translateY(-14px) rotate(10deg); }
+}
+
+// ── Motif layer ───────────────────────────────────────────
+.motif-layer {
+  position: absolute; inset: 0; pointer-events: none; opacity: .08;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><g fill='none' stroke='white' stroke-width='1.2' stroke-linecap='round'><circle cx='30' cy='30' r='10'/><path d='M30 20v20M20 30h20M24 24l12 12M36 24L24 36'/><path d='M110 30c-5 0-8 4-8 8l-2 8h20l-2-8c0-4-3-8-8-8z'/><path d='M100 46h20v4h-20z'/><circle cx='30' cy='110' r='12'/><path d='M18 110h24M30 98v24'/></g></svg>");
+  background-size: 300px 300px;
+}
+
+// ── Footer ────────────────────────────────────────────────
+footer {
+  padding: 48px 0 80px; border-top: 1px solid var(--line);
+  margin-top: 60px; color: var(--ink-3); font-size: 13px;
+  .row { display: flex; justify-content: space-between; align-items: center; }
+  .links { display: flex; gap: 24px; a:hover { color: var(--orange-600); } }
+}
+
+// ── Scrollbar ─────────────────────────────────────────────
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #{$color-border}; border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 99px; }
 
-// ── Impression recette — style magazine/cookbook ───────────────────────────
+// ── Reduced motion ────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
 
+// ═══════════════════════════════════════════════════════════
+//  PRINT — recette (conservé tel quel)
+// ═══════════════════════════════════════════════════════════
 @media print {
+  @page { margin: 0; size: A4 portrait; }
 
-  // @page contrôle les marges physiques de la feuille A4.
-  // margin: 0 supprime la zone où Chrome affiche sa date, son titre et son URL.
-  // Sans cette zone, le navigateur n'a nulle part où les rendre → ils disparaissent.
-  // On compense avec du padding directement sur .recipe-dialog ci-dessous.
-  @page {
-    margin: 0;
-    size: A4 portrait;
-  }
-
-  // ── 1. MASQUER TOUT SAUF LE DIALOG ──────────────────────────────────────
-
-  // body > * = tous les enfants directs du body
-  // :not(.cdk-overlay-container) = "tout sauf le conteneur des dialogs Angular"
-  body > *:not(.cdk-overlay-container) {
-    display: none !important;
-  }
-
-  .cdk-overlay-backdrop {
-    display: none !important;
-  }
-
-  // Sort les wrappers Material du flux "position:fixed" → blocs normaux imprimables
+  body > *:not(.cdk-overlay-container) { display: none !important; }
+  .cdk-overlay-backdrop { display: none !important; }
   .cdk-overlay-container,
   .cdk-global-overlay-wrapper,
   .cdk-overlay-pane {
-    position: static !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    transform: none !important;
-    display: block !important;
+    position: static !important; width: 100% !important;
+    max-width: 100% !important; height: auto !important;
+    transform: none !important; display: block !important;
   }
-
   mat-dialog-container {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    max-height: none !important;
-    height: auto !important;
-    padding: 0 !important;
-    position: static !important;
-    background: transparent !important;
+    box-shadow: none !important; border-radius: 0 !important;
+    max-height: none !important; height: auto !important;
+    padding: 0 !important; position: static !important; background: transparent !important;
   }
-
-  mat-dialog-content {
-    max-height: none !important;
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: visible !important;
-    padding: 0 !important;
-  }
-
-  // Wrappers internes Angular Material M3 — gardent une height fixe sans ce reset
+  mat-dialog-content { max-height: none !important; height: auto !important; min-height: 0 !important; overflow: visible !important; padding: 0 !important; }
   .mat-mdc-dialog-content,
-  .mat-mdc-dialog-inner-scroll-container {
-    max-height: none !important;
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: visible !important;
-  }
-
-  // ── 2. ÉLÉMENTS À MASQUER SUR PAPIER ────────────────────────────────────
+  .mat-mdc-dialog-inner-scroll-container { max-height: none !important; height: auto !important; min-height: 0 !important; overflow: visible !important; }
 
   .recipe-dialog__hero-overlay,
   .recipe-dialog__title-row > div:last-child,
-  .hide-on-print {
-    display: none !important;
-  }
+  .hide-on-print { display: none !important; }
 
-  // ── 3. BRANDING HEADER + FOOTER ─────────────────────────────────────────
-
-  // ::before injecte du contenu AVANT le premier enfant de .recipe-dialog
-  // C'est notre wordmark "MATCH & MUNCH" en haut à droite
   .recipe-dialog::before {
-    content: 'MATCH & MUNCH';
-    display: block !important;
-    font-family: 'Figtree', sans-serif !important;
-    font-size: 0.58rem !important;
-    font-weight: 800 !important;
-    letter-spacing: 3px !important;
-    color: #F4801A !important;
-    text-align: center !important;
-    margin-bottom: 0.65rem !important;
-    padding-bottom: 0.5rem !important;
-    border-bottom: 1px solid #e8e8e8 !important;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
+    content: 'MATCH & MUNCH'; display: block !important;
+    font-family: 'Figtree', sans-serif !important; font-size: .58rem !important;
+    font-weight: 800 !important; letter-spacing: 3px !important; color: #F4801A !important;
+    text-align: center !important; margin-bottom: .65rem !important;
+    padding-bottom: .5rem !important; border-bottom: 1px solid #e8e8e8 !important;
+    print-color-adjust: exact; -webkit-print-color-adjust: exact;
   }
 
-  // ── 4. LAYOUT ───────────────────────────────────────────────────────────
+  .recipe-dialog { max-width: 100% !important; width: 100% !important; font-family: 'Figtree', sans-serif !important; padding: 12mm 14mm !important; }
+  .recipe-dialog__hero { height: 190px !important; border-radius: 6px !important; overflow: hidden !important; margin-bottom: 1rem !important; }
+  .recipe-dialog__hero img { width: 100% !important; height: 100% !important; object-fit: cover !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
 
-  .recipe-dialog {
-    max-width: 100% !important;
-    width: 100% !important;
-    font-family: 'Figtree', sans-serif !important;
-    // Padding pour compenser margin: 0 sur @page
-    // Sans ça le contenu collerait au bord physique de la feuille
-    padding: 12mm 14mm !important;
-  }
-
-  // ── 5. IMAGE HERO ───────────────────────────────────────────────────────
-
-  .recipe-dialog__hero {
-    height: 190px !important;
-    border-radius: 6px !important;
-    overflow: hidden !important;
-    margin-bottom: 1rem !important;
-  }
-
-  .recipe-dialog__hero img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
-  }
-
-  // ── 6. TITRE ────────────────────────────────────────────────────────────
-
-  .recipe-dialog__title-row {
-    margin-bottom: 0.6rem !important;
-
+  .recipe-dialog__title-row { margin-bottom: .6rem !important;
     h2 {
-      font-family: 'Figtree', sans-serif !important;
-      font-size: 2rem !important;
-      font-weight: 800 !important;
-      color: #1E3A5F !important;
-      margin: 0 0 0.5rem !important;
-      letter-spacing: -0.5px !important;
-      line-height: 1.15 !important;
-      // Ligne orange sous le titre — séparation élégante style magazine
-      padding-bottom: 0.4rem !important;
-      border-bottom: 3px solid #F4801A !important;
-      display: inline-block !important;
-      print-color-adjust: exact !important;
-      -webkit-print-color-adjust: exact !important;
+      font-family: 'Figtree', sans-serif !important; font-size: 2rem !important;
+      font-weight: 800 !important; color: #1E3A5F !important; margin: 0 0 .5rem !important;
+      letter-spacing: -.5px !important; line-height: 1.15 !important;
+      padding-bottom: .4rem !important; border-bottom: 3px solid #F4801A !important;
+      display: inline-block !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important;
     }
   }
 
-  // Tags : on re-stylise mat-chip en pills navy propres
-  // mat-chip perd tous ses styles Material dans le contexte print
-  .tags {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 0.3rem !important;
-    margin-top: 0.45rem !important;
+  .tags { display: flex !important; flex-wrap: wrap !important; gap: .3rem !important; margin-top: .45rem !important; }
+  mat-chip, mat-chip-row, .mat-mdc-chip {
+    display: inline-flex !important; align-items: center !important;
+    padding: 1px 9px !important; border: 1px solid #1E3A5F !important;
+    border-radius: 99px !important; font-family: 'Figtree', sans-serif !important;
+    font-size: .65rem !important; font-weight: 600 !important; color: #1E3A5F !important;
+    background: transparent !important; box-shadow: none !important;
+    print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important;
   }
-
-  mat-chip,
-  mat-chip-row,
-  .mat-mdc-chip {
-    display: inline-flex !important;
-    align-items: center !important;
-    padding: 1px 9px !important;
-    border: 1px solid #1E3A5F !important;
-    border-radius: 99px !important;
-    font-family: 'Figtree', sans-serif !important;
-    font-size: 0.65rem !important;
-    font-weight: 600 !important;
-    color: #1E3A5F !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
-  }
-
-  // ── 7. DESCRIPTION — style citation magazine ─────────────────────────────
 
   .recipe-dialog__desc {
-    font-size: 0.82rem !important;
-    color: #555 !important;
-    line-height: 1.6 !important;
-    margin: 0 0 0.85rem !important;
-    font-style: italic !important;
-    border-left: 3px solid #F4801A !important;
-    padding-left: 0.75rem !important;
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
+    font-size: .82rem !important; color: #555 !important; line-height: 1.6 !important;
+    margin: 0 0 .85rem !important; font-style: italic !important;
+    border-left: 3px solid #F4801A !important; padding-left: .75rem !important;
+    print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important;
   }
 
-  // ── 8. MÉTA (prépa / cuisson / portions / difficulté) ───────────────────
-
-  .recipe-dialog__meta {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 0.4rem !important;
-    margin-bottom: 0.85rem !important;
-  }
-
+  .recipe-dialog__meta { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: .4rem !important; margin-bottom: .85rem !important; }
   .meta-item {
-    background: #F7F6F3 !important;
-    border: 1px solid #e8e8e8 !important;
-    border-radius: 7px !important;
-    padding: 0.45rem 0.6rem !important;
-    display: flex !important;
-    flex-direction: column !important;
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
-
-    mat-icon {
-      font-size: 0.85rem !important;
-      width: 0.85rem !important;
-      height: 0.85rem !important;
-      color: #F4801A !important;
-      margin-bottom: 0.15rem !important;
-      print-color-adjust: exact !important;
-      -webkit-print-color-adjust: exact !important;
-    }
+    background: #F7F6F3 !important; border: 1px solid #e8e8e8 !important;
+    border-radius: 7px !important; padding: .45rem .6rem !important;
+    display: flex !important; flex-direction: column !important;
+    print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important;
+    mat-icon { font-size: .85rem !important; width: .85rem !important; height: .85rem !important; color: #F4801A !important; margin-bottom: .15rem !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
   }
+  .meta-label { font-size: .55rem !important; color: #999 !important; text-transform: uppercase !important; letter-spacing: .05em !important; }
+  .meta-value { font-size: .78rem !important; font-weight: 700 !important; color: #1E3A5F !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
 
-  .meta-label {
-    font-size: 0.55rem !important;
-    color: #999 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-  }
-
-  .meta-value {
-    font-size: 0.78rem !important;
-    font-weight: 700 !important;
-    color: #1E3A5F !important;
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
-  }
-
-  // ── 9. DIVIDERS ──────────────────────────────────────────────────────────
-
-  mat-divider {
-    display: block !important;
-    border: none !important;
-    border-top: 1px solid #eeeeee !important;
-    margin: 0.65rem 0 !important;
-  }
-
-  // ── 10. TITRES DE SECTION ────────────────────────────────────────────────
+  mat-divider { display: block !important; border: none !important; border-top: 1px solid #eee !important; margin: .65rem 0 !important; }
 
   .recipe-dialog__section h3 {
-    font-family: 'Figtree', sans-serif !important;
-    font-size: 0.7rem !important;
-    font-weight: 800 !important;
-    color: #1E3A5F !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.1em !important;
-    margin: 0 0 0.6rem !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.3rem !important;
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
-
-    mat-icon {
-      font-size: 0.9rem !important;
-      width: 0.9rem !important;
-      height: 0.9rem !important;
-      color: #F4801A !important;
-      print-color-adjust: exact !important;
-      -webkit-print-color-adjust: exact !important;
-    }
+    font-family: 'Figtree', sans-serif !important; font-size: .7rem !important;
+    font-weight: 800 !important; color: #1E3A5F !important; text-transform: uppercase !important;
+    letter-spacing: .1em !important; margin: 0 0 .6rem !important;
+    display: flex !important; align-items: center !important; gap: .3rem !important;
+    print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important;
+    mat-icon { font-size: .9rem !important; width: .9rem !important; height: .9rem !important; color: #F4801A !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
   }
 
-  // ── 11. INGRÉDIENTS — encadré fond crème ─────────────────────────────────
-
-  // :has(.ingredients-list) = la section parente qui contient la liste
-  .recipe-dialog__section:has(.ingredients-list) {
-    background: #FAFAF8 !important;
-    border: 1px solid #eeeeee !important;
-    border-radius: 8px !important;
-    padding: 0.65rem 0.9rem !important;
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
+  .recipe-dialog__section:has(.ingredients-list) { background: #FAFAF8 !important; border: 1px solid #eee !important; border-radius: 8px !important; padding: .65rem .9rem !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  .ingredients-list { grid-template-columns: 1fr 1fr !important; gap: .28rem 1.5rem !important; padding: 0 !important; margin: 0 !important;
+    li { font-size: .78rem !important; line-height: 1.45 !important; padding-left: .85rem !important; &::before { color: #F4801A !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; } }
   }
 
-  .ingredients-list {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 0.28rem 1.5rem !important;
-    padding: 0 !important;
-    margin: 0 !important;
-
-    li {
-      font-size: 0.78rem !important;
-      line-height: 1.45 !important;
-      padding-left: 0.85rem !important;
-
-      &::before {
-        color: #F4801A !important;
-        print-color-adjust: exact !important;
-        -webkit-print-color-adjust: exact !important;
-      }
-    }
+  .steps-list { gap: .45rem !important;
+    li { font-size: .8rem !important; line-height: 1.55 !important; page-break-inside: avoid !important; }
   }
-
-  // ── 12. ÉTAPES ───────────────────────────────────────────────────────────
-
-  .steps-list {
-    gap: 0.45rem !important;
-
-    li {
-      font-size: 0.8rem !important;
-      line-height: 1.55 !important;
-      // page-break-inside: avoid = une étape ne sera jamais coupée entre 2 pages
-      page-break-inside: avoid !important;
-    }
-  }
-
-  .step-num {
-    min-width: 21px !important;
-    width: 21px !important;
-    height: 21px !important;
-    background: #1E3A5F !important;
-    color: #ffffff !important;
-    font-size: 0.65rem !important;
-    border-radius: 50% !important;
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
-  }
+  .step-num { min-width: 21px !important; width: 21px !important; height: 21px !important; background: #1E3A5F !important; color: #fff !important; font-size: .65rem !important; border-radius: 50% !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
 }

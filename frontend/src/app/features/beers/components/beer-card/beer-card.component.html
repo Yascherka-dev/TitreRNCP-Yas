@@ -1,0 +1,47 @@
+<mat-card class="beer-card">
+
+  <!-- Visuel -->
+  <div class="beer-card__image">
+    @if (beer().imageUrl) {
+      <img [src]="beer().imageUrl" [alt]="beer().nom" class="beer-card__img" />
+    } @else {
+      <div class="beer-card__img-placeholder">
+        <span class="placeholder-icon">🍺</span>
+        <span class="placeholder-brand">Match & Munch</span>
+      </div>
+    }
+    <div class="beer-card__region-badge">
+      <mat-icon>place</mat-icon>
+      <span>{{ beer().region || beer().pays }}</span>
+    </div>
+  </div>
+
+  <mat-card-content>
+
+    <!-- Nom + brasserie -->
+    <h3 class="beer-card__name">{{ beer().nom }}</h3>
+    @if (beer().brasserie) {
+      <p class="beer-card__brewery">🏭 {{ beer().brasserie }}</p>
+    }
+
+    <!-- Description -->
+    <p class="beer-card__desc">{{ beer().description }}</p>
+
+    <!-- Infos -->
+    <div class="beer-card__meta">
+      @if (beer().style) {
+        <div class="meta-item">
+          <mat-icon>local_bar</mat-icon>
+          <span>{{ beer().style }}</span>
+        </div>
+      }
+      @if (beer().degreAlcool) {
+        <div class="meta-item">
+          <mat-icon>percent</mat-icon>
+          <span>{{ beer().degreAlcool }}°</span>
+        </div>
+      }
+    </div>
+
+  </mat-card-content>
+</mat-card>

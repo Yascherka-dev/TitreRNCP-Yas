@@ -16,6 +16,7 @@ export class LoginComponent {
 
   email    = '';
   password = '';
+  showPw   = false;
   loading  = signal(false);
   error    = signal('');
 

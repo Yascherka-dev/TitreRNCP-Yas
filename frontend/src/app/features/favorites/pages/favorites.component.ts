@@ -6,15 +6,13 @@ import { Match } from '../../../core/models/fixture.model';
 import { Recipe } from '../../../core/models/recipe.model';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { RecipeDialogComponent } from '../../../features/recipes/components/recipe-dialog/recipe-dialog.component';
 
 @Component({
   selector: 'app-favorites',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIconModule, MatButtonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './favorites.component.html',
   styleUrl: './favorites.component.scss'
 })

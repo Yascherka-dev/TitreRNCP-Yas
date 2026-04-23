@@ -12,7 +12,7 @@ import { SuggestionsService } from '../../../../core/services/suggestions.servic
 import { Match } from '../../../../core/models/fixture.model';
 import { MatchSuggestion } from '../../../../core/models/recipe.model';
 import { RecipeCardComponent } from '../../../recipes/components/recipe-card/recipe-card.component';
-import { SkeletonRecipeCardComponent } from '../../../../shared/components/skeleton-recipe-card/skeleton-recipe-card.component';
+import { BeerCardComponent } from '../../../beers/components/beer-card/beer-card.component';
 
 interface PartnerLink {
   name: string;
@@ -89,7 +89,7 @@ const STREAMING_PARTNERS: PartnerLink[] = [
     MatButtonModule,
     MatIconModule,
     RecipeCardComponent,
-    SkeletonRecipeCardComponent,
+    BeerCardComponent,
   ],
   templateUrl: './match-detail.component.html',
   styleUrl: './match-detail.component.scss',
@@ -173,7 +173,9 @@ export class MatchDetailComponent implements OnInit {
 
         // On cherche dans les 2 recettes de la suggestion laquelle a cet id
         // String(r.id) = on convertit l'id en texte au cas où il serait un nombre, pour comparer avec recipeId qui est toujours un string
-        const recette = [s.recipeA, s.recipeB].find(r => String(r.id) === recipeId);
+        const recette = [s.recetteA, s.recetteB, s.pecheMignonA, s.pecheMignonB]
+          .filter(Boolean)
+          .find(r => String(r!.id) === recipeId);
 
         // Si aucune recette ne correspond à l'id (id invalide ou recette pas dans ce match) → on s'arrête
         if (!recette) return;

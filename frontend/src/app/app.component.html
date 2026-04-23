@@ -1,45 +1,26 @@
-<!-- Header Airbnb-style — masqué sur la landing page -->
 @if (!isLanding()) {
-  <header class="mm-header">
-    <div class="mm-header__inner">
-      <a class="mm-header__logo" routerLink="/">
-        <span class="mm-header__logo-icon">🍽️</span>
-        <span class="mm-header__logo-text">Match &amp; Munch</span>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="logo" routerLink="/">
+        <span class="mark" aria-hidden="true"></span>
+        Match <span class="amp">&amp;</span> Munch
       </a>
-
-      <nav class="mm-header__nav">
-        <a routerLink="/matches" routerLinkActive="active">
-          <mat-icon>sports_soccer</mat-icon>
-          <span class="nav-label">Matchs</span>
-        </a>
-        <a routerLink="/favorites" routerLinkActive="active">
-          <mat-icon>favorite_border</mat-icon>
-          <span class="nav-label">Favoris</span>
-        </a>
+      <nav class="nav-links" aria-label="Menu">
+        <a routerLink="/matches" routerLinkActive="active">Matchs</a>
+        <a routerLink="/favorites" routerLinkActive="active">Mes recettes</a>
       </nav>
-
+      <div class="nav-spacer"></div>
+      <span class="nav-live"><span class="dot"></span>En direct</span>
       @if (authService.isLoggedIn()) {
-        <span class="mm-header__username"> Bonjour,
-          {{ authService.currentUser()?.prenom }}
-        </span>
-        <button
-          class="mm-header__login"
-          mat-stroked-button
-          (click)="authService.logout()"
-        >
-          <mat-icon>logout</mat-icon>
-          <span class="login-label">Déconnexion</span>
-        </button>
+        <span class="nav-hello">Bonjour, <strong>{{ authService.currentUser()?.prenom }}</strong></span>
+        <button class="btn btn-ghost btn-sm" (click)="authService.logout()">Déconnexion</button>
       } @else {
-        <a class="mm-header__login" mat-stroked-button routerLink="/login">
-          <mat-icon>person_outline</mat-icon>
-          <span class="login-label">Connexion</span>
-        </a>
+        <a class="btn btn-primary" routerLink="/login">Connexion</a>
       }
     </div>
   </header>
 }
 
-<main [class.mm-main]="!isLanding()">
+<main [class.page-content]="!isLanding()">
   <router-outlet />
 </main>
