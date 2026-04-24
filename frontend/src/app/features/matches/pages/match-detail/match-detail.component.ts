@@ -1,18 +1,17 @@
-import { Component, OnInit, signal, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, computed, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY, of } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog'; // service Angular Material pour ouvrir des dialogs
-import { RecipeDialogComponent } from '../../../recipes/components/recipe-dialog/recipe-dialog.component'; // le dialog qu'on va ouvrir automatiquement
+import { MatDialog } from '@angular/material/dialog';
+import { RecipeDialogComponent } from '../../../recipes/components/recipe-dialog/recipe-dialog.component';
 import { DatePipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatchesService } from '../../../../core/services/matches.service';
 import { SuggestionsService } from '../../../../core/services/suggestions.service';
 import { Match } from '../../../../core/models/fixture.model';
 import { MatchSuggestion } from '../../../../core/models/recipe.model';
 import { RecipeCardComponent } from '../../../recipes/components/recipe-card/recipe-card.component';
 import { BeerCardComponent } from '../../../beers/components/beer-card/beer-card.component';
+import { MarcoLoaderComponent, ChefScript } from '../../../../shared/components/marco-loader/marco-loader.component';
 
 interface PartnerLink {
   name: string;
@@ -83,13 +82,13 @@ const STREAMING_PARTNERS: PartnerLink[] = [
 @Component({
   selector: 'app-match-detail',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DatePipe,
     RouterLink,
-    MatButtonModule,
-    MatIconModule,
     RecipeCardComponent,
     BeerCardComponent,
+    MarcoLoaderComponent,
   ],
   templateUrl: './match-detail.component.html',
   styleUrl: './match-detail.component.scss',
@@ -100,6 +99,44 @@ export class MatchDetailComponent implements OnInit {
   suggestionError = signal(false);
   regenerating    = signal(false);
   loadingMsg      = signal('');
+
+  marcoLoadingScript = computed<ChefScript | null>(() => {
+    const m = this.match();
+    if (!m) return null;
+    return {
+      chef: 'marco',
+      matchLabel: `${m.home.name} vs ${m.away.name}`,
+      tokens: [
+        '🍳 Marco explore les cuisines du monde… ',
+        { italic: `${m.home.countryName} × ${m.away.countryName}` },
+        ', ça sent bon par ici. Sélection des meilleures recettes en cours…',
+      ],
+      steps: ['Match reçu', 'Saveurs par pays', 'Recettes rédigées', 'À table'],
+    };
+  });
+
+  marcoScript = computed<ChefScript | null>(() => {
+    const m = this.match();
+    const s = this.suggestion();
+    if (!m || !s) return null;
+    return {
+      chef: 'marco',
+      matchLabel: `${m.home.name} vs ${m.away.name}`,
+      tokens: [
+        'Allez, on allume le feu. ',
+        { italic: `${m.home.countryName} × ${m.away.countryName}` },
+        ', ça appelle du goût et des couleurs. Côté ',
+        { italic: m.home.countryName }, ' : ',
+        { italic: s.recetteA?.title ?? '…' },
+        '. Côté ',
+        { italic: m.away.countryName }, ' : ',
+        { italic: s.recetteB?.title ?? '…' },
+        '. Je dresse les assiettes — ',
+        { italic: 'bonne soirée.' },
+      ],
+      steps: ['Match reçu', 'Saveurs par pays', 'Recettes rédigées', 'À table'],
+    };
+  });
 
   private readonly LOADING_MSGS = [
     '🧑‍🍳 Marco est aux fourneaux...',

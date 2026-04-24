@@ -1,136 +1,128 @@
 @if (match(); as m) {
   <div class="match-detail">
 
-    <!-- Retour -->
-    <a mat-button routerLink="/matches" class="back-btn">
-      <mat-icon>arrow_back</mat-icon>
+    <!-- Back link -->
+    <a class="back" routerLink="/matches">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Retour aux matchs
     </a>
 
-    <!-- Header match -->
-    <section class="match-detail__header">
-      <div class="match-detail__league">
-        <img [src]="m.league.logo" [alt]="m.league.name" />
-        <span>{{ m.league.name }}</span>
-        <span class="round">{{ m.league.round }}</span>
+    <!-- ══ STADIUM HERO ══ -->
+    <section class="stadium">
+      <div class="stadium-grad"></div>
+      <div class="stadium-grid"></div>
+      <div class="motif-layer"></div>
+      <div class="pitch"></div>
+
+      <!-- Competition header -->
+      <div class="comp-head" style="position:relative;z-index:1;">
+        <img [src]="m.league.logo" [alt]="m.league.name" width="20" height="20" style="object-fit:contain;border-radius:3px;" />
+        {{ m.league.name }}
+        <span class="round-tag">{{ m.league.round }}</span>
+        @if (m.status.short === '1H' || m.status.short === '2H' || m.status.short === 'HT' || m.status.short === 'ET') {
+          <span class="live-tag">En direct {{ m.status.elapsed }}'</span>
+        }
       </div>
 
-      <div class="match-detail__teams">
-        <!-- Équipe domicile -->
-        <div class="team">
-          <img [src]="m.home.logo" [alt]="m.home.name" class="team-logo" />
-          <h2>{{ m.home.name }}</h2>
-          <div class="team-country">
-            <img [src]="m.home.flag" [alt]="m.home.countryName" />
-            <span>{{ m.home.countryName }}</span>
+      <!-- Teams row -->
+      <div class="stadium-row">
+        <div class="big-team">
+          <div class="crest-ring">
+            <div class="crest-inner">
+              <img [src]="m.home.logo" [alt]="m.home.name" />
+            </div>
           </div>
+          <div class="nm">{{ m.home.name }}</div>
+          <div class="cn">{{ m.home.countryName }}</div>
         </div>
 
-        <!-- Score / VS -->
-        <div class="match-detail__score">
+        <div class="kick-center">
           @if (m.status.short !== 'NS' && m.status.short !== 'TBD') {
-            <span class="score">{{ m.home.goals }} — {{ m.away.goals }}</span>
-            @if (m.status.short === 'FT') {
-              <span class="status-label finished">Terminé</span>
+            <div class="t">
+              {{ m.home.goals }}<span class="sep">–</span>{{ m.away.goals }}
+            </div>
+            @if (m.status.short === 'FT' || m.status.short === 'AET' || m.status.short === 'PEN') {
+              <div class="d">Terminé</div>
             } @else {
-              <span class="status-label live">
-                <span class="dot"></span>{{ m.status.elapsed }}'
-              </span>
+              <div class="d">{{ m.status.elapsed }}'</div>
             }
           } @else {
-            <span class="vs-time">{{ m.date | date:'HH:mm' }}</span>
-            <span class="vs-label">VS</span>
-            <span class="match-date">{{ m.date | date:'d MMM' }}</span>
+            <div class="t">{{ m.date | date:'HH:mm' }}</div>
+            <div class="d">{{ m.date | date:'d MMM yyyy' }}</div>
+            <div class="vs-small">vs</div>
           }
         </div>
 
-        <!-- Équipe extérieur -->
-        <div class="team team--away">
-          <img [src]="m.away.logo" [alt]="m.away.name" class="team-logo" />
-          <h2>{{ m.away.name }}</h2>
-          <div class="team-country">
-            <img [src]="m.away.flag" [alt]="m.away.countryName" />
-            <span>{{ m.away.countryName }}</span>
+        <div class="big-team b">
+          <div class="crest-ring">
+            <div class="crest-inner">
+              <img [src]="m.away.logo" [alt]="m.away.name" />
+            </div>
           </div>
+          <div class="nm">{{ m.away.name }}</div>
+          <div class="cn">{{ m.away.countryName }}</div>
         </div>
       </div>
-    </section>
 
-    <!-- Section voir le match -->
-    <section class="match-detail__partners match-detail__streaming">
-      <h2>📺 Voir le match</h2>
-      <p class="partners-sub">Retrouvez le match en direct sur ces plateformes.</p>
-      <div class="partners-grid">
-        @for (p of streamingPartners; track p.name) {
-          <a [href]="p.url" class="partner-card" target="_blank" rel="noopener">
-            <div class="partner-card__icon" [style.background]="p.color">
-              <span>{{ p.emoji }}</span>
-            </div>
-            <div class="partner-card__body">
-              <div class="partner-card__top">
-                <span class="partner-name">{{ p.name }}</span>
-                @if (p.badge) {
-                  <span class="partner-badge">{{ p.badge }}</span>
-                }
-              </div>
-              <p class="partner-tagline">{{ p.tagline }}</p>
-            </div>
-            <span class="partner-cta">{{ p.ctaLabel }} →</span>
-          </a>
-        }
+      <!-- Meta -->
+      <div class="stadium-meta">
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          {{ m.date | date:'EEEE d MMMM · HH:mm' }}
+        </span>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{ m.venue || 'Stade à confirmer' }}
+        </span>
       </div>
     </section>
 
-    <!-- Section recettes -->
-    <section class="match-detail__recipes">
-      <div class="recipes-header">
+    <!-- ══ RECETTES ══ -->
+    <section class="sec">
+      <div class="sec-head">
         <div>
-          <h2>🍽️ Ce soir, Marco cuisine</h2>
-          <p class="recipes-byline">Recettes générées à la demande · inspirées des deux pays</p>
+          <h2>Ce soir, Marco cuisine <span class="ital">pour toi</span>.</h2>
+          <p class="sub">Recettes générées à la demande · inspirées des deux pays</p>
         </div>
-        <button
-          class="mm-regen-btn"
-          (click)="onRegenerate()"
-          [disabled]="regenerating()"
-        >
-          <mat-icon [class.spinning]="regenerating()">refresh</mat-icon>
-          <span>{{ regenerating() ? 'Marco cuisine...' : 'Nouvelle idée' }}</span>
+        <button class="regen-btn" (click)="onRegenerate()" [disabled]="regenerating()">
+          <svg [class.spin]="regenerating()" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+          {{ regenerating() ? 'Marco cuisine...' : 'Nouvelle idée' }}
         </button>
       </div>
 
       @if (suggestion(); as s) {
+        @if (marcoScript(); as script) {
+          <app-marco-loader [script]="script" [autoRestart]="false" style="margin-bottom:1.5rem;" />
+        }
         <div class="recipes-grid">
           @if (s.recetteA) { <app-recipe-card [recipe]="s.recetteA" /> }
           @if (s.recetteB) { <app-recipe-card [recipe]="s.recetteB" /> }
         </div>
       } @else if (suggestionError()) {
-        <div class="recipes-feedback recipes-feedback--error">
+        <div class="feedback feedback--error">
           <span class="feedback-icon">😕</span>
           <p class="feedback-title">Aïe, une erreur s'est glissée !</p>
           <p class="feedback-sub">Marco a brûlé sa recette. Réessaie dans un instant.</p>
-          <button class="mm-regen-btn" (click)="onRegenerate()">
-            <mat-icon>refresh</mat-icon><span>Réessayer</span>
+          <button class="regen-btn" (click)="onRegenerate()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+            Réessayer
           </button>
         </div>
       } @else {
-        <div class="recipes-feedback recipes-feedback--loading">
-          <div class="feedback-chef">🧑‍🍳</div>
-          <p class="feedback-msg">{{ loadingMsg() }}</p>
-          <div class="feedback-dots">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
+        @if (marcoLoadingScript(); as script) {
+          <app-marco-loader [script]="script" [autoRestart]="true" />
+        }
       }
     </section>
 
-    <!-- Section péché mignon -->
+    <!-- ══ PÉCHÉ MIGNON ══ -->
     @if (suggestion(); as s) {
       @if (s.pecheMignonA || s.pecheMignonB) {
-        <section class="match-detail__recipes match-detail__peche-mignon">
-          <div class="recipes-header">
+        <section class="sec">
+          <div class="sec-head">
             <div>
-              <h2>🍰 Péché mignon</h2>
-              <p class="recipes-byline">La gourmandise régionale du soir — pour finir en beauté</p>
+              <h2>La gourmandise <span class="ital">du soir</span>.</h2>
+              <p class="sub">La douceur régionale pour finir en beauté</p>
             </div>
           </div>
           <div class="recipes-grid">
@@ -141,17 +133,17 @@
       }
     }
 
-    <!-- Section bières -->
+    <!-- ══ BIÈRES ══ -->
     @if (suggestion(); as s) {
       @if (s.biereA || s.biereB) {
-        <section class="match-detail__recipes match-detail__bieres">
-          <div class="recipes-header">
+        <section class="sec">
+          <div class="sec-head">
             <div>
-              <h2>🍺 La bière du match</h2>
-              <p class="recipes-byline">La brasserie locale de chaque équipe — pour trinquer comme un local</p>
+              <h2>La bière <span class="ital">officielle</span> du match.</h2>
+              <p class="sub">La brasserie locale de chaque équipe — pour trinquer comme un local</p>
             </div>
           </div>
-          <div class="recipes-grid">
+          <div class="beer-stack">
             @if (s.biereA) { <app-beer-card [beer]="s.biereA" /> }
             @if (s.biereB) { <app-beer-card [beer]="s.biereB" /> }
           </div>
@@ -159,26 +151,51 @@
       }
     }
 
-    <!-- Section commander -->
-    <section class="match-detail__partners">
-      <h2>🛒 Commander ce soir</h2>
-      <p class="partners-sub">Nos partenaires vous livrent les ingrédients ou le plat directement chez vous.</p>
-      <div class="partners-grid">
-        @for (p of foodPartners; track p.name) {
-          <a [href]="p.url" class="partner-card" target="_blank" rel="noopener">
-            <div class="partner-card__icon" [style.background]="p.color">
+    <!-- ══ VOIR LE MATCH ══ -->
+    <section class="sec">
+      <div class="sec-head">
+        <div>
+          <h2>Voir le <span class="ital">match</span>.</h2>
+          <p class="sub">Retrouvez le match en direct sur ces plateformes</p>
+        </div>
+      </div>
+      <div class="plat-list">
+        @for (p of streamingPartners; track p.name) {
+          <a [href]="p.url" class="plat" target="_blank" rel="noopener">
+            <div class="plat-logo" [style.background]="p.color">
               <span>{{ p.emoji }}</span>
             </div>
-            <div class="partner-card__body">
-              <div class="partner-card__top">
-                <span class="partner-name">{{ p.name }}</span>
-                @if (p.badge) {
-                  <span class="partner-badge">{{ p.badge }}</span>
-                }
-              </div>
-              <p class="partner-tagline">{{ p.tagline }}</p>
+            <div class="plat-body">
+              <strong>{{ p.name }}</strong>
+              @if (p.badge) { <span class="plat-badge">{{ p.badge }}</span> }
+              <p>{{ p.tagline }}</p>
             </div>
-            <span class="partner-cta">{{ p.ctaLabel }} →</span>
+            <span class="plat-cta">{{ p.ctaLabel }} →</span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- ══ COMMANDER ══ -->
+    <section class="sec">
+      <div class="sec-head">
+        <div>
+          <h2>Commander <span class="ital">ce soir</span>.</h2>
+          <p class="sub">Nos partenaires vous livrent les ingrédients ou le plat directement chez vous</p>
+        </div>
+      </div>
+      <div class="plat-list">
+        @for (p of foodPartners; track p.name) {
+          <a [href]="p.url" class="plat" target="_blank" rel="noopener">
+            <div class="plat-logo" [style.background]="p.color">
+              <span>{{ p.emoji }}</span>
+            </div>
+            <div class="plat-body">
+              <strong>{{ p.name }}</strong>
+              @if (p.badge) { <span class="plat-badge">{{ p.badge }}</span> }
+              <p>{{ p.tagline }}</p>
+            </div>
+            <span class="plat-cta">{{ p.ctaLabel }} →</span>
           </a>
         }
       </div>
@@ -186,8 +203,8 @@
 
   </div>
 } @else {
-  <div class="match-detail__not-found">
+  <div class="not-found">
     <p>Match introuvable.</p>
-    <a mat-flat-button color="primary" routerLink="/">Retour</a>
+    <a class="btn btn-primary" routerLink="/matches">Retour aux matchs</a>
   </div>
 }

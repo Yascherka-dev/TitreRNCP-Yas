@@ -14,7 +14,7 @@
 
   <!-- Teams + score -->
   <div class="mc-teams">
-    <div class="mc-team">
+    <div class="mc-team" [class.tilted]="hovering()">
       <div class="mc-crest">
         <img [src]="match().home.logo" [alt]="match().home.name" />
       </div>
@@ -35,11 +35,11 @@
         </div>
       } @else {
         <span class="mc-time">{{ match().date | date:"HH:mm" }}</span>
-        <span class="mc-vs">VS</span>
+        <span class="mc-vs">vs</span>
       }
     </div>
 
-    <div class="mc-team mc-team--away">
+    <div class="mc-team mc-team--away" [class.tilted]="hovering()">
       <div class="mc-crest">
         <img [src]="match().away.logo" [alt]="match().away.name" />
       </div>

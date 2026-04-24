@@ -1,4 +1,4 @@
-import { Component, input, computed, inject } from '@angular/core';
+import { Component, input, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { Match } from '../../../../core/models/fixture.model';
@@ -8,12 +8,18 @@ import { AuthService } from '../../../../core/services/auth.service';
 @Component({
   selector: 'app-match-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DatePipe, RouterLink],
   templateUrl: './match-card.component.html',
   styleUrl: './match-card.component.scss',
+  host: {
+    '(mouseenter)': 'hovering.set(true)',
+    '(mouseleave)': 'hovering.set(false)',
+  },
 })
 export class MatchCardComponent {
-  match = input.required<Match>();
+  match   = input.required<Match>();
+  hovering = signal(false);
 
   private favoritesService = inject(FavoritesService);
   private authService      = inject(AuthService);
