@@ -1,16 +1,11 @@
-// Conteneur des étoiles
 .star-rating {
   display: flex;
   align-items: center;
   gap: 2px;
 
-  // Mode lecture seule : désactive toutes les interactions souris
-  &.readonly {
-    pointer-events: none;
-  }
+  &.readonly { pointer-events: none; }
 }
 
-// Chaque bouton étoile
 .star-btn {
   background: none;
   border: none;
@@ -18,47 +13,30 @@
   padding: 2px;
   display: flex;
   align-items: center;
-  transition: transform 0.12s ease;
+  transition: transform .12s;
 
-  // Légère mise à l'échelle au survol pour un retour visuel
-  &:hover {
-    transform: scale(1.2);
-  }
-
-  mat-icon {
-    font-size: 1.5rem;
-    width: 1.5rem;
-    height: 1.5rem;
-    color: #ddd;              // Étoile vide → gris clair
-    transition: color 0.12s;
-
-    // Étoile remplie → orange du design system
-    &.filled {
-      color: var(--mm-secondary); // #F4801A
-    }
-  }
+  &:hover { transform: scale(1.2); }
 }
 
-// En mode lecture seule (dans les commentaires) : étoiles plus petites
+.star {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #ddd;
+  transition: color .12s;
+
+  &.filled { color: var(--orange-500, #F4801A); }
+}
+
 .readonly .star-btn {
   cursor: default;
   padding: 1px;
-
-  &:hover {
-    transform: none;
-  }
-
-  mat-icon {
-    font-size: 1rem;
-    width: 1rem;
-    height: 1rem;
-  }
+  &:hover { transform: none; }
+  .star { width: 1rem; height: 1rem; }
 }
 
-// Texte "X/5" affiché à droite des étoiles en mode interactif
 .star-label {
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--mm-secondary);
+  color: var(--orange-500, #F4801A);
   margin-left: 0.3rem;
 }

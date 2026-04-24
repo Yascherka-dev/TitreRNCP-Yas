@@ -1,53 +1,62 @@
-<mat-card class="recipe-card">
+<article class="recipe-card" (click)="openDetail()" role="button" tabindex="0" (keydown.enter)="openDetail()">
 
-  <!-- Photo -->
-  <div class="recipe-card__image">
-    <div class="recipe-card__img-placeholder">
-      <span class="placeholder-icon">🧑‍🍳</span>
-      <span class="placeholder-brand">Marco · Match & Munch</span>
+  <!-- Image / placeholder -->
+  <div class="rc-img">
+    @if (recipe().imageUrl) {
+      <img [src]="recipe().imageUrl" [alt]="recipe().title" />
+    } @else {
+      <div class="rc-placeholder">
+        <span class="rc-chef">🧑‍🍳</span>
+        <span class="rc-brand">Marco · Match &amp; Munch</span>
+      </div>
+    }
+    <div class="rc-country">
+      <img [src]="recipe().flag" [alt]="recipe().country" class="rc-flag" />
+      {{ recipe().country }}
     </div>
-    <div class="recipe-card__country-badge">
-      <img [src]="recipe().flag" [alt]="recipe().country" class="badge-flag" />
-      <span>{{ recipe().country }}</span>
-    </div>
+    <div class="rc-shine" aria-hidden="true"></div>
+    <svg class="rc-steam" aria-hidden="true" viewBox="0 0 80 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 52 Q25 42 20 32 Q15 22 20 10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M40 52 Q45 42 40 32 Q35 22 40 10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M60 52 Q65 42 60 32 Q55 22 60 10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
   </div>
 
-  <mat-card-content>
+  <!-- Body -->
+  <div class="rc-body">
+    <h3 class="rc-title">{{ recipe().title }}</h3>
+    <p class="rc-desc">{{ recipe().description }}</p>
 
-    <!-- Titre -->
-    <h3 class="recipe-card__title">{{ recipe().title }}</h3>
-    <p class="recipe-card__desc">{{ recipe().description }}</p>
-
-    <!-- Infos rapides -->
-    <div class="recipe-card__meta">
-      <div class="meta-item">
-        <mat-icon>schedule</mat-icon>
-        <span>{{ recipe().prepTime + recipe().cookTime }} min</span>
-      </div>
-      <div class="meta-item">
-        <mat-icon>group</mat-icon>
-        <span>{{ recipe().servings }} pers.</span>
-      </div>
-      <div class="meta-item">
-        <mat-icon>bar_chart</mat-icon>
-        <span>{{ recipe().difficulty }}</span>
-      </div>
+    <!-- Meta -->
+    <div class="rc-meta">
+      <span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        {{ recipe().prepTime + recipe().cookTime }} min
+      </span>
+      <span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        {{ recipe().servings }} pers.
+      </span>
+      <span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        {{ recipe().difficulty }}
+      </span>
     </div>
 
     <!-- Tags -->
-    <div class="recipe-card__tags">
-      @for (tag of recipe().tags; track tag) {
-        <mat-chip>{{ tag }}</mat-chip>
-      }
-    </div>
+    @if (recipe().tags.length) {
+      <div class="rc-tags">
+        @for (tag of recipe().tags.slice(0, 4); track tag) {
+          <span class="rc-tag">{{ tag }}</span>
+        }
+      </div>
+    }
 
     <!-- CTA -->
-    <div class="recipe-card__action">
-      <button class="mm-cta-btn" (click)="openDetail()">
-        <span>Voir la recette</span>
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
-    </div>
+    <button class="rc-cta">
+      Voir la recette
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
 
-  </mat-card-content>
-</mat-card>
+</article>

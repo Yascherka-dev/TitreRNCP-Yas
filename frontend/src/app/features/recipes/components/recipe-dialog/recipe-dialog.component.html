@@ -2,20 +2,33 @@
 
   <!-- Image hero avec actions intégrées -->
   <div class="recipe-dialog__hero">
-    <img [src]="recipe.imageUrl" [alt]="recipe.title" />
+    @if (recipe.imageUrl) {
+      <img [src]="recipe.imageUrl" [alt]="recipe.title" />
+    } @else {
+      <div class="rd-hero-placeholder">
+        <span>🧑‍🍳</span>
+      </div>
+    }
     <div class="recipe-dialog__hero-overlay">
       <div class="country-badge">
         <img [src]="recipe.flag" [alt]="recipe.country" />
         <span>{{ recipe.country }}</span>
       </div>
       <div class="hero-actions">
-        <button mat-icon-button class="hero-btn" [class.hero-btn--fav-active]="isFavorite()" (click)="toggleFavorite()" [attr.aria-label]="isFavorite() ? 'Retirer des favoris' : 'Ajouter aux favoris'">
-          <mat-icon>
-            {{ isFavorite() ? 'favorite' : 'favorite_border' }}
-          </mat-icon>
+        <button
+          class="hero-btn"
+          [class.hero-btn--fav-active]="isFavorite()"
+          (click)="toggleFavorite()"
+          [attr.aria-label]="isFavorite() ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+        >
+          @if (isFavorite()) {
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          } @else {
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          }
         </button>
-        <button mat-icon-button class="hero-btn" (click)="dialogRef.close()" aria-label="Fermer">
-          <mat-icon>close</mat-icon>
+        <button class="hero-btn" (click)="dialogRef.close()" aria-label="Fermer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
     </div>
@@ -25,19 +38,21 @@
 
     <!-- Titre + tags -->
     <div class="recipe-dialog__title-row">
-      <h2>{{ recipe.title }}</h2>
-      <p class="recipe-dialog__marco-credit">🧑‍🍳 Recette générée par Marco</p>
-      <div class="tags">
-        @for (tag of recipe.tags; track tag) {
-          <mat-chip>{{ tag }}</mat-chip>
-        }
+      <div class="rd-title-group">
+        <h2>{{ recipe.title }}</h2>
+        <p class="recipe-dialog__marco-credit">🧑‍🍳 Recette générée par Marco</p>
+        <div class="rd-tags">
+          @for (tag of recipe.tags; track tag) {
+            <span class="rd-tag">{{ tag }}</span>
+          }
+        </div>
       </div>
       <div class="title-actions">
-        <button mat-icon-button class="hero-btn" (click)="share()" aria-label="Share">
-          <mat-icon>share</mat-icon>
+        <button class="hero-btn hero-btn--light" (click)="share()" aria-label="Partager">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
         </button>
-        <button mat-icon-button class="hero-btn" aria-label="Print" (click)="print()">
-          <mat-icon>print</mat-icon>
+        <button class="hero-btn hero-btn--light" (click)="print()" aria-label="Imprimer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         </button>
       </div>
     </div>
@@ -47,28 +62,28 @@
     <!-- Méta infos -->
     <div class="recipe-dialog__meta">
       <div class="meta-item">
-        <mat-icon>schedule</mat-icon>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         <div>
           <span class="meta-label">Préparation</span>
           <span class="meta-value">{{ recipe.prepTime }} min</span>
         </div>
       </div>
       <div class="meta-item">
-        <mat-icon>local_fire_department</mat-icon>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
         <div>
           <span class="meta-label">Cuisson</span>
           <span class="meta-value">{{ recipe.cookTime }} min</span>
         </div>
       </div>
       <div class="meta-item">
-        <mat-icon>group</mat-icon>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <div>
           <span class="meta-label">Portions</span>
           <span class="meta-value">{{ recipe.servings }} pers.</span>
         </div>
       </div>
       <div class="meta-item">
-        <mat-icon>bar_chart</mat-icon>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         <div>
           <span class="meta-label">Difficulté</span>
           <span class="meta-value">{{ recipe.difficulty }}</span>
@@ -76,12 +91,12 @@
       </div>
     </div>
 
-    <mat-divider />
+    <hr class="rd-divider" />
 
     <!-- Ingrédients -->
     <div class="recipe-dialog__section">
       <h3>
-        <mat-icon>grocery</mat-icon>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         Ingrédients
       </h3>
       <ul class="ingredients-list">
@@ -91,12 +106,12 @@
       </ul>
     </div>
 
-    <mat-divider />
+    <hr class="rd-divider" />
 
     <!-- Étapes -->
     <div class="recipe-dialog__section">
       <h3>
-        <mat-icon>format_list_numbered</mat-icon>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         Préparation
       </h3>
       <ol class="steps-list">
@@ -109,14 +124,13 @@
       </ol>
     </div>
 
-    <mat-divider />
+    <hr class="rd-divider" />
 
     <!-- Avis & Notes -->
     <div class="recipe-dialog__section recipe-dialog__reviews hide-on-print">
-
       <h3>
-        <mat-icon>rate_review</mat-icon>
-        Avis & notes
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Avis &amp; notes
         @if (currentRating() > 0) {
           <span class="current-rating-badge">{{ currentRating() }}/5</span>
         }
@@ -137,18 +151,18 @@
         ></textarea>
         @if (submitError()) {
           <p class="review-form__error">
-            <mat-icon>error_outline</mat-icon>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             {{ submitError() }}
           </p>
         }
         <button class="mm-submit-btn" (click)="submitReview()">
-          <mat-icon>send</mat-icon>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           <span>Publier mon avis</span>
         </button>
       </div>
 
       @if (comments().length > 0) {
-        <div class="comments-list" >
+        <div class="comments-list">
           @for (comment of comments(); track comment.id) {
             <div class="comment-item">
               <div class="comment-item__header">
@@ -163,7 +177,6 @@
       } @else {
         <p class="no-comments">Soyez le premier à donner votre avis !</p>
       }
-
     </div>
 
   </mat-dialog-content>
