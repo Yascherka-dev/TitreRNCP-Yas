@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { FavoritesService } from '../../../core/services/favorites.service';
 import { MatchesService } from '../../../core/services/matches.service';
 import { RecipesService } from '../../../core/services/recipes.service';
@@ -12,6 +12,7 @@ import { RecipeDialogComponent } from '../../../features/recipes/components/reci
 @Component({
   selector: 'app-favorites',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
   templateUrl: './favorites.component.html',
   styleUrl: './favorites.component.scss'

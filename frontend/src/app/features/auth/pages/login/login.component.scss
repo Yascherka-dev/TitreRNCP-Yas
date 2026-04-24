@@ -214,6 +214,14 @@
   to { transform: rotate(360deg); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .auth-card       { animation: none; }
+  .spin            { animation: none; }
+  .partner-grad,
+  .partner-ball,
+  .partner-plate   { animation: none; }
+}
+
 // ── Right — partner panel ─────────────────────
 .partner {
   position: relative;
