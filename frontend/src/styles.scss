@@ -44,6 +44,12 @@ html {
   --font:  "Figtree", ui-sans-serif, system-ui, sans-serif;
   --serif: "Instrument Serif", ui-serif, Georgia, serif;
 
+  --ease-soft:   cubic-bezier(.2,.8,.2,1);
+  --ease-bounce: cubic-bezier(.34,1.56,.64,1);
+  --dur-fast:    220ms;
+  --dur-med:     350ms;
+  --dur-slow:    600ms;
+
   // Backward-compat aliases (Angular Material overrides)
   --mm-primary:     #0F2747;
   --mm-accent:      #F4801A;
@@ -91,7 +97,7 @@ a { color: inherit; text-decoration: none; }
 h1,h2,h3,h4,h5,h6 { margin: 0; line-height: 1.2; font-family: var(--font); }
 
 // ── Layout ────────────────────────────────────────────────
-.container { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+.container { max-width: 1240px; margin: 0 auto; padding: 0 40px; width: 100%; }
 
 // ── Navbar ────────────────────────────────────────────────
 .nav {
@@ -192,13 +198,13 @@ h1,h2,h3,h4,h5,h6 { margin: 0; line-height: 1.2; font-family: var(--font); }
 }
 
 .btn-ghost {
-  background: transparent; color: var(--ink); border-color: var(--line-2);
-  &:hover { background: white; border-color: var(--navy-800); }
+  background: transparent; color: var(--ink); border-color: var(--line);
+  &:hover { background: var(--cream); border-color: var(--line-2); }
 }
 
 .btn-ghost-dark {
-  background: rgba(255,255,255,.05); color: white; border-color: rgba(255,255,255,.22);
-  &:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.35); }
+  background: rgba(255,255,255,.08); color: white; border-color: rgba(255,255,255,.15);
+  &:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.28); }
 }
 
 .btn-white {

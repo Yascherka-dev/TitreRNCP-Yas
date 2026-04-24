@@ -4,6 +4,10 @@
   100% { background-position:  600px 0; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .sk { animation: none; background: #ebebeb; }
+}
+
 .sk {
   display: block;
   background: linear-gradient(
