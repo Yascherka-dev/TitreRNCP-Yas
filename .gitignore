@@ -31,3 +31,7 @@ frontend/.angular/
 
 # Docs internes
 docs/
+
+# Scripts génération IA (prompts Claude — ne pas commiter)
+backend/apps/recipes/management/commands/generate_marco_*.py
+backend/apps/*/management/commands/generate_*.py
