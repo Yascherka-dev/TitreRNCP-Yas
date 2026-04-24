@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'apps.favorites',
     'apps.comments',
     'apps.ratings',
+    'apps.beers',
 ]
 
 MIDDLEWARE = [
@@ -144,4 +145,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Clés API externes (lues depuis .env)
 
 ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY', '')
-API_FOOTBALL_KEY = os.getenv('API_FOOTBALL_KEY', '')
+SPORTSDB_KEY      = os.getenv('SPORTSDB_KEY', '')
