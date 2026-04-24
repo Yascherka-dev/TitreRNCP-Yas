@@ -47,6 +47,7 @@ export interface Match {
   };
   league: {
     id: number;
+    leagueId?: number;
     name: string;
     country: string;
     logo: string;
@@ -72,4 +73,6 @@ export interface Match {
     goals: number | null;
     winner: boolean | null;
   };
+  venue?: string;
+  thumbUrl?: string;
 }

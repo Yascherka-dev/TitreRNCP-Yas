@@ -28,6 +28,8 @@ export interface Beer {
   style: string;
   description: string;
   degreAlcool: string | null;
+  ibu?: number;
+  volume?: string;
   imageUrl: string;
 }
 

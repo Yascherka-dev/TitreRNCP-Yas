@@ -4,10 +4,21 @@ import { Observable, map, shareReplay } from 'rxjs';
 import { Match } from '../models/fixture.model';
 import { environment } from '../../../environments/environment';
 
+// TheSportsDB league badge URLs (keyed by league ID)
+const LEAGUE_BADGES: Record<number, string> = {
+  4334: 'https://r2.thesportsdb.com/images/media/league/badge/9f7z9d1742983155.png',  // Ligue 1
+  4480: 'https://r2.thesportsdb.com/images/media/league/badge/yfz9u11698329979.png',  // UCL
+  4387: 'https://r2.thesportsdb.com/images/media/league/badge/ajkyop1520230513.png',  // NBA
+  4391: 'https://r2.thesportsdb.com/images/media/league/badge/y5nvl91519022553.png',  // NFL
+  4380: 'https://r2.thesportsdb.com/images/media/league/badge/gpte3j1674917228.png',  // NHL
+  4430: 'https://r2.thesportsdb.com/images/media/league/badge/4pv0ts1701693602.png',  // Top 14
+  4714: 'https://r2.thesportsdb.com/images/media/league/badge/vupfoc1617273194.png',  // Six Nations
+};
+
 @Injectable({ providedIn: 'root' })
 export class MatchesService {
-  private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private http    = inject(HttpClient);
+  private apiUrl  = environment.apiUrl;
 
   private fixtures$ = this.http
     .get<any[]>(`${this.apiUrl}/matches/`)
@@ -23,47 +34,28 @@ export class MatchesService {
       .pipe(map(items => items.map(this.toMatch)));
   }
 
+  getFixturesBySport(sport: string): Observable<Match[]> {
+    return this.http
+      .get<any[]>(`${this.apiUrl}/matches/?sport=${sport}`)
+      .pipe(map(items => items.map(this.toMatch)));
+  }
+
   getFixtureById(id: string | number): Observable<Match | undefined> {
     return this.getFixtures().pipe(
       map(matches => matches.find(m => String(m.id) === String(id)))
     );
   }
 
-  private hashString(s: string): number {
-    let h = 0;
-    for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
-    return Math.abs(h);
+  getLivescores(): Observable<Match[]> {
+    return this.http
+      .get<any[]>(`${this.apiUrl}/matches/livescores/`)
+      .pipe(map(items => items.map(this.toMatch)));
   }
 
-  // Traduit les statuts de football-data.org vers les codes attendus par le composant
-  private mapStatus(statut: string): string {
-    const map: Record<string, string> = {
-      'FINISHED':  'FT',
-      'IN_PLAY':   'LIVE',
-      'PAUSED':    'HT',
-      'HALFTIME':  'HT',
-      'SCHEDULED': 'NS',
-      'TIMED':     'NS',
-      'POSTPONED': 'PST',
-      'CANCELLED': 'CANC',
-    };
-    return map[statut] ?? 'NS';
+  private leagueBadge(leagueId: number): string {
+    return LEAGUE_BADGES[leagueId] ?? '';
   }
 
-  // Retourne le logo de la compétition depuis football-data.org
-  private competitionLogo(name: string): string {
-    const map: Record<string, string> = {
-      'Ligue 1':        'https://crests.football-data.org/FL1.png',
-      'Premier League': 'https://crests.football-data.org/PL.png',
-      'La Liga':        'https://crests.football-data.org/PD.png',
-      'Bundesliga':     'https://crests.football-data.org/BL1.png',
-      'Serie A':        'https://crests.football-data.org/SA.png',
-      'UEFA Champions League': 'https://crests.football-data.org/CL.png',
-    };
-    return map[name] ?? '';
-  }
-
-  // Génère une URL de drapeau à partir du nom de pays (ex: "france" → drapeau FR)
   private flagUrl(countryName: string): string {
     const map: Record<string, string> = {
       // Europe occidentale
@@ -77,6 +69,7 @@ export class MatchesService {
       'italy':                    'it',
       'portugal':                 'pt',
       'netherlands':              'nl',
+      'the netherlands':          'nl',
       'belgium':                  'be',
       'austria':                  'at',
       'switzerland':              'ch',
@@ -87,10 +80,6 @@ export class MatchesService {
       'ireland':                  'ie',
       'luxembourg':               'lu',
       'monaco':                   'mc',
-      'liechtenstein':            'li',
-      'malta':                    'mt',
-      'san marino':               'sm',
-      'andorra':                  'ad',
       'iceland':                  'is',
       // Europe centrale et orientale
       'czechia':                  'cz',
@@ -104,25 +93,18 @@ export class MatchesService {
       'croatia':                  'hr',
       'serbia':                   'rs',
       'bosnia and herzegovina':   'ba',
-      'bosnia & herzegovina':     'ba',
       'north macedonia':          'mk',
-      'macedonia':                'mk',
       'montenegro':               'me',
       'albania':                  'al',
-      'kosovo':                   'xk',
-      'moldova':                  'md',
       'ukraine':                  'ua',
-      'belarus':                  'by',
       'russia':                   'ru',
       'latvia':                   'lv',
       'lithuania':                'lt',
       'estonia':                  'ee',
       'cyprus':                   'cy',
       'greece':                   'gr',
-      // Moyen-Orient / Asie occidentale
       'turkey':                   'tr',
       'israel':                   'il',
-      'palestine':                'ps',
       'azerbaijan':               'az',
       'armenia':                  'am',
       'georgia':                  'ge',
@@ -152,11 +134,9 @@ export class MatchesService {
       // Asie / Océanie
       'japan':                    'jp',
       'south korea':              'kr',
-      'korea republic':           'kr',
       'china':                    'cn',
       'australia':                'au',
       'saudi arabia':             'sa',
-      'iran':                     'ir',
       'qatar':                    'qa',
       'united arab emirates':     'ae',
       // Divers
@@ -168,32 +148,46 @@ export class MatchesService {
   }
 
   private toMatch = (item: any): Match => {
+    const leagueId: number = item.league_id ?? 0;
     return {
-      id: item.id,
-      date: new Date(item.date_heure),
-      sport: item.sport ?? 'football',
-      status: { short: this.mapStatus(item.statut ?? 'NS'), long: item.statut ?? 'Not Started', elapsed: null },
-      league: { id: this.hashString(item.competition ?? ''), name: item.competition ?? '', country: '', logo: this.competitionLogo(item.competition ?? ''), round: '' },
+      id:      String(item.id),
+      date:    new Date(item.date_heure),
+      sport:   item.sport ?? 'football',
+      status: {
+        short:   item.statut ?? 'NS',
+        long:    item.statut ?? 'NS',
+        elapsed: null,
+      },
+      league: {
+        id:       leagueId,
+        leagueId: leagueId,
+        name:     item.competition ?? '',
+        country:  '',
+        logo:     this.leagueBadge(leagueId),
+        round:    '',
+      },
       home: {
-        id: 0,
-        name: item.equipe_a ?? '',
-        logo: item.logo_a ?? '',
+        id:          0,
+        name:        item.equipe_a ?? '',
+        logo:        item.logo_a ?? '',
         countryCode: item.pays_a ?? '',
         countryName: item.pays_a ?? '',
-        flag: this.flagUrl(item.pays_a ?? ''),
-        goals: item.score_a ?? null,
-        winner: null,
+        flag:        this.flagUrl(item.pays_a ?? ''),
+        goals:       item.score_a ?? null,
+        winner:      null,
       },
       away: {
-        id: 0,
-        name: item.equipe_b ?? '',
-        logo: item.logo_b ?? '',
+        id:          0,
+        name:        item.equipe_b ?? '',
+        logo:        item.logo_b ?? '',
         countryCode: item.pays_b ?? '',
         countryName: item.pays_b ?? '',
-        flag: this.flagUrl(item.pays_b ?? ''),
-        goals: item.score_b ?? null,
-        winner: null,
+        flag:        this.flagUrl(item.pays_b ?? ''),
+        goals:       item.score_b ?? null,
+        winner:      null,
       },
+      venue:    item.venue ?? '',
+      thumbUrl: item.thumb_url ?? '',
     };
   };
 }
