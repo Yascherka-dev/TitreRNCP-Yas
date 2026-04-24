@@ -761,6 +761,7 @@ class Command(BaseCommand):
             obj, was_created = Recipe.objects.update_or_create(
                 titre=data['titre'],
                 pays=data['pays'],
+                type_plat=data.get('type_plat', Recipe.TYPE_SALE),
                 defaults=data,
             )
             if was_created:
