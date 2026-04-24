@@ -1,47 +1,150 @@
-<mat-card class="beer-card">
+<div class="beer-banner">
 
-  <!-- Visuel -->
-  <div class="beer-card__image">
-    @if (beer().imageUrl) {
-      <img [src]="beer().imageUrl" [alt]="beer().nom" class="beer-card__img" />
-    } @else {
-      <div class="beer-card__img-placeholder">
-        <span class="placeholder-icon">🍺</span>
-        <span class="placeholder-brand">Match & Munch</span>
+  <!-- ── Left column ────────────────────────── -->
+  <div class="bb-content">
+
+    <div class="bb-kicker">
+      <span class="bb-kicker-line" aria-hidden="true"></span>
+      PARTENAIRE OFFICIEL
+      @if (beer().equipe) { · {{ beer().equipe.toUpperCase() }} }
+    </div>
+
+    <h3 class="bb-name">{{ beer().brasserie || beer().nom }}</h3>
+    <p class="bb-style"><em>{{ beer().style || beer().nom }}</em></p>
+
+    <p class="bb-desc">{{ beer().description }}</p>
+
+    <!-- Stats -->
+    <div class="bb-stats">
+      @if (beer().degreAlcool) {
+        <div class="bb-stat">
+          <span class="bb-stat-val">{{ beer().degreAlcool }}<sup>°</sup></span>
+          <span class="bb-stat-lbl">ALCOOL</span>
+        </div>
+      }
+      @if (beer().ibu) {
+        <div class="bb-stat">
+          <span class="bb-stat-val">{{ beer().ibu }}</span>
+          <span class="bb-stat-lbl">IBU</span>
+        </div>
+      }
+      @if (beer().volume) {
+        <div class="bb-stat">
+          <span class="bb-stat-val">{{ beer().volume }}<sup>cl</sup></span>
+          <span class="bb-stat-lbl">BOUTEILLE</span>
+        </div>
+      }
+    </div>
+
+    <!-- CTAs -->
+    <div class="bb-ctas">
+      <button class="bb-btn-primary">Commander un coffret 6 →</button>
+      <button class="bb-btn-ghost">Trouver un bar diffuseur</button>
+    </div>
+
+    <!-- Legal -->
+    <div class="bb-warning" role="note">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" flex-shrink="0">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div>
+        <strong>L'ABUS D'ALCOOL EST DANGEREUX POUR LA SANTÉ</strong>
+        <p>À consommer avec modération. Interdit à la vente aux mineurs. La femme enceinte s'expose à des risques pour l'enfant à naître. Pour votre santé, évitez de grignoter en mangeant.</p>
       </div>
-    }
-    <div class="beer-card__region-badge">
-      <mat-icon>place</mat-icon>
-      <span>{{ beer().region || beer().pays }}</span>
     </div>
   </div>
 
-  <mat-card-content>
+  <!-- ── Right column — beer glass SVG ──────── -->
+  <div class="bb-visual" aria-hidden="true">
+    <svg class="bb-glass" viewBox="0 0 200 370" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bbAmber" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stop-color="#9C6208"/>
+          <stop offset="48%"  stop-color="#F0A020"/>
+          <stop offset="100%" stop-color="#9C6208"/>
+        </linearGradient>
+        <linearGradient id="bbShine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stop-color="rgba(255,255,255,.26)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </linearGradient>
+        <radialGradient id="bbGlow" cx="50%" cy="100%" r="55%">
+          <stop offset="0%"   stop-color="#F5A623" stop-opacity=".6"/>
+          <stop offset="100%" stop-color="#F5A623" stop-opacity="0"/>
+        </radialGradient>
+        <clipPath id="bbClip">
+          <path d="M66 95 C58 95 40 295 36 332 L164 332 C160 295 142 95 134 95 Z"/>
+        </clipPath>
+      </defs>
 
-    <!-- Nom + brasserie -->
-    <h3 class="beer-card__name">{{ beer().nom }}</h3>
-    @if (beer().brasserie) {
-      <p class="beer-card__brewery">🏭 {{ beer().brasserie }}</p>
-    }
+      <!-- Base glow -->
+      <ellipse cx="100" cy="352" rx="78" ry="20" fill="url(#bbGlow)"/>
 
-    <!-- Description -->
-    <p class="beer-card__desc">{{ beer().description }}</p>
+      <!-- Glass base platform -->
+      <rect x="50" y="332" width="100" height="12" rx="5" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+      <rect x="44" y="342" width="112" height="8"  rx="4" fill="rgba(255,255,255,.04)"/>
 
-    <!-- Infos -->
-    <div class="beer-card__meta">
-      @if (beer().style) {
-        <div class="meta-item">
-          <mat-icon>local_bar</mat-icon>
-          <span>{{ beer().style }}</span>
-        </div>
+      <!-- Beer fill -->
+      <path d="M66 95 C58 95 40 295 36 332 L164 332 C160 295 142 95 134 95 Z"
+            fill="url(#bbAmber)"/>
+
+      <!-- Left glass shine -->
+      <path d="M66 95 C58 95 42 250 38 310 L52 312 C48 256 56 100 66 95 Z"
+            fill="url(#bbShine)"/>
+
+      <!-- Glass outline -->
+      <path d="M66 95 C58 95 40 295 36 332 L164 332 C160 295 142 95 134 95 Z"
+            fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+
+      <!-- Bubbles (clipped inside glass) -->
+      <g clip-path="url(#bbClip)">
+        <circle cx="76"  cy="300" r="4.5" fill="rgba(255,255,255,.38)"/>
+        <circle cx="122" cy="268" r="3"   fill="rgba(255,255,255,.32)"/>
+        <circle cx="94"  cy="238" r="3.5" fill="rgba(255,255,255,.30)"/>
+        <circle cx="135" cy="210" r="2.5" fill="rgba(255,255,255,.36)"/>
+        <circle cx="68"  cy="195" r="3"   fill="rgba(255,255,255,.28)"/>
+        <circle cx="114" cy="170" r="2"   fill="rgba(255,255,255,.34)"/>
+        <circle cx="82"  cy="150" r="2.5" fill="rgba(255,255,255,.26)"/>
+        <circle cx="140" cy="148" r="2"   fill="rgba(255,255,255,.30)"/>
+      </g>
+
+      <!-- Label -->
+      <rect x="56" y="175" width="88" height="82" rx="5"
+            fill="rgba(8,20,46,.88)" stroke="rgba(255,255,255,.08)" stroke-width=".5"/>
+      <text x="100" y="202"
+            text-anchor="middle"
+            font-family="Georgia,'Times New Roman',serif"
+            font-style="italic" font-size="11.5" fill="#F5A623" opacity=".92">{{ labelLine1() }}</text>
+      @if (labelLine2()) {
+        <text x="100" y="218"
+              text-anchor="middle"
+              font-family="Georgia,'Times New Roman',serif"
+              font-style="italic" font-size="11.5" fill="#F5A623" opacity=".92">{{ labelLine2() }}</text>
       }
-      @if (beer().degreAlcool) {
-        <div class="meta-item">
-          <mat-icon>percent</mat-icon>
-          <span>{{ beer().degreAlcool }}°</span>
-        </div>
-      }
-    </div>
+      <line x1="64" y1="227" x2="136" y2="227" stroke="rgba(255,255,255,.1)" stroke-width=".5"/>
+      <text x="100" y="240"
+            text-anchor="middle"
+            font-family="sans-serif" font-size="7" letter-spacing="1.5"
+            fill="rgba(255,255,255,.42)">{{ (beer().style || '').slice(0, 16).toUpperCase() }}</text>
+      <text x="100" y="253"
+            text-anchor="middle"
+            font-family="sans-serif" font-size="6.5" letter-spacing="1"
+            fill="rgba(255,255,255,.3)">{{ (beer().region || beer().pays || '').toUpperCase() }}</text>
 
-  </mat-card-content>
-</mat-card>
+      <!-- Foam blobs -->
+      <circle cx="60"  cy="88"  r="13" fill="white"/>
+      <circle cx="75"  cy="76"  r="19" fill="white"/>
+      <circle cx="94"  cy="70"  r="23" fill="white"/>
+      <circle cx="114" cy="72"  r="20" fill="white"/>
+      <circle cx="130" cy="80"  r="16" fill="white"/>
+      <circle cx="144" cy="89"  r="11" fill="white"/>
+      <circle cx="50"  cy="94"  r="9"  fill="white"/>
+      <!-- Foam base -->
+      <ellipse cx="100" cy="95" rx="54" ry="14" fill="white" opacity=".96"/>
+      <!-- Foam shadow -->
+      <ellipse cx="100" cy="100" rx="52" ry="7"  fill="rgba(150,90,0,.18)"/>
+    </svg>
+  </div>
+
+</div>
