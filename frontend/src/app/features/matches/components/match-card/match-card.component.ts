@@ -51,10 +51,15 @@ export class MatchCardComponent {
   statusConfig = computed(() => {
     const s = this.match().status.short;
     if (['1H', '2H', 'ET', 'BT', 'P', 'LIVE', 'HT'].includes(s)) {
-      return { label: s === 'HT' ? 'Mi-temps' : `${this.match().status.elapsed}'`, cssClass: 'live' };
+      if (s === 'HT') return { label: 'Mi-temps', cssClass: 'live' };
+      const elapsed = this.match().status.elapsed;
+      return { label: elapsed != null ? `${elapsed}'` : 'En cours', cssClass: 'live' };
     }
-    if (s === 'FT' || s === 'AET' || s === 'PEN') {
+    if (['FT', 'AET', 'PEN'].includes(s)) {
       return { label: 'Terminé', cssClass: 'finished' };
+    }
+    if (['PST', 'CANC', 'ABD', 'SUSP'].includes(s)) {
+      return { label: 'Annulé', cssClass: 'cancelled' };
     }
     return { label: 'À venir', cssClass: 'upcoming' };
   });

@@ -20,7 +20,7 @@
         {{ m.league.name }}
         <span class="round-tag">{{ m.league.round }}</span>
         @if (m.status.short === '1H' || m.status.short === '2H' || m.status.short === 'HT' || m.status.short === 'ET') {
-          <span class="live-tag">En direct {{ m.status.elapsed }}'</span>
+          <span class="live-tag">En direct {{ m.status.elapsed != null ? m.status.elapsed + "'" : '' }}</span>
         }
       </div>
 
@@ -44,7 +44,7 @@
             @if (m.status.short === 'FT' || m.status.short === 'AET' || m.status.short === 'PEN') {
               <div class="d">Terminé</div>
             } @else {
-              <div class="d">{{ m.status.elapsed }}'</div>
+              <div class="d">{{ m.status.elapsed != null ? m.status.elapsed + "'" : 'En cours' }}</div>
             }
           } @else {
             <div class="t">{{ m.date | date:'HH:mm' }}</div>
