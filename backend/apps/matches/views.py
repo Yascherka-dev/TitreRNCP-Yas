@@ -72,13 +72,22 @@ class LivescoresView(APIView):
     def get(self, _request):
         updates = fetch_livescores()
 
+        updated_ids = []
         for upd in updates:
             Match.objects.filter(external_id=upd['external_id']).update(
                 statut=upd['statut'],
                 score_a=upd['score_a'],
                 score_b=upd['score_b'],
             )
+            updated_ids.append(upd['external_id'])
 
+        # Retourne live + matchs terminés mis à jour (le frontend les merge)
         live_statuts = ['1H', '2H', 'HT', 'ET', 'P', 'BT']
-        qs = Match.objects.filter(statut__in=live_statuts).order_by('date_heure')
-        return Response(MatchSerializer(qs, many=True).data)
+        finished_statuts = ['FT', 'AET', 'PEN']
+        qs = Match.objects.filter(
+            statut__in=live_statuts
+        ) | Match.objects.filter(
+            external_id__in=updated_ids,
+            statut__in=finished_statuts,
+        )
+        return Response(MatchSerializer(qs.order_by('date_heure'), many=True).data)

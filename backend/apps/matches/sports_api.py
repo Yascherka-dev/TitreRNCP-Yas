@@ -32,6 +32,8 @@ _STATUS_MAP = {
     'Not Started':       'NS',
     'Match Finished':    'FT',
     'After Extra Time':  'AET',
+    'After Overtime':    'AET',
+    'AOT':               'AET',
     'After Penalties':   'PEN',
     'Match Postponed':   'PST',
     'Postponed':         'PST',
@@ -200,27 +202,57 @@ def fetch_fixtures(date: str | None = None) -> list[dict]:
 
 def fetch_livescores() -> list[dict]:
     """
-    Appelle TheSportsDB V2 livescores (tous sports confondus).
-    Retourne des dicts partiels {external_id, statut, score_a, score_b}
-    à merger dans la base.
+    Combine livescores V2 (matchs en direct) + résultats du jour via eventsday V1.
+    Garantit que les matchs terminés dans la journée passent bien en FT.
     """
+    from datetime import date
     results: list[dict] = []
+    seen: set[str] = set()
     tracked_league_ids = {cfg['id'] for cfg in LEAGUES}
+    cfg_by_id = {cfg['id']: cfg for cfg in LEAGUES}
 
+    # 1. Livescores en direct (V2)
     try:
         data = _v2('livescore/all')
-        events = data.get('livescore') or []
-        for event in events:
+        for event in (data.get('livescore') or []):
             league_id = int(event.get('idLeague') or 0)
             if league_id not in tracked_league_ids:
                 continue
+            ext_id = f'sdb_{event["idEvent"]}'
             results.append({
-                'external_id': f'sdb_{event["idEvent"]}',
-                'statut':  event.get('strStatus', 'NS'),
+                'external_id': ext_id,
+                'statut':  _map_status(event.get('strStatus', 'NS')),
                 'score_a': _parse_score(event.get('intHomeScore')),
                 'score_b': _parse_score(event.get('intAwayScore')),
             })
+            seen.add(ext_id)
     except Exception:
         pass
+
+    # 2. Résultats du jour (V1) — met à jour les matchs terminés hors livescore
+    today = date.today().strftime('%Y-%m-%d')
+    for sport_label, sports in [('Soccer', {'football'}), ('Basketball', {'basketball'}),
+                                  ('Ice Hockey', {'ice_hockey'}), ('Rugby', {'rugby'})]:
+        try:
+            data = _v1('eventsday.php', d=today, s=sport_label)
+            for event in (data.get('events') or []):
+                league_id = int(event.get('idLeague') or 0)
+                if league_id not in tracked_league_ids:
+                    continue
+                ext_id = f'sdb_{event["idEvent"]}'
+                if ext_id in seen:
+                    continue  # déjà couvert par le livescore
+                statut = _map_status(event.get('strStatus', 'NS'))
+                if statut == 'NS':
+                    continue  # pas encore commencé, inutile de mettre à jour
+                results.append({
+                    'external_id': ext_id,
+                    'statut':  statut,
+                    'score_a': _parse_score(event.get('intHomeScore')),
+                    'score_b': _parse_score(event.get('intAwayScore')),
+                })
+                seen.add(ext_id)
+        except Exception:
+            continue
 
     return results
