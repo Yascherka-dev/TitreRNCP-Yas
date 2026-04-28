@@ -1,10 +1,22 @@
+from datetime import timedelta
+
 from django.db.models import Case, When, Value, IntegerField
+from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import Match
 from .serializers import MatchSerializer
 from .sports_api import fetch_fixtures, fetch_livescores
+
+
+_LIVE_STATUTS = ['1H', '2H', 'HT', 'ET', 'P', 'BT']
+
+
+def _cleanup_stale_live_matches() -> None:
+    """Force FT pour les matchs encore "en cours" dont la date est > 3h dans le passé."""
+    cutoff = timezone.now() - timedelta(hours=3)
+    Match.objects.filter(statut__in=_LIVE_STATUTS, date_heure__lt=cutoff).update(statut='FT')
 
 
 class MatchListView(APIView):
@@ -70,6 +82,8 @@ class LivescoresView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, _request):
+        _cleanup_stale_live_matches()
+
         updates = fetch_livescores()
 
         updated_ids = []
@@ -82,10 +96,9 @@ class LivescoresView(APIView):
             updated_ids.append(upd['external_id'])
 
         # Retourne live + matchs terminés mis à jour (le frontend les merge)
-        live_statuts = ['1H', '2H', 'HT', 'ET', 'P', 'BT']
         finished_statuts = ['FT', 'AET', 'PEN']
         qs = Match.objects.filter(
-            statut__in=live_statuts
+            statut__in=_LIVE_STATUTS
         ) | Match.objects.filter(
             external_id__in=updated_ids,
             statut__in=finished_statuts,
