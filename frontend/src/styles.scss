@@ -166,6 +166,16 @@ h1,h2,h3,h4,h5,h6 { margin: 0; line-height: 1.2; font-family: var(--font); }
 .nav-hello { font-size: 14px; color: var(--ink-2); }
 .nav-hello strong { color: var(--ink); font-weight: 700; }
 
+// ── Responsive global ──────────────────────────────────────────────────────
+@media (max-width: 767px) {
+  .container  { padding: 0 24px; }
+  .nav-live   { display: none; }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+}
+
 // ── Buttons ───────────────────────────────────────────────
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
