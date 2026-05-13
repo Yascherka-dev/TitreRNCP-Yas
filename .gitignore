@@ -6,6 +6,9 @@ CLAUDE.md
 # MCP & config local
 .mcp.json
 
+# Superpowers / outils IA — jamais dans le repo
+.superpowers/
+
 # IDE & outils
 .vscode/
 .idea/
