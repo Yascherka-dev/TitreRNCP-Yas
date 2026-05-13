@@ -266,3 +266,35 @@
     svg { fill: var(--orange-500); }
   }
 }
+
+// ── Mobile compact ────────────────────────────
+@media (max-width: 767px) {
+  .match-card {
+    padding: 0.875rem 1rem 0.75rem;
+    gap: 0.6rem;
+    border-radius: 16px;
+  }
+
+  .mc-crest {
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+  }
+
+  .mc-team-name { font-size: 0.72rem; }
+
+  .mc-flag { font-size: 0.6rem; }
+
+  .mc-time { font-size: 1.1rem; }
+
+  .mc-score span { font-size: 1.2rem; }
+
+  .mc-vs { font-size: 1.1rem; }
+
+  .mc-actions { padding-top: 0.65rem; }
+
+  .mc-cta {
+    font-size: 0.75rem !important;
+    padding: 7px 10px !important;
+  }
+}
