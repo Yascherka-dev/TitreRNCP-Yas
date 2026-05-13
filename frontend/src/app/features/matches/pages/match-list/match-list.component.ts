@@ -44,10 +44,19 @@ export class MatchListComponent implements OnInit {
   selectedDate     = signal<string | null>(null);
   countrySearch    = signal('');
   countryDropdown  = signal(false);
+  showFilterSheet  = signal(false);
+
+  readonly todayStr = new Date().toISOString().split('T')[0];
 
   readonly PAGE_SIZE = 10;
   currentPage = signal(1);
   totalPages  = computed(() => Math.ceil(this.filteredMatches().length / this.PAGE_SIZE));
+
+  selectedLeagueName = computed<string>(() => {
+    const id = this.selectedLeague();
+    if (id === 'all') return '';
+    return this.leagues().find(l => l.id === id)?.name ?? String(id);
+  });
 
   sports = computed<string[]>(() => {
     const seen = new Set<string>();
@@ -190,4 +199,18 @@ export class MatchListComponent implements OnInit {
 
   prevPage() { this.currentPage.update(p => Math.max(1, p - 1)); }
   nextPage() { this.currentPage.update(p => Math.min(this.totalPages(), p + 1)); }
+
+  activeFilterCount(): number {
+    let count = 0;
+    if (this.selectedLeague() !== 'all') count++;
+    if (this.selectedDate()) count++;
+    if (this.selectedCountry() !== 'all') count++;
+    return count;
+  }
+
+  clearAllFilters(): void {
+    this.selectLeague('all');
+    this.clearDate();
+    this.selectCountry('all');
+  }
 }

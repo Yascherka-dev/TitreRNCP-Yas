@@ -19,6 +19,82 @@
     </span>
   </div>
 
+  <!-- ══ FILTRE MOBILE (< 768px) ══ -->
+  <div class="mobile-filter-bar">
+    <button class="mfb-btn" [class.mfb-btn--active]="activeFilterCount() > 0" (click)="showFilterSheet.set(true)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      Filtres
+      @if (activeFilterCount() > 0) {
+        <span class="mfb-badge">{{ activeFilterCount() }}</span>
+      }
+    </button>
+    <div class="mfb-chips">
+      @if (selectedLeague() !== 'all') {
+        <span class="mfb-chip">
+          {{ selectedLeagueName() }}
+          <button (click)="selectLeague('all')" aria-label="Retirer filtre">×</button>
+        </span>
+      }
+      @if (selectedDate()) {
+        <span class="mfb-chip">
+          {{ selectedDate() === todayStr ? 'Aujourd\'hui' : selectedDate() }}
+          <button (click)="clearDate()" aria-label="Retirer filtre">×</button>
+        </span>
+      }
+      @if (selectedCountry() !== 'all') {
+        <span class="mfb-chip">
+          {{ selectedCountry() }}
+          <button (click)="selectCountry('all')" aria-label="Retirer filtre">×</button>
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- Bottom sheet overlay -->
+  @if (showFilterSheet()) {
+    <div class="filter-sheet-backdrop" (click)="showFilterSheet.set(false)"></div>
+    <div class="filter-sheet" role="dialog" aria-modal="true" aria-label="Filtres">
+      <div class="filter-sheet__handle"></div>
+      <div class="filter-sheet__header">
+        <span class="filter-sheet__title">Filtres</span>
+        <button class="filter-sheet__clear" (click)="clearAllFilters()">Tout effacer</button>
+      </div>
+
+      <div class="filter-sheet__section">
+        <div class="filter-sheet__label">Compétition</div>
+        <div class="filter-sheet__pills">
+          <button class="filter-sheet__pill" [class.active]="isLeagueSelected('all')" (click)="selectLeague('all')">Tous</button>
+          @for (league of leagues(); track league.id) {
+            <button class="filter-sheet__pill" [class.active]="isLeagueSelected(league.id)" (click)="selectLeague(league.id)">{{ league.name }}</button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-sheet__section">
+        <div class="filter-sheet__label">Date</div>
+        <div class="filter-sheet__pills">
+          <button class="filter-sheet__pill" [class.active]="selectedDate() === todayStr" (click)="setToday()">Aujourd'hui</button>
+          <button class="filter-sheet__pill" [class.active]="!selectedDate()" (click)="clearDate()">Toutes dates</button>
+          <input class="filter-sheet__date-input" type="date" [ngModel]="selectedDate()" (ngModelChange)="selectedDate.set($event)" />
+        </div>
+      </div>
+
+      <div class="filter-sheet__section">
+        <div class="filter-sheet__label">Pays</div>
+        <div class="filter-sheet__pills">
+          <button class="filter-sheet__pill" [class.active]="isCountrySelected('all')" (click)="selectCountry('all')">Tous</button>
+          @for (country of countries().slice(0, 12); track country) {
+            <button class="filter-sheet__pill" [class.active]="isCountrySelected(country)" (click)="selectCountry(country)">{{ country }}</button>
+          }
+        </div>
+      </div>
+
+      <button class="filter-sheet__apply" (click)="showFilterSheet.set(false)">
+        Voir {{ filteredMatches().length }} match{{ filteredMatches().length > 1 ? 's' : '' }}
+      </button>
+    </div>
+  }
+
   <!-- Zone filtres -->
   <div class="dashboard__filters-zone">
 
