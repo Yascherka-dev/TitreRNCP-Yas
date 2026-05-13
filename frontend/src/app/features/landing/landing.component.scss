@@ -631,17 +631,145 @@ footer {
   .hero-content h1 { font-size: 2.8rem; }
 }
 
-@media (max-width: 480px) {
-  .hero-stage { padding: 6rem 16px 3rem; }
+@media (max-width: 767px) {
+  // ── Nav : safe area iPhone + logo only ────────
+  // fallback 44px = barre de statut iPhone standard
+  .nav {
+    padding-top: env(safe-area-inset-top, 44px);
+  }
+  .nav .nav-links  { display: none; }
+  .nav .btn        { display: none; }
+  .nav .nav-spacer { display: none; }
 
-  .hero-ctas { flex-direction: column; align-items: flex-start; }
+  // ── Hero stage : colonne, grille 8px ──────────
+  // top: 96px + safe-area = nav + 40px air | sides: 24px | bottom: 48px
+  .hero-stage {
+    flex-direction: column;
+    align-items: stretch;
+    padding: calc(96px + env(safe-area-inset-top, 44px)) 24px 48px;
+    gap: 32px;
+  }
 
+  // ── Hero content ──────────────────────────────
+  .hero-content {
+    max-width: 100%;
+    gap: 16px;
+  }
+
+  .hero-badge {
+    font-size: 0.72rem;
+    padding: 6px 12px 6px 10px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2.2rem, 10vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .hero-lede {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    max-width: 100%;
+  }
+
+  // ── Stats : masquées ──────────────────────────
+  .hero-stats { display: none; }
+
+  // ── CTAs : colonne pleine largeur ─────────────
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .btn-lg {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+
+  // ── Scoreboard : sous les CTAs ────────────────
+  .hero-scoreboard {
+    width: 100%;
+    max-width: 100%;
+    position: static;
+    transform: none;
+    animation: none;
+    align-self: stretch;
+  }
+
+  .score-card {
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  .score-kicker  { margin-bottom: 16px; }
+  .score-teams   { margin-bottom: 16px; }
+
+  .sc-crest {
+    width: 40px;
+    height: 40px;
+  }
+
+  .big-time { font-size: 1.35rem; }
+
+  // ── Ballon déco : masqué ──────────────────────
   .hero-ball { display: none; }
 
-  .hiw { padding: 4rem 0; }
-  .banner { padding: 4rem 0; }
+  // ── Section "Comment ça marche" ───────────────
+  // 48px haut/bas = 6×8 · container gère les sides
+  .hiw { padding: 48px 0; }
 
-  footer .row { flex-direction: column; text-align: center; }
+  .hiw-head {
+    padding: 0 24px;
+    margin-bottom: 32px;
+  }
 
-  .score-card { padding: 1.25rem; }
+  .hiw-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 24px;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .hiw-step {
+    padding: 24px;
+  }
+
+  // ── Banner CTA ────────────────────────────────
+  .banner { padding: 48px 0; }
+
+  .banner-inner {
+    max-width: none;
+    margin: 0;
+    padding: 40px 24px;
+    border-radius: 16px;
+    gap: 16px;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .banner-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  // ── Footer ────────────────────────────────────
+  footer .row {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    padding: 32px 24px;
+  }
+
+  footer .links { gap: 16px; }
 }

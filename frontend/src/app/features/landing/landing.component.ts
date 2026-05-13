@@ -93,7 +93,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     this.observer = new IntersectionObserver(
       entries => entries.forEach(e => {
         if (e.isIntersecting) {
-          e.target.classList.add('visible');
+          e.target.classList.add('in');
           this.observer.unobserve(e.target);
         }
       }),
