@@ -1,116 +1,194 @@
 <div class="fav-page">
 
-  <header class="fav-header">
-    <h1 class="fav-header__title">Mes favoris</h1>
-    <p class="fav-header__sub">Retrouvez vos matchs, recettes et équipes sauvegardés</p>
-  </header>
-
-  <div class="fav-columns">
-
-  <!-- Matchs -->
-  <section class="fav-section">
-    <div class="fav-section__head">
-      <span class="fav-section__label">Matchs</span>
-      <span class="fav-section__count">{{ favoriteMatches().length }}</span>
+  <!-- ══ HERO ══ -->
+  <header class="fav-hero">
+    <div class="fav-hero__text">
+      <h1>Mon livre de <span class="ital">recettes</span>.</h1>
+      <p class="fav-hero__sub">
+        Chaque plat garde en mémoire le match qui l'a inspiré.
+        @if (favoriteRecipes().length > 0) {
+          {{ favoriteRecipes().length }} recette{{ favoriteRecipes().length > 1 ? 's' : '' }},
+          {{ uniqueCountryCount() }} pays{{ uniqueCountryCount() > 1 ? '' : '' }}.
+        } @else {
+          Sauvegarde tes premières recettes depuis les pages de matchs.
+        }
+      </p>
     </div>
 
-    @if (favoriteMatches().length === 0) {
-      <div class="fav-empty">
-        <span class="fav-empty__icon">⚽</span>
-        <p>Aucun match sauvegardé</p>
-        <a routerLink="/matches" class="fav-empty__link">Explorer les matchs</a>
+    <!-- Stats -->
+    @if (favoriteRecipes().length > 0) {
+      <div class="fav-stats">
+        <div class="fav-stat">
+          <span class="fav-stat__n">{{ favoriteRecipes().length }}</span>
+          <span class="fav-stat__l">Recettes sauvegardées</span>
+        </div>
+        <div class="fav-stat">
+          <span class="fav-stat__n">{{ uniqueCountryCount() }}</span>
+          <span class="fav-stat__l">Pays explorés</span>
+        </div>
+        <div class="fav-stat">
+          <span class="fav-stat__n">{{ favoriteMatches().length }}</span>
+          <span class="fav-stat__l">Matchs sauvegardés</span>
+        </div>
+        <div class="fav-stat">
+          <span class="fav-stat__n">{{ formatTime(avgCookTime()) }}</span>
+          <span class="fav-stat__l">Temps moyen en cuisine</span>
+        </div>
       </div>
-    } @else {
-      <div class="fav-grid">
+    }
+  </header>
+
+  <!-- ══ MATCHS COMPACTS ══ -->
+  @if (favoriteMatches().length > 0) {
+    <section class="fav-matches">
+      <div class="fav-matches__head">
+        <span class="fav-matches__label">Matchs sauvegardés</span>
+        <span class="fav-matches__count">{{ favoriteMatches().length }}</span>
+      </div>
+      <div class="fav-matches__row">
         @for (match of favoriteMatches(); track match.id) {
-          <a class="match-tile" [routerLink]="['/matches', match.id]">
-            <button class="tile-delete" (click)="removeFavorite('match', match.id, $event)" aria-label="Retirer des favoris">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <a class="match-chip" [routerLink]="['/matches', match.id]">
+            <button class="chip-del" (click)="removeFavorite('match', match.id, $event)" aria-label="Retirer">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
-            <div class="match-tile__body">
-
-              <div class="match-tile__team">
-                <img class="match-tile__logo" [src]="match.home.logo" [alt]="match.home.name" />
-                <span class="match-tile__name">{{ match.home.name }}</span>
-              </div>
-
-              <div class="match-tile__center">
-                <span class="match-tile__vs">VS</span>
-                <span class="match-tile__date">{{ match.date | date:'dd MMM' }}</span>
-              </div>
-
-              <div class="match-tile__team match-tile__team--away">
-                <img class="match-tile__logo" [src]="match.away.logo" [alt]="match.away.name" />
-                <span class="match-tile__name">{{ match.away.name }}</span>
-              </div>
-
-            </div>
-            <div class="match-tile__footer">
-              <span>Voir le match →</span>
-            </div>
+            <img class="chip-logo" [src]="match.home.logo" [alt]="match.home.name" />
+            <span class="chip-vs">vs</span>
+            <img class="chip-logo" [src]="match.away.logo" [alt]="match.away.name" />
+            <span class="chip-names">{{ match.home.name }} · {{ match.away.name }}</span>
+            <span class="chip-date">{{ match.date | date:'dd MMM' }}</span>
           </a>
         }
       </div>
-    }
-  </section>
-
-  <!-- Recettes -->
-  <section class="fav-section">
-    <div class="fav-section__head">
-      <span class="fav-section__label">Recettes</span>
-      <span class="fav-section__count">{{ favoriteRecipes().length }}</span>
-    </div>
-
-    @if (favoriteRecipes().length === 0) {
-      <div class="fav-empty">
-        <span class="fav-empty__icon">🍽️</span>
-        <p>Aucune recette sauvegardée</p>
-      </div>
-    } @else {
-      <div class="fav-grid">
-        @for (recipe of favoriteRecipes(); track recipe.id) {
-          <div class="recipe-tile" role="button" tabindex="0" (click)="openRecipe(recipe)">
-            <button class="tile-delete" (click)="removeFavorite('recette', recipe.id, $event)" aria-label="Retirer des favoris">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-            <div class="recipe-tile__img-wrap">
-              @if (recipe.imageUrl) {
-                <img [src]="recipe.imageUrl" [alt]="recipe.title" />
-              } @else {
-                <span class="recipe-tile__fallback">🍴</span>
-              }
-              <span class="recipe-tile__country-badge">{{ recipe.country }}</span>
-            </div>
-            <div class="recipe-tile__body">
-              <p class="recipe-tile__title">{{ recipe.title }}</p>
-              <div class="recipe-tile__meta">
-                <span>⏱ {{ recipe.prepTime + recipe.cookTime }} min</span>
-                <span class="recipe-tile__dot">·</span>
-                <span>{{ recipe.difficulty }}</span>
-              </div>
-            </div>
-            <div class="recipe-tile__footer">Voir la recette →</div>
-          </div>
-        }
-      </div>
-    }
-  </section>
-
-
-  @if (false) {
-  <!-- Équipes — feature not yet available -->
-  <section class="fav-section">
-    <div class="fav-section__head">
-      <span class="fav-section__label">Équipes</span>
-      <span class="fav-section__count">0</span>
-    </div>
-    <div class="fav-empty">
-      <span class="fav-empty__icon">🏟️</span>
-      <p>Bientôt disponible</p>
-    </div>
-  </section>
+    </section>
   }
 
-  </div><!-- /fav-columns -->
+  <!-- ══ SEARCH + FILTERS ══ -->
+  @if (favoriteRecipes().length > 0) {
+    <div class="fav-toolbar">
+      <div class="fav-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input
+          type="text"
+          placeholder="Rechercher un plat, un pays..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+      </div>
+      <div class="fav-filters">
+        <button
+          class="fav-pill"
+          [class.active]="activeFilter() === 'all'"
+          (click)="activeFilter.set('all')"
+        >
+          Toutes <span class="pill-count">{{ favoriteRecipes().length }}</span>
+        </button>
+        @for (country of uniqueCountries(); track country) {
+          <button
+            class="fav-pill"
+            [class.active]="activeFilter() === country"
+            (click)="activeFilter.set(country)"
+          >
+            {{ country }}
+            <span class="pill-count">{{ countByCountry(country) }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ══ RECIPE GRID ══ -->
+  @if (favoriteRecipes().length === 0) {
+
+    <div class="fav-empty-state">
+      <div class="fav-empty-state__icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 15h18"/><path d="M4 15a8 8 0 0 1 16 0"/><path d="M12 7v-3M10 4h4"/><path d="M3 19h18"/></svg>
+      </div>
+      <h3>Ton carnet est encore vide</h3>
+      <p>Choisis un match, laisse Marco cuisiner, puis sauvegarde les recettes qui t'inspirent.</p>
+      <a class="btn-cta" routerLink="/matches">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg>
+        Voir les matchs
+      </a>
+    </div>
+
+  } @else if (filteredRecipes().length === 0) {
+
+    <div class="fav-no-result">
+      <p>Aucune recette ne correspond à cette recherche.</p>
+      <button class="fav-pill active" (click)="searchQuery.set(''); activeFilter.set('all')">Tout afficher</button>
+    </div>
+
+  } @else {
+
+    <div class="fav-grid">
+      @for (recipe of filteredRecipes(); track recipe.id) {
+        <article class="rc" (click)="openRecipe(recipe)" role="button" tabindex="0" (keydown.enter)="openRecipe(recipe)">
+
+          <!-- Image area -->
+          <div class="rc__img">
+            <img [src]="localImageFor(recipe)" [alt]="recipe.title" class="rc__food" />
+
+            <!-- Country badge -->
+            <div class="rc__country">
+              <img [src]="recipe.flag" [alt]="recipe.country" class="rc__flag" />
+              {{ recipe.country }}
+            </div>
+
+            <!-- Unfavorite heart -->
+            <button
+              class="rc__heart"
+              (click)="removeFavorite('recette', recipe.id, $event)"
+              aria-label="Retirer des favoris"
+              title="Retirer des favoris"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Body -->
+          <div class="rc__body">
+            <h3 class="rc__title">{{ recipe.title }}</h3>
+
+            <div class="rc__meta">
+              <span class="rc__meta-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                {{ recipe.prepTime + recipe.cookTime }} min
+              </span>
+              <span class="rc__meta-dot">·</span>
+              <span class="rc__meta-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                {{ recipe.servings }} pers.
+              </span>
+            </div>
+
+            <!-- Team context -->
+            @if (recipe.equipe) {
+              <div class="rc__team">
+                <img [src]="recipe.flag" [alt]="recipe.country" class="rc__team-flag" />
+                <span class="rc__team-name">{{ recipe.equipe }}</span>
+              </div>
+            }
+          </div>
+
+        </article>
+      }
+    </div>
+
+    <!-- CTA end card -->
+    <div class="fav-cta-card">
+      <div class="fav-cta-card__icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+      </div>
+      <h3>Envie de découvrir plus ?</h3>
+      <p>Explore le calendrier et laisse Marco inventer de nouvelles recettes pour ce soir.</p>
+      <a class="btn-cta" routerLink="/matches">
+        Voir les matchs à venir
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+  }
 
 </div>
