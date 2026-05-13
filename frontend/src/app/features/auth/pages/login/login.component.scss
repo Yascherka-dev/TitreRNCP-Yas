@@ -191,6 +191,133 @@
   }
 }
 
+// ── Mobile (< 768px) ──────────────────────────
+.auth-mobile-hero {
+  display: none;
+  width: 100%;
+  background: var(--mm-primary);
+  padding: 24px 20px 36px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+}
+
+.auth-mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 15px;
+  color: white;
+  text-decoration: none;
+  letter-spacing: -.01em;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 16px;
+}
+
+.auth-mobile-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--mm-accent), #ffA040);
+  box-shadow: 0 4px 12px rgba(244,128,26,.4);
+}
+
+.auth-mobile-amp {
+  font-style: italic;
+  color: var(--mm-accent);
+  font-weight: 400;
+}
+
+.auth-mobile-title {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+  color: white;
+  margin: 0 0 6px;
+  position: relative;
+  z-index: 1;
+
+  .ital {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--mm-accent);
+  }
+}
+
+.auth-mobile-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.6);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+  line-height: 1.5;
+}
+
+@media (max-width: 767px) {
+  // ── Plein écran (ignore les paddings de page-content) ──
+  .split {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    background: var(--mm-primary);
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  .partner { display: none; }
+
+  // ── Hero : safe area en haut ──────────────────
+  .auth-mobile-hero {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: calc(env(safe-area-inset-top, 44px) + 24px) 24px 40px;
+  }
+
+  // ── Section form : colonne, remplit le reste ──
+  .auth {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 0;
+    width: 100%;
+    flex: 1;
+    background: transparent;
+  }
+
+  // ── Carte : bottom-sheet ──────────────────────
+  .auth-card {
+    border-radius: 24px 24px 0 0;
+    border: none;
+    box-shadow: 0 -8px 32px rgba(0,0,0,.18);
+    padding: 32px 24px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    flex: 1;
+    max-width: 100%;
+  }
+
+  .auth-logo    { display: none; }
+  .auth-card h1 { display: none; }
+  .tagline      { display: none; }
+}
+
 // ── Footer link ───────────────────────────────
 .auth-foot {
   text-align: center;
