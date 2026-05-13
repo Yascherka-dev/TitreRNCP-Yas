@@ -22,7 +22,12 @@ export interface ChefScript {
     <div class="loader-wrap">
       <header class="head">
         <div class="avatar" [class.dolce]="script().chef === 'dolce'">
-          {{ script().chef === 'dolce' ? 'D' : 'M' }}
+          @if (script().chef === 'marco') {
+            <img [src]="done() ? '/assets/images/marco/marco-thumbs.png' : '/assets/images/marco/marco-cooking.png'"
+                 alt="Marco" class="avatar-img" />
+          } @else {
+            D
+          }
         </div>
         <div class="meta">
           <div class="who">

@@ -31,6 +31,7 @@
   position: relative;
   flex-shrink: 0;
   animation: halo 2.2s ease-in-out infinite;
+  overflow: hidden;
 
   &.dolce { color: #FFCFB0; }
 
@@ -44,6 +45,15 @@
             mask: radial-gradient(circle, transparent 62%, black 63%);
     animation: spin 1.8s linear infinite;
   }
+}
+
+.avatar-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
 }
 
 .meta {
