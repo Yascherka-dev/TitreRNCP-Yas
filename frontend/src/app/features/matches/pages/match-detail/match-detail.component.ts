@@ -103,12 +103,15 @@ export class MatchDetailComponent implements OnInit {
   marcoLoadingScript = computed<ChefScript | null>(() => {
     const m = this.match();
     if (!m) return null;
+    const domestic = m.home.countryName.toLowerCase() === m.away.countryName.toLowerCase();
+    const labelA = domestic ? m.home.name : m.home.countryName;
+    const labelB = domestic ? m.away.name : m.away.countryName;
     return {
       chef: 'marco',
       matchLabel: `${m.home.name} vs ${m.away.name}`,
       tokens: [
         '🍳 Marco explore les cuisines du monde… ',
-        { italic: `${m.home.countryName} × ${m.away.countryName}` },
+        { italic: `${labelA} × ${labelB}` },
         ', ça sent bon par ici. Sélection des meilleures recettes en cours…',
       ],
       steps: ['Match reçu', 'Saveurs par pays', 'Recettes rédigées', 'À table'],
@@ -119,17 +122,20 @@ export class MatchDetailComponent implements OnInit {
     const m = this.match();
     const s = this.suggestion();
     if (!m || !s) return null;
+    const domestic = m.home.countryName.toLowerCase() === m.away.countryName.toLowerCase();
+    const labelA = domestic ? m.home.name : m.home.countryName;
+    const labelB = domestic ? m.away.name : m.away.countryName;
     return {
       chef: 'marco',
       matchLabel: `${m.home.name} vs ${m.away.name}`,
       tokens: [
         'Allez, on allume le feu. ',
-        { italic: `${m.home.countryName} × ${m.away.countryName}` },
+        { italic: `${labelA} × ${labelB}` },
         ', ça appelle du goût et des couleurs. Côté ',
-        { italic: m.home.countryName }, ' : ',
+        { italic: labelA }, ' : ',
         { italic: s.recetteA?.title ?? '…' },
         '. Côté ',
-        { italic: m.away.countryName }, ' : ',
+        { italic: labelB }, ' : ',
         { italic: s.recetteB?.title ?? '…' },
         '. Je dresse les assiettes — ',
         { italic: 'bonne soirée.' },

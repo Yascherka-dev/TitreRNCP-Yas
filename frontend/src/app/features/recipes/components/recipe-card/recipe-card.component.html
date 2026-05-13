@@ -2,14 +2,7 @@
 
   <!-- Image / placeholder -->
   <div class="rc-img">
-    @if (recipe().imageUrl) {
-      <img [src]="recipe().imageUrl" [alt]="recipe().title" />
-    } @else {
-      <div class="rc-placeholder">
-        <span class="rc-chef">🧑‍🍳</span>
-        <span class="rc-brand">Marco · Match &amp; Munch</span>
-      </div>
-    }
+    <img [src]="localImage()" [alt]="recipe().title" class="rc-food-img" />
     <div class="rc-country">
       <img [src]="recipe().flag" [alt]="recipe().country" class="rc-flag" />
       {{ recipe().country }}

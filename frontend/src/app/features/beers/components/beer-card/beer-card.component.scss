@@ -256,7 +256,8 @@
 .bb-glass {
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 8px 32px rgba(245, 166, 35, .35));
+  object-fit: contain;
+  filter: drop-shadow(0 8px 32px rgba(245, 166, 35, .45));
   animation: beerFloat 6s ease-in-out infinite;
 }
 
@@ -269,4 +270,25 @@
   .bb-glass    { animation: none; }
   .bb-btn-primary,
   .bb-btn-ghost { transition: none; }
+}
+
+@media (max-width: 767px) {
+  .bb-warning {
+    padding: 0.75rem 0.9rem;
+
+    p { font-size: 0.7rem; }
+
+    strong { font-size: 0.62rem; }
+  }
+
+  .bb-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bb-btn-primary,
+  .bb-btn-ghost {
+    text-align: center;
+    justify-content: center;
+  }
 }

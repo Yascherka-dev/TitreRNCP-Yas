@@ -1,6 +1,12 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { Beer } from '../../../../core/models/recipe.model';
 
+const BEER_IMGS: Record<string, string> = {
+  tulipe: '/assets/images/beer/beer-tulipe.png',
+  chope:  '/assets/images/beer/beer-chope.png',
+  ballon: '/assets/images/beer/beer-ballon.png',
+};
+
 @Component({
   selector: 'app-beer-card',
   standalone: true,
@@ -12,17 +18,14 @@ import { Beer } from '../../../../core/models/recipe.model';
 export class BeerCardComponent {
   beer = input.required<Beer>();
 
-  labelLine1 = computed(() => {
-    const name = this.beer().brasserie || this.beer().nom;
-    const words = name.split(' ');
-    if (name.length <= 13 || words.length === 1) return name.slice(0, 13);
-    return words.slice(0, Math.ceil(words.length / 2)).join(' ');
-  });
-
-  labelLine2 = computed(() => {
-    const name = this.beer().brasserie || this.beer().nom;
-    const words = name.split(' ');
-    if (name.length <= 13 || words.length <= 1) return '';
-    return words.slice(Math.ceil(words.length / 2)).join(' ');
+  beerImage = computed(() => {
+    const style = (this.beer().style || '').toLowerCase();
+    if (style.includes('ipa') || style.includes('pale') || style.includes('blonde') || style.includes('wheat') || style.includes('blanche')) {
+      return BEER_IMGS['tulipe'];
+    }
+    if (style.includes('lager') || style.includes('pils') || style.includes('amber') || style.includes('ambrée')) {
+      return BEER_IMGS['chope'];
+    }
+    return BEER_IMGS['ballon'];
   });
 }

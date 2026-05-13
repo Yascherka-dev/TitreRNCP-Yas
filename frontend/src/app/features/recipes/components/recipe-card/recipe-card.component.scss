@@ -27,17 +27,18 @@
   height: 190px;
   overflow: hidden;
   flex-shrink: 0;
+  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-600) 100%);
+  display: flex; align-items: center; justify-content: center;
   img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
 }
 
-.rc-placeholder {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
-  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-600) 100%);
+.rc-food-img {
+  width: 140px !important;
+  height: 140px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.35));
+  transition: transform .4s !important;
 }
-
-.rc-chef { font-size: 2.5rem; line-height: 1; }
-.rc-brand { font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,.55); letter-spacing: .1em; text-transform: uppercase; }
 
 .rc-country {
   position: absolute; top: 10px; left: 10px;
