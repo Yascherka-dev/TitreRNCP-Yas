@@ -24,3 +24,7 @@
 <main [class.page-content]="!isLanding()">
   <router-outlet />
 </main>
+
+@if (!isLanding()) {
+  <app-bottom-tab-bar />
+}

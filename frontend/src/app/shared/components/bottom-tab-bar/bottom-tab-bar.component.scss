@@ -1,0 +1,38 @@
+.tab-bar {
+  display: none; // caché par défaut — visible uniquement sur mobile via app.component.scss
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: #fff;
+  border-top: 1px solid #E7E3DB;
+  padding: 6px 0 env(safe-area-inset-bottom, 8px);
+  justify-content: space-around;
+  align-items: center;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 16px;
+  color: #7C8599;
+  text-decoration: none;
+  font-family: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  transition: color .15s;
+  flex: 1;
+
+  svg { flex-shrink: 0; }
+
+  &--active {
+    color: #F4801A;
+  }
+}
+
+@media (max-width: 767px) {
+  .tab-bar { display: flex; }
+}
