@@ -47,11 +47,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           });
           return next(retryReq);
         }),
-        catchError((refreshErr) => {
+        catchError(() => {
           isRefreshing = false;
           refreshDone$.next(null);
           auth.logout();
-          return throwError(() => refreshErr);
+          // Réessaie sans token — les endpoints publics fonctionnent, les privés échouent normalement
+          return next(req);
         }),
       );
     }),
