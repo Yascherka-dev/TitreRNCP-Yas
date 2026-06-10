@@ -16,12 +16,12 @@ TIMEOUT = 15
 # country=None → multi-pays (CL, Coupe du monde...) → lookup par équipe
 LEAGUES = [
     dict(id=4334, sport='football',          season='2025-2026', country='france'),  # Ligue 1
-    dict(id=4480, sport='football',          season='2024-2025', country=None),      # CL
-    dict(id=4387, sport='basketball',        season='2024-2025', country='usa'),     # NBA
-    dict(id=4391, sport='american_football', season='2024-2025', country='usa'),     # NFL
-    dict(id=4380, sport='ice_hockey',        season='2024-2025', country='usa'),     # NHL
-    dict(id=4430, sport='rugby',             season='2024-2025', country='france'),  # Top 14
-    dict(id=4714, sport='rugby',             season='2025',      country=None),      # Six Nations
+    dict(id=4480, sport='football',          season='2025-2026', country=None),      # CL
+    dict(id=4387, sport='basketball',        season='2025-2026', country='usa'),     # NBA
+    dict(id=4391, sport='american_football', season='2025-2026', country='usa'),     # NFL
+    dict(id=4380, sport='ice_hockey',        season='2025-2026', country='usa'),     # NHL
+    dict(id=4430, sport='rugby',             season='2025-2026', country='france'),  # Top 14
+    dict(id=4714, sport='rugby',             season='2026',      country=None),      # Six Nations
     dict(id=4607, sport='football',          season='2026',      country=None),      # FIFA World Cup 2026
 ]
 
