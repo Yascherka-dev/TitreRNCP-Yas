@@ -1,4 +1,7 @@
+from django.db import IntegrityError
+
 from rest_framework import generics, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from .models import Rating
@@ -20,7 +23,10 @@ class RatingListView(generics.ListCreateAPIView):
         return qs
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        try:
+            serializer.save(user=self.request.user)
+        except IntegrityError:
+            raise ValidationError({"detail": "Une note existe déjà pour cet élément."})
 
 
 class RatingDetailView(generics.DestroyAPIView):
