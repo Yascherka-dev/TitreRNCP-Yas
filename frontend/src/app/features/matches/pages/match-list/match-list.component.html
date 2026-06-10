@@ -206,8 +206,29 @@
       }
       @empty {
         <div class="dashboard__empty">
-          <span>🏟️</span>
-          <p>Aucun match pour ces filtres.</p>
+          <span class="dashboard__empty-icon">🏟️</span>
+          @if (selectedSport() !== 'all') {
+            <p class="dashboard__empty-title">
+              Pas de match de <strong>{{ sportLabel(selectedSport()) }}</strong> dans les 60 prochains jours.
+            </p>
+            @if (sports().length > 0) {
+              <p class="dashboard__empty-sub">Il y a de l'action dans d'autres sports&nbsp;:</p>
+              <div class="dashboard__empty-sports">
+                @for (s of sports(); track s) {
+                  @if (s !== selectedSport()) {
+                    <button class="chip chip--sport" (click)="selectSport(s)">
+                      {{ sportLabel(s) }}
+                    </button>
+                  }
+                }
+                <button class="chip chip--sport chip--all" (click)="selectSport('all')">
+                  Tous les sports
+                </button>
+              </div>
+            }
+          } @else {
+            <p class="dashboard__empty-title">Aucun match dans les 60 prochains jours.</p>
+          }
         </div>
       }
     }

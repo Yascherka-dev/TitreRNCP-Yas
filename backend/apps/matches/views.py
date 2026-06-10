@@ -24,7 +24,11 @@ class MatchListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        qs = Match.objects.all()
+        today = timezone.now().date()
+        qs = Match.objects.filter(
+            date_heure__date__gte=today - timedelta(days=3),
+            date_heure__date__lte=today + timedelta(days=60),
+        )
 
         date = request.query_params.get('date')
         if date:
