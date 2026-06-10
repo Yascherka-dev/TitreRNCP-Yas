@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-bottom-tab-bar',
@@ -9,4 +10,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './bottom-tab-bar.component.html',
   styleUrl: './bottom-tab-bar.component.scss',
 })
-export class BottomTabBarComponent {}
+export class BottomTabBarComponent {
+  readonly auth = inject(AuthService);
+  readonly isLoggedIn = this.auth.isLoggedIn;
+}

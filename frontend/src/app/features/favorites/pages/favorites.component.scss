@@ -23,6 +23,32 @@
   }
 }
 
+// ── Stats block ───────────────────────────────
+.fav-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.fav-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &__n {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--navy-900);
+    line-height: 1;
+  }
+
+  &__l {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+}
+
 // ── Columns layout ────────────────────────────
 .fav-columns {
   display: flex;
@@ -257,6 +283,17 @@
 
   .fav-hero h1 {
     font-size: clamp(1.8rem, 7vw, 2.5rem);
+  }
+}
+
+// ── Recipe card image (contexte favorites) ────
+.rc__img {
+  max-height: 200px;
+  overflow: hidden;
+
+  .rc__food {
+    max-height: 200px;
+    object-fit: cover;
   }
 }
 
