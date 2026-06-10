@@ -22,6 +22,7 @@ LEAGUES = [
     dict(id=4380, sport='ice_hockey',        season='2024-2025', country='usa'),     # NHL
     dict(id=4430, sport='rugby',             season='2024-2025', country='france'),  # Top 14
     dict(id=4714, sport='rugby',             season='2025',      country=None),      # Six Nations
+    dict(id=4607, sport='football',          season='2026',      country=None),      # FIFA World Cup 2026
 ]
 
 # Cache en mémoire : idTeam (str) → pays normalisé
