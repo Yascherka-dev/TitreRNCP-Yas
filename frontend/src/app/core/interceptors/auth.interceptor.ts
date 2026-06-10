@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service';
 
 // Partagé entre toutes les invocations de l'intercepteur (singleton de facto)
 let isRefreshing = false;
-const refreshDone$ = new BehaviorSubject<string | null>(null);
+const refreshDone$ = new BehaviorSubject<string | null>(null); // null = en attente, 'FAILED' = échec
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
@@ -27,8 +27,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           filter((t) => t !== null),
           take(1),
           switchMap((newToken) => {
+            if (newToken === 'FAILED') return next(req);
             const retryReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${newToken}` },
+              setHeaders: { Authorization: `Bearer ${newToken!}` },
             });
             return next(retryReq);
           }),
@@ -49,9 +50,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         }),
         catchError(() => {
           isRefreshing = false;
-          refreshDone$.next(null);
           auth.logout();
-          // Réessaie sans token — les endpoints publics fonctionnent, les privés échouent normalement
+          refreshDone$.next('FAILED');
           return next(req);
         }),
       );
