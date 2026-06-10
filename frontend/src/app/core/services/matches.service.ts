@@ -4,6 +4,25 @@ import { Observable, map, shareReplay } from 'rxjs';
 import { Match } from '../models/fixture.model';
 import { environment } from '../../../environments/environment';
 
+interface RawMatch {
+  id: number;
+  date_heure: string;
+  sport: string;
+  statut: string;
+  competition: string;
+  league_id: number;
+  equipe_a: string;
+  equipe_b: string;
+  pays_a: string;
+  pays_b: string;
+  logo_a: string;
+  logo_b: string;
+  score_a: number | null;
+  score_b: number | null;
+  venue: string;
+  thumb_url: string;
+}
+
 // TheSportsDB league badge URLs (keyed by league ID)
 const LEAGUE_BADGES: Record<number, string> = {
   4334: 'https://r2.thesportsdb.com/images/media/league/badge/9f7z9d1742983155.png',  // Ligue 1
@@ -21,7 +40,7 @@ export class MatchesService {
   private apiUrl  = environment.apiUrl;
 
   private fixtures$ = this.http
-    .get<any[]>(`${this.apiUrl}/matches/`)
+    .get<RawMatch[]>(`${this.apiUrl}/matches/`)
     .pipe(map(items => items.map(this.toMatch)), shareReplay(1));
 
   getFixtures(): Observable<Match[]> {
@@ -30,13 +49,13 @@ export class MatchesService {
 
   getFixturesByDate(date: string): Observable<Match[]> {
     return this.http
-      .get<any[]>(`${this.apiUrl}/matches/?date=${date}`)
+      .get<RawMatch[]>(`${this.apiUrl}/matches/?date=${date}`)
       .pipe(map(items => items.map(this.toMatch)));
   }
 
   getFixturesBySport(sport: string): Observable<Match[]> {
     return this.http
-      .get<any[]>(`${this.apiUrl}/matches/?sport=${sport}`)
+      .get<RawMatch[]>(`${this.apiUrl}/matches/?sport=${sport}`)
       .pipe(map(items => items.map(this.toMatch)));
   }
 
@@ -48,7 +67,7 @@ export class MatchesService {
 
   getLivescores(): Observable<Match[]> {
     return this.http
-      .get<any[]>(`${this.apiUrl}/matches/livescores/`)
+      .get<RawMatch[]>(`${this.apiUrl}/matches/livescores/`)
       .pipe(map(items => items.map(this.toMatch)));
   }
 
@@ -163,7 +182,7 @@ export class MatchesService {
     return `https://flagcdn.com/w40/${code}.png`;
   }
 
-  private toMatch = (item: any): Match => {
+  private toMatch = (item: RawMatch): Match => {
     const leagueId: number = item.league_id ?? 0;
     return {
       id:      String(item.id),

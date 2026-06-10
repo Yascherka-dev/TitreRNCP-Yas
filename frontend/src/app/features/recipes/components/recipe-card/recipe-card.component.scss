@@ -135,6 +135,14 @@
   .recipe-card                      { transition: none; }
 }
 
+@media (max-width: 480px) {
+  .rc-img        { height: 150px; }
+  .rc-food-img   { width: 110px !important; height: 110px !important; }
+  .rc-body       { padding: 0.9rem 0.9rem 0.75rem; gap: 0.45rem; }
+  .rc-title      { font-size: 0.95rem; }
+  .rc-meta span  { font-size: 0.72rem; }
+}
+
 .rc-cta {
   margin-top: auto;
   display: inline-flex; align-items: center; gap: 8px;

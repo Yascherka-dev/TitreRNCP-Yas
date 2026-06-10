@@ -1,67 +1,40 @@
-// ── Animation shimmer ─────────────────────────────────────────────────────────
-// Dégradé qui se déplace de gauche à droite pour simuler un chargement
 @keyframes shimmer {
   0%   { background-position: -600px 0; }
   100% { background-position:  600px 0; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sk { animation: none; background: #ebebeb; }
-}
-
-// Classe de base appliquée sur tous les blocs skeleton
 .sk {
   display: block;
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 25%,   // gris clair
-    #e0e0e0 50%,   // gris légèrement plus foncé (reflet)
-    #f0f0f0 75%
-  );
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 600px 100%;
   animation: shimmer 1.4s infinite linear;
   border-radius: 4px;
 }
 
-// ── Carte conteneur ────────────────────────────────────────────────────────────
 .skeleton-card {
-  border-radius: 12px !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07) !important;
-
-  mat-card-content {
-    padding: 1.25rem !important;
-  }
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 1.25rem 1.5rem 1rem;
+  box-shadow: var(--shadow-sm);
 }
 
-// ── Formes réutilisables ───────────────────────────────────────────────────────
-
-// Cercles (logos équipes, logo ligue, icône favori)
 .sk--circle-sm   { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; }
 .sk--circle-lg   { width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0; }
 .sk--circle-icon { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
 
-// Barres (noms d'équipes, textes)
 .sk--bar  { height: 11px; border-radius: 6px; }
 .sk--w-xs { width: 44px; }
 .sk--w-sm { width: 60px; }
 .sk--w-md { width: 90px; }
 .sk--w-lg { width: 130px; }
 
-// Pill (badge statut)
-.sk--pill { height: 22px; border-radius: 20px; margin-bottom: 1rem; }
-
-// Bloc central score/heure
+.sk--pill  { height: 22px; border-radius: 20px; margin-bottom: 1rem; }
 .sk--score { width: 52px; height: 48px; border-radius: 8px; }
+.sk--btn   { height: 36px; width: 155px; border-radius: 8px; }
 
-// Bouton "Voir les recettes"
-.sk--btn { height: 36px; width: 155px; border-radius: 8px; }
-
-// Utilitaire alignement
 .sk--ml-auto { margin-left: auto; }
 
-// ── Layouts ────────────────────────────────────────────────────────────────────
-
-// Ligne ligue : logo | nom | round (à droite)
 .sk-league {
   display: flex;
   align-items: center;
@@ -69,7 +42,6 @@
   margin-bottom: 0.75rem;
 }
 
-// Grille équipes : calque la même structure que .match-card__teams
 .sk-teams {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -78,7 +50,6 @@
   margin-bottom: 1.25rem;
 }
 
-// Colonne d'une équipe : logo + nom + pays
 .sk-team {
   display: flex;
   flex-direction: column;
@@ -86,11 +57,14 @@
   gap: 0.4rem;
 }
 
-// Ligne actions : bouton à gauche, icône à droite
 .sk-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-top: 1px solid #f0f0f0;
   padding-top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk { animation: none; background: #ebebeb; }
 }

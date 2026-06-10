@@ -184,3 +184,19 @@
   .dot, .cursor           { animation: none; opacity: 1; }
   .steps li.active .badge { animation: none; }
 }
+
+@media (max-width: 480px) {
+  .loader-wrap { padding: 18px 16px; }
+
+  .bubble { padding: 14px 16px; font-size: 13.5px; min-height: 60px; }
+
+  .steps {
+    flex-wrap: wrap;
+    gap: 8px 4px;
+
+    li {
+      flex: 0 0 calc(50% - 2px);
+      font-size: 10.5px;
+    }
+  }
+}

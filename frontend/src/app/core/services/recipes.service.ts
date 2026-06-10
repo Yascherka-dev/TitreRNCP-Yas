@@ -6,6 +6,24 @@ import { environment } from '../../../environments/environment';
 
 
 
+interface RawRecipe {
+  id: number;
+  titre: string;
+  pays: string;
+  region: string;
+  equipe: string;
+  type_plat: string;
+  description: string;
+  temps_preparation: number;
+  temps_cuisson: number;
+  nb_personnes: number;
+  difficulte: string;
+  image_url: string;
+  ingredients: string[];
+  etapes: string[];
+  tags: string[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class RecipesService {
   private http   = inject(HttpClient);
@@ -13,11 +31,11 @@ export class RecipesService {
 
   getAll(): Observable<Recipe[]> {
     return this.http
-      .get<any[]>(`${this.apiUrl}/recipes/`)
+      .get<RawRecipe[]>(`${this.apiUrl}/recipes/`)
       .pipe(map(items => items.map(r => this.toRecipe(r))));
   }
 
-  private toRecipe(r: any): Recipe {
+  private toRecipe(r: RawRecipe): Recipe {
     return {
       id:          String(r.id),
       title:       r.titre ?? '',
@@ -25,13 +43,13 @@ export class RecipesService {
       countryCode: r.pays ?? '',
       region:      r.region ?? '',
       equipe:      r.equipe ?? '',
-      typePlat:    r.type_plat ?? 'salé',
+      typePlat:    (r.type_plat ?? 'salé') as 'salé' | 'sucré',
       flag:        this.flagUrl(r.pays ?? ''),
       description: r.description ?? '',
       prepTime:    r.temps_preparation ?? 0,
       cookTime:    r.temps_cuisson ?? 0,
       servings:    r.nb_personnes ?? 4,
-      difficulty:  r.difficulte ?? 'Facile',
+      difficulty:  (r.difficulte ?? 'Facile') as 'Facile' | 'Moyen' | 'Difficile',
       imageUrl:    r.image_url ?? '',
       ingredients: r.ingredients ?? [],
       steps:       r.etapes ?? [],
