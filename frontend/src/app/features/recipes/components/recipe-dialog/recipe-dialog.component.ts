@@ -45,6 +45,7 @@ export class RecipeDialogComponent {
     this.dialogRef.afterClosed().subscribe(() => {
       this.location.go(urlAvantOuverture);
     });
+    this.reviewsService.loadReviews(this.recipe.id);
   }
 
   comments      = computed(() => this.reviewsService.commentsFor(this.recipe.id));
@@ -108,8 +109,10 @@ export class RecipeDialogComponent {
       this.submitError.set('Votre avis doit contenir au moins 10 caractères.');
       return;
     }
-    this.reviewsService.setRating(this.recipe.id, this.pendingRating());
-    this.reviewsService.addComment(this.recipe.id, this.commentText(), this.pendingRating());
+    const rating  = this.pendingRating();
+    const content = this.commentText();
+    this.reviewsService.setRating(this.recipe.id, rating).subscribe();
+    this.reviewsService.addComment(this.recipe.id, content, rating).subscribe();
     this.pendingRating.set(0);
     this.commentText.set('');
     this.submitError.set('');
