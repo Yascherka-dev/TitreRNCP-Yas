@@ -145,10 +145,10 @@
   color: var(--ink-3);
 
   img {
-    width: 14px;
-    height: 10px;
-    object-fit: cover;
+    height: 11px;
+    width: auto;
     border-radius: 2px;
+    display: block;
   }
 }
 

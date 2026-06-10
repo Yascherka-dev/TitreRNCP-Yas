@@ -2,7 +2,7 @@
 
   <!-- League row -->
   <div class="mc-league">
-    <img [src]="match().league.logo" [alt]="match().league.name" class="mc-league-logo" />
+    <img [src]="match().league.logo" [alt]="match().league.name" class="mc-league-logo" (error)="$any($event.target).style.display='none'" />
     <span class="mc-league-name">{{ match().league.name }}</span>
     <span class="mc-status mc-status--{{ statusConfig().cssClass }}">
       @if (statusConfig().cssClass === 'live') {

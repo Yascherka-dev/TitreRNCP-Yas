@@ -7,12 +7,12 @@ import { environment } from '../../../environments/environment';
 // TheSportsDB league badge URLs (keyed by league ID)
 const LEAGUE_BADGES: Record<number, string> = {
   4334: 'https://r2.thesportsdb.com/images/media/league/badge/9f7z9d1742983155.png',  // Ligue 1
-  4480: 'https://r2.thesportsdb.com/images/media/league/badge/yfz9u11698329979.png',  // UCL
-  4387: 'https://r2.thesportsdb.com/images/media/league/badge/ajkyop1520230513.png',  // NBA
-  4391: 'https://r2.thesportsdb.com/images/media/league/badge/y5nvl91519022553.png',  // NFL
-  4380: 'https://r2.thesportsdb.com/images/media/league/badge/gpte3j1674917228.png',  // NHL
-  4430: 'https://r2.thesportsdb.com/images/media/league/badge/4pv0ts1701693602.png',  // Top 14
-  4714: 'https://r2.thesportsdb.com/images/media/league/badge/vupfoc1617273194.png',  // Six Nations
+  4480: 'https://r2.thesportsdb.com/images/media/league/badge/facv1u1742998896.png',  // UCL
+  4387: 'https://r2.thesportsdb.com/images/media/league/badge/frdjqy1536585083.png',  // NBA
+  4391: 'https://r2.thesportsdb.com/images/media/league/badge/g85fqz1662057187.png',  // NFL
+  4380: 'https://r2.thesportsdb.com/images/media/league/badge/4cem2k1619616539.png',  // NHL
+  4430: 'https://r2.thesportsdb.com/images/media/league/badge/xrsqtw1452903237.png',  // Top 14
+  4714: 'https://r2.thesportsdb.com/images/media/league/badge/7h1wr91738670253.png',  // Six Nations
 };
 
 @Injectable({ providedIn: 'root' })
@@ -54,6 +54,22 @@ export class MatchesService {
 
   private leagueBadge(leagueId: number): string {
     return LEAGUE_BADGES[leagueId] ?? '';
+  }
+
+  private countryLabel(pays: string): string {
+    const labels: Record<string, string> = {
+      france: 'France', england: 'Angleterre', spain: 'Espagne',
+      germany: 'Allemagne', italy: 'Italie', portugal: 'Portugal',
+      netherlands: 'Pays-Bas', belgium: 'Belgique', scotland: 'Écosse',
+      usa: 'USA', 'united states': 'USA', canada: 'Canada',
+      brazil: 'Brésil', argentina: 'Argentine', mexico: 'Mexique',
+      japan: 'Japon', 'south korea': 'Corée du Sud', australia: 'Australie',
+      morocco: 'Maroc', senegal: 'Sénégal', 'ivory coast': "Côte d'Ivoire",
+      turkey: 'Turquie', switzerland: 'Suisse', denmark: 'Danemark',
+      sweden: 'Suède', croatia: 'Croatie', ukraine: 'Ukraine',
+      poland: 'Pologne', 'czech republic': 'Tchéquie', czechia: 'Tchéquie',
+    };
+    return labels[pays.toLowerCase()] ?? pays.charAt(0).toUpperCase() + pays.slice(1);
   }
 
   private flagUrl(countryName: string): string {
@@ -171,7 +187,7 @@ export class MatchesService {
         name:        item.equipe_a ?? '',
         logo:        item.logo_a ?? '',
         countryCode: item.pays_a ?? '',
-        countryName: item.pays_a ?? '',
+        countryName: this.countryLabel(item.pays_a ?? ''),
         flag:        this.flagUrl(item.pays_a ?? ''),
         goals:       item.score_a ?? null,
         winner:      null,
@@ -181,7 +197,7 @@ export class MatchesService {
         name:        item.equipe_b ?? '',
         logo:        item.logo_b ?? '',
         countryCode: item.pays_b ?? '',
-        countryName: item.pays_b ?? '',
+        countryName: this.countryLabel(item.pays_b ?? ''),
         flag:        this.flagUrl(item.pays_b ?? ''),
         goals:       item.score_b ?? null,
         winner:      null,

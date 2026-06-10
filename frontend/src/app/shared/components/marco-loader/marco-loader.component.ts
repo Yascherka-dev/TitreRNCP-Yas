@@ -1,5 +1,5 @@
 import {
-  Component, input, signal, computed,
+  Component, input, output, signal, computed,
   OnInit, OnDestroy, inject, ChangeDetectionStrategy,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -46,7 +46,7 @@ export interface ChefScript {
       @if (script().steps?.length) {
         <ol class="steps">
           @for (s of script().steps!; track $index; let i = $index) {
-            <li [class.done]="i < activeStep()"
+            <li [class.done]="done() || i < activeStep()"
                 [class.active]="i === activeStep() && !done()">
               <span class="badge">{{ i < activeStep() ? '✓' : (i + 1) }}</span>
               {{ s }}
@@ -62,6 +62,8 @@ export class MarcoLoaderComponent implements OnInit, OnDestroy {
   script      = input.required<ChefScript>();
   autoRestart = input<boolean>(true);
   charDelayMs = input<number>(22);
+
+  completed = output<void>();
 
   private readonly sanitizer = inject(DomSanitizer);
 
@@ -110,6 +112,7 @@ export class MarcoLoaderComponent implements OnInit, OnDestroy {
     const tokens = this.script().tokens;
     if (tokenIdx >= tokens.length) {
       this.done.set(true);
+      this.completed.emit();
       if (this.autoRestart()) {
         this.timer = setTimeout(() => this.play(), 3200);
       }

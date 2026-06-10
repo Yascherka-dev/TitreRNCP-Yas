@@ -100,6 +100,10 @@ export class MatchDetailComponent implements OnInit {
   regenerating    = signal(false);
   loadingMsg      = signal('');
 
+  recipeTab     = signal<'sale' | 'sucre'>('sale');
+  beerTab       = signal<'a' | 'b'>('a');
+  marcoFinished = signal(false);
+
   marcoLoadingScript = computed<ChefScript | null>(() => {
     const m = this.match();
     if (!m) return null;
@@ -134,9 +138,13 @@ export class MatchDetailComponent implements OnInit {
         ', ça appelle du goût et des couleurs. Côté ',
         { italic: labelA }, ' : ',
         { italic: s.recetteA?.title ?? '…' },
+        ' et en sucré, ',
+        { italic: s.pecheMignonA?.title ?? '…' },
         '. Côté ',
         { italic: labelB }, ' : ',
         { italic: s.recetteB?.title ?? '…' },
+        ' et ',
+        { italic: s.pecheMignonB?.title ?? '…' },
         '. Je dresse les assiettes — ',
         { italic: 'bonne soirée.' },
       ],
@@ -237,6 +245,7 @@ export class MatchDetailComponent implements OnInit {
     const m = this.match();
     if (!m) return;
     this.regenerating.set(true);
+    this.marcoFinished.set(false);
     this.suggestion.set(null);
 
     this.suggestionError.set(false);

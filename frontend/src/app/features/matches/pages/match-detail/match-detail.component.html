@@ -77,7 +77,7 @@
       </div>
     </section>
 
-    <!-- ══ RECETTES ══ -->
+    <!-- ══ RECETTES (tabs Salé / Sucré) ══ -->
     <section class="sec">
       <div class="sec-head">
         <div>
@@ -92,12 +92,34 @@
 
       @if (suggestion(); as s) {
         @if (marcoScript(); as script) {
-          <app-marco-loader [script]="script" [autoRestart]="false" style="margin-bottom:1.5rem;" />
+          <app-marco-loader [script]="script" [autoRestart]="false" style="margin-bottom:1.5rem;"
+            (completed)="marcoFinished.set(true)" />
         }
-        <div class="recipes-grid">
-          @if (s.recetteA) { <app-recipe-card [recipe]="s.recetteA" /> }
-          @if (s.recetteB) { <app-recipe-card [recipe]="s.recetteB" /> }
-        </div>
+
+        @if (marcoFinished()) {
+          <!-- Tabs -->
+          <div class="tab-bar">
+            <button class="tab-btn" [class.tab-btn--active]="recipeTab() === 'sale'" (click)="recipeTab.set('sale')">
+              🍽️ Salé
+            </button>
+            <button class="tab-btn" [class.tab-btn--active]="recipeTab() === 'sucre'" (click)="recipeTab.set('sucre')">
+              🍰 Sucré
+            </button>
+          </div>
+
+          @if (recipeTab() === 'sale') {
+            <div class="recipes-grid">
+              @if (s.recetteA) { <app-recipe-card [recipe]="s.recetteA" /> }
+              @if (s.recetteB) { <app-recipe-card [recipe]="s.recetteB" /> }
+            </div>
+          } @else {
+            <div class="recipes-grid">
+              @if (s.pecheMignonA) { <app-recipe-card [recipe]="s.pecheMignonA" /> }
+              @if (s.pecheMignonB) { <app-recipe-card [recipe]="s.pecheMignonB" /> }
+            </div>
+          }
+        }
+
       } @else if (suggestionError()) {
         <div class="feedback feedback--error">
           <span class="feedback-icon">😕</span>
@@ -115,25 +137,7 @@
       }
     </section>
 
-    <!-- ══ PÉCHÉ MIGNON ══ -->
-    @if (suggestion(); as s) {
-      @if (s.pecheMignonA || s.pecheMignonB) {
-        <section class="sec">
-          <div class="sec-head">
-            <div>
-              <h2>La gourmandise <span class="ital">du soir</span>.</h2>
-              <p class="sub">La douceur régionale pour finir en beauté</p>
-            </div>
-          </div>
-          <div class="recipes-grid">
-            @if (s.pecheMignonA) { <app-recipe-card [recipe]="s.pecheMignonA" /> }
-            @if (s.pecheMignonB) { <app-recipe-card [recipe]="s.pecheMignonB" /> }
-          </div>
-        </section>
-      }
-    }
-
-    <!-- ══ BIÈRES ══ -->
+    <!-- ══ BIÈRES (tabs équipe A / équipe B) ══ -->
     @if (suggestion(); as s) {
       @if (s.biereA || s.biereB) {
         <section class="sec">
@@ -143,10 +147,28 @@
               <p class="sub">La brasserie locale de chaque équipe — pour trinquer comme un local</p>
             </div>
           </div>
-          <div class="beer-stack">
-            @if (s.biereA) { <app-beer-card [beer]="s.biereA" /> }
-            @if (s.biereB) { <app-beer-card [beer]="s.biereB" /> }
+
+          <!-- Tabs équipes -->
+          <div class="tab-bar">
+            @if (s.biereA) {
+              <button class="tab-btn" [class.tab-btn--active]="beerTab() === 'a'" (click)="beerTab.set('a')">
+                <img [src]="m.home.flag" [alt]="m.home.countryName" class="tab-flag" />
+                {{ m.home.name }}
+              </button>
+            }
+            @if (s.biereB) {
+              <button class="tab-btn" [class.tab-btn--active]="beerTab() === 'b'" (click)="beerTab.set('b')">
+                <img [src]="m.away.flag" [alt]="m.away.countryName" class="tab-flag" />
+                {{ m.away.name }}
+              </button>
+            }
           </div>
+
+          @if (beerTab() === 'a' && s.biereA) {
+            <app-beer-card [beer]="s.biereA" />
+          } @else if (beerTab() === 'b' && s.biereB) {
+            <app-beer-card [beer]="s.biereB" />
+          }
         </section>
       }
     }
