@@ -16,7 +16,7 @@
     </div>
 
     <!-- Stats -->
-    @if (favoriteRecipes().length > 0) {
+    @if (favoriteMatches().length > 0 || favoriteRecipes().length > 0) {
       <div class="fav-stats">
         <div class="fav-stat">
           <span class="fav-stat__n">{{ favoriteRecipes().length }}</span>
@@ -97,7 +97,7 @@
   }
 
   <!-- ══ RECIPE GRID ══ -->
-  @if (favoriteRecipes().length === 0) {
+  @if (favoriteMatches().length === 0 && favoriteRecipes().length === 0) {
 
     <div class="fav-empty-state">
       <div class="fav-empty-state__icon">
@@ -105,6 +105,20 @@
       </div>
       <h3>Ton carnet est encore vide</h3>
       <p>Choisis un match, laisse Marco cuisiner, puis sauvegarde les recettes qui t'inspirent.</p>
+      <a class="btn-cta" routerLink="/matches">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg>
+        Voir les matchs
+      </a>
+    </div>
+
+  } @else if (favoriteRecipes().length === 0) {
+
+    <div class="fav-empty-state fav-empty-state--recipes">
+      <div class="fav-empty-state__icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 15h18"/><path d="M4 15a8 8 0 0 1 16 0"/><path d="M12 7v-3M10 4h4"/><path d="M3 19h18"/></svg>
+      </div>
+      <h3>Aucune recette sauvegardee</h3>
+      <p>Ouvre un match, laisse Marco cuisiner, puis sauvegarde les recettes qui t'inspirent.</p>
       <a class="btn-cta" routerLink="/matches">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg>
         Voir les matchs
