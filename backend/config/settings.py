@@ -17,7 +17,10 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Liste séparée par des virgules, à renseigner avec le domaine de prod une fois DEBUG=False.
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    h.strip() for h in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+    if h.strip()
+]
 
 
 # Applications
@@ -134,10 +137,10 @@ SIMPLE_JWT = {
 
 # CORS — localhost:4200 en dev, domaine Vercel en prod (via l'env, séparés par virgules)
 
-CORS_ALLOWED_ORIGINS = os.getenv(
-    'CORS_ALLOWED_ORIGINS',
-    'http://localhost:4200'
-).split(',')
+CORS_ALLOWED_ORIGINS = [
+    o.strip() for o in os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:4200').split(',')
+    if o.strip()
+]
 
 
 # Validation des mots de passe
