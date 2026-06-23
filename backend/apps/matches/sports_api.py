@@ -7,6 +7,7 @@ V2 (header X-API-KEY) pour les livescores.
 import requests
 from django.conf import settings
 from django.utils.dateparse import parse_datetime
+from django.utils.timezone import make_aware, is_aware
 
 API_V1 = 'https://www.thesportsdb.com/api/v1/json'
 API_V2 = 'https://www.thesportsdb.com/api/v2/json'
@@ -60,6 +61,13 @@ _SPORT_MAP = {
     'Baseball':          'baseball',
     'Cricket':           'cricket',
 }
+
+
+def _parse_aware(value: str):
+    dt = parse_datetime(value or '')
+    if dt is None:
+        return None
+    return dt if is_aware(dt) else make_aware(dt)
 
 
 def _key() -> str:
@@ -145,7 +153,7 @@ def _to_match_dict(event: dict, league_cfg: dict) -> dict | None:
         'equipe_b':    away_name,
         'pays_a':      pays_a,
         'pays_b':      pays_b,
-        'date_heure':  parse_datetime(event.get('strTimestamp', '')),
+        'date_heure':  _parse_aware(event.get('strTimestamp', '')),
         'statut':      statut,
         'score_a':     _parse_score(event.get('intHomeScore')),
         'score_b':     _parse_score(event.get('intAwayScore')),
