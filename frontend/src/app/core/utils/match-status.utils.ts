@@ -11,13 +11,20 @@ const FINISHED_CODES = new Set(['FT', 'AET', 'PEN']);
 export function inferStatus(match: Match): string {
   const s = match.status.short;
 
-  if (LIVE_CODES.has(s) || FINISHED_CODES.has(s)) return s;
-  if (s !== 'NS') return s; // PST, CANC, ABD…
+  if (FINISHED_CODES.has(s)) return s;
 
   const elapsedMs = Date.now() - match.date.getTime();
-  if (elapsedMs <= 0)                      return 'NS';   // pas encore commencé
-  if (elapsedMs >= 130 * 60 * 1000)        return 'FT';   // > 2h10 → probablement terminé
-  return 'LIVE';                                           // dans la fenêtre → en cours
+
+  // Statut live retourné par l'API : fiable seulement si < 130 min depuis le coup d'envoi
+  if (LIVE_CODES.has(s)) {
+    return elapsedMs >= 130 * 60 * 1000 ? 'FT' : s;
+  }
+
+  if (s !== 'NS') return s; // PST, CANC, ABD…
+
+  if (elapsedMs <= 0)                return 'NS';
+  if (elapsedMs >= 130 * 60 * 1000) return 'FT';
+  return 'LIVE';
 }
 
 export function isEffectivelyLive(match: Match): boolean {
