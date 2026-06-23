@@ -26,7 +26,7 @@ class MatchListView(APIView):
     def get(self, request):
         today = timezone.now().date()
         qs = Match.objects.filter(
-            date_heure__date__gte=today - timedelta(days=3),
+            date_heure__date__gte=today - timedelta(days=30),
             date_heure__date__lte=today + timedelta(days=60),
         )
 
