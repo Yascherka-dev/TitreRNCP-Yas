@@ -73,6 +73,7 @@ const FLAG_CODES: Record<string, string> = {
   ecuador:                  'ec',
   venezuela:                've',
   peru:                     'pe',
+  haiti:                    'ht',
   panama:                   'pa',
   'costa rica':             'cr',
   honduras:                 'hn',

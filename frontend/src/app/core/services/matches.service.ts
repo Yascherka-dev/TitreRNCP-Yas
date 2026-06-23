@@ -102,7 +102,7 @@ export class MatchesService {
     brazil: 'Brésil', argentina: 'Argentine', mexico: 'Mexique',
     colombia: 'Colombie', chile: 'Chili', uruguay: 'Uruguay',
     ecuador: 'Équateur', venezuela: 'Venezuela', peru: 'Pérou',
-    panama: 'Panama', 'costa rica': 'Costa Rica', honduras: 'Honduras',
+    haiti: 'Haïti', panama: 'Panama', 'costa rica': 'Costa Rica', honduras: 'Honduras',
     jamaica: 'Jamaïque', 'el salvador': 'El Salvador', paraguay: 'Paraguay',
     bolivia: 'Bolivie', 'trinidad and tobago': 'Trinidad',
     // Afrique
