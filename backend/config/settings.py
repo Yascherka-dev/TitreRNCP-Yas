@@ -1,16 +1,22 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+import sys
 from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me-in-production')
+# True uniquement pendant l'exécution des tests, sert à neutraliser le throttling.
+TESTING = 'test' in sys.argv
 
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+# Obligatoire : aucune valeur en dur. Lève une KeyError au démarrage si absente.
+SECRET_KEY = os.environ['SECRET_KEY']
 
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+# Liste séparée par des virgules, à renseigner avec le domaine de prod une fois DEBUG=False.
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
@@ -40,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -97,6 +104,16 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ),
+    # Rates neutralisés en test (None) pour éviter les 429 sur 127.0.0.1.
+    'DEFAULT_THROTTLE_RATES': {
+        'anon':  None if TESTING else '60/min',
+        'user':  None if TESTING else '120/min',
+        'login': None if TESTING else '5/min',
+    },
 }
 
 
@@ -109,7 +126,7 @@ SIMPLE_JWT = {
 }
 
 
-# CORS — Angular en dev sur localhost:4200
+# CORS — localhost:4200 en dev, domaine Vercel en prod (via l'env, séparés par virgules)
 
 CORS_ALLOWED_ORIGINS = os.getenv(
     'CORS_ALLOWED_ORIGINS',
@@ -135,9 +152,19 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Fichiers statiques
+# Fichiers statiques — servis par WhiteNoise en prod
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
