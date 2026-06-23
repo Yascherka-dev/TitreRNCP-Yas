@@ -4,6 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { Match } from '../../../../core/models/fixture.model';
 import { FavoritesService } from '../../../../core/services/favorites.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { inferStatus } from '../../../../core/utils/match-status.utils';
 
 @Component({
   selector: 'app-match-card',
@@ -47,7 +48,7 @@ export class MatchCardComponent {
   }
 
   statusConfig = computed(() => {
-    const s = this.match().status.short;
+    const s = inferStatus(this.match());
     if (['1H', '2H', 'ET', 'BT', 'P', 'LIVE', 'HT'].includes(s)) {
       if (s === 'HT') return { label: 'Mi-temps', cssClass: 'live' };
       const elapsed = this.match().status.elapsed;
@@ -63,7 +64,7 @@ export class MatchCardComponent {
   });
 
   isStarted = computed(() => {
-    const s = this.match().status.short;
+    const s = inferStatus(this.match());
     return !['NS', 'TBD', 'PST', 'CANC', 'ABD'].includes(s);
   });
 }

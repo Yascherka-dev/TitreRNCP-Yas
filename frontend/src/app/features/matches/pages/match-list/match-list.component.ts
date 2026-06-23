@@ -8,6 +8,7 @@ import { MatchCardComponent } from '../../components/match-card/match-card.compo
 import { SkeletonMatchCardComponent } from '../../../../shared/components/skeleton-match-card/skeleton-match-card.component';
 import { MatchesService } from '../../../../core/services/matches.service';
 import { Match } from '../../../../core/models/fixture.model';
+import { inferStatus, isEffectivelyLive } from '../../../../core/utils/match-status.utils';
 
 interface LeagueFilter { id: number | 'all'; name: string; }
 
@@ -121,7 +122,10 @@ export class MatchListComponent implements OnInit {
     }
 
     return result.slice().sort((a, b) => {
-      const order = (m: Match) => LIVE_STATUSES.has(m.status.short) ? 0 : m.status.short === 'NS' ? 1 : 2;
+      const order = (m: Match) => {
+        const s = inferStatus(m);
+        return LIVE_STATUSES.has(s) ? 0 : s === 'NS' ? 1 : 2;
+      };
       const diff = order(a) - order(b);
       return diff !== 0 ? diff : a.date.getTime() - b.date.getTime();
     });
@@ -166,7 +170,7 @@ export class MatchListComponent implements OnInit {
   }
 
   private _updateLiveCount() {
-    this.liveCount.set(this.matches().filter(m => LIVE_STATUSES.has(m.status.short)).length);
+    this.liveCount.set(this.matches().filter(m => isEffectivelyLive(m)).length);
   }
 
   selectSport(sport: string | 'all') {
