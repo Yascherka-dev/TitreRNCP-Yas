@@ -112,7 +112,7 @@ export class RecipeDialogComponent {
     const rating  = this.pendingRating();
     const content = this.commentText();
     this.reviewsService.setRating(this.recipe.id, rating).subscribe();
-    this.reviewsService.addComment(this.recipe.id, content, rating).subscribe();
+    this.reviewsService.addComment(this.recipe.id, content).subscribe();
     this.pendingRating.set(0);
     this.commentText.set('');
     this.submitError.set('');

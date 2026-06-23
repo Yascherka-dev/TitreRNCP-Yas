@@ -210,33 +210,25 @@ export class MatchDetailComponent implements OnInit {
       )
       .subscribe(s => {
         this.stopLoadingMsgs();
-        this.suggestion.set(s); // on stocke la suggestion (les 2 recettes) dans le signal
+        this.suggestion.set(s);
 
-        if (!s) return; // si la suggestion est vide on s'arrête là, rien à ouvrir
+        if (!s) return;
 
-        // On lit le param ?recipe= dans l'URL (ex: "/matches/5?recipe=42" → donne "42")
-        // queryParamMap = la map de tous les params de l'URL après le ?
-        // .get('recipe') = on récupère spécifiquement la valeur du param "recipe"
+        // ?recipe= permet d'ouvrir directement une recette depuis un lien partagé
         const recipeId = this.route.snapshot.queryParamMap.get('recipe');
-
-        // Si le param n'existe pas dans l'URL (lien normal sans share) → on ne fait rien
         if (!recipeId) return;
 
-        // On cherche dans les 2 recettes de la suggestion laquelle a cet id
-        // String(r.id) = on convertit l'id en texte au cas où il serait un nombre, pour comparer avec recipeId qui est toujours un string
         const recette = [s.recetteA, s.recetteB, s.pecheMignonA, s.pecheMignonB]
           .filter(Boolean)
           .find(r => String(r!.id) === recipeId);
 
-        // Si aucune recette ne correspond à l'id (id invalide ou recette pas dans ce match) → on s'arrête
         if (!recette) return;
 
-        // On ouvre le dialog avec la recette trouvée, exactement comme le fait RecipeCard
         this.dialog.open(RecipeDialogComponent, {
-          data: recette,       // la recette complète passée au dialog
-          maxWidth: '560px',   // largeur max sur desktop
-          width: '95vw',       // largeur sur mobile (95% de la fenêtre)
-          panelClass: 'recipe-dialog-panel', // classe CSS custom pour le style du dialog
+          data: recette,
+          maxWidth: '560px',
+          width: '95vw',
+          panelClass: 'recipe-dialog-panel',
         });
       });
   }

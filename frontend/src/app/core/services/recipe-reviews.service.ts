@@ -96,7 +96,7 @@ export class RecipeReviewsService {
       );
   }
 
-  addComment(recipeId: string, content: string, rating: number): Observable<void> {
+  addComment(recipeId: string, content: string): Observable<void> {
     return this.http
       .post<ApiComment>(`${this.apiUrl}/comments/`, {
         type: 'recette',

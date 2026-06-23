@@ -33,8 +33,6 @@ export class MatchCardComponent {
     event.stopPropagation();
     event.preventDefault();
 
-    //console.log('match id:', this.match().id, typeof this.match().id);
-
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return;

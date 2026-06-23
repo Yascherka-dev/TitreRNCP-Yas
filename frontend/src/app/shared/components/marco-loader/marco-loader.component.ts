@@ -7,7 +7,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export type Token = string | { italic: string };
 
 export interface ChefScript {
-  chef: 'marco' | 'dolce';
+  chef: 'marco';
   matchLabel: string;
   tokens: Token[];
   steps?: string[];
@@ -21,18 +21,14 @@ export interface ChefScript {
   template: `
     <div class="loader-wrap">
       <header class="head">
-        <div class="avatar" [class.dolce]="script().chef === 'dolce'">
-          @if (script().chef === 'marco') {
-            <img [src]="done() ? '/assets/images/marco/marco-thumbs.png' : '/assets/images/marco/marco-cooking.png'"
-                 alt="Marco" class="avatar-img" />
-          } @else {
-            D
-          }
+        <div class="avatar">
+          <img [src]="done() ? '/assets/images/marco/marco-thumbs.png' : '/assets/images/marco/marco-cooking.png'"
+               alt="Marco" class="avatar-img" />
         </div>
         <div class="meta">
           <div class="who">
             <span class="dot"></span>
-            {{ script().chef === 'dolce' ? 'Dolce · pâtissière IA' : 'Marco · votre chef agent' }}
+            Marco · votre chef agent
           </div>
           <div class="status" [innerHTML]="statusHtml()"></div>
         </div>
