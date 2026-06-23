@@ -31,8 +31,10 @@ _team_country_cache: dict[str, str] = {}
 
 # Statuts longs (schedule) → codes courts
 _STATUS_MAP = {
+    # Generiques
     'Not Started':       'NS',
     'Match Finished':    'FT',
+    'Game Finished':     'FT',
     'After Extra Time':  'AET',
     'After Overtime':    'AET',
     'AOT':               'AET',
@@ -42,12 +44,29 @@ _STATUS_MAP = {
     'Match Abandoned':   'ABD',
     'Cancelled':         'CANC',
     'Match Suspended':   'SUSP',
+    # Football / Soccer
     'First Half':        '1H',
     'Half Time':         'HT',
     'Second Half':       '2H',
     'Extra Time':        'ET',
     'Penalty Shootout':  'P',
     'Break Time':        'BT',
+    # Rugby / Basketball / autres sports
+    '1st Half':          '1H',
+    '2nd Half':          '2H',
+    'Half-Time':         'HT',
+    'Half Time Break':   'HT',
+    'In Progress':       '2H',
+    'Live':              '2H',
+    'Q1':                '1H',
+    'Q2':                '1H',
+    'Q3':                '2H',
+    'Q4':                '2H',
+    'OT':                'ET',
+    'Overtime':          'ET',
+    'Period 1':          '1H',
+    'Period 2':          '2H',
+    'Period 3':          '2H',
 }
 
 # Noms de sports TheSportsDB → clés internes
