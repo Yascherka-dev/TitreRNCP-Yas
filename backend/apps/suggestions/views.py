@@ -1,5 +1,25 @@
 import random
 
+# Noms officiels FIFA/TheSportsDB → clé pays utilisée en base (lowercase)
+_TEAM_PAYS_MAP: dict[str, str] = {
+    'usa':                      'united states',
+    'united states of america': 'united states',
+    'korea republic':           'south korea',
+    'republic of korea':        'south korea',
+    "côte d'ivoire":            'ivory coast',
+    'cote d\'ivoire':           'ivory coast',
+    'cote divoire':             'ivory coast',
+    'ir iran':                  'iran',
+    'islamic republic of iran': 'iran',
+    'dr congo':                 'congo',
+    'trinidad and tobago':      'trinidad',
+}
+
+
+def _normalise_team_pays(equipe: str) -> str:
+    key = equipe.lower().strip()
+    return _TEAM_PAYS_MAP.get(key, key)
+
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -42,11 +62,12 @@ class SuggestionView(APIView):
         equipe_a = (request.data.get("equipeA") or "").strip()
         equipe_b = (request.data.get("equipeB") or "").strip()
 
-        # Pour les tournois internationaux (WC, CL…), l'équipe = le pays quand pays est vide
+        # Pour les tournois internationaux (WC, CL…), l'équipe = le pays quand pays est vide.
+        # Normalisation des noms officiels FIFA/TheSportsDB → pays en base.
         if not pays_a and equipe_a:
-            pays_a = equipe_a.lower()
+            pays_a = _normalise_team_pays(equipe_a)
         if not pays_b and equipe_b:
-            pays_b = equipe_b.lower()
+            pays_b = _normalise_team_pays(equipe_b)
 
         if not pays_a or not pays_b:
             return Response(
