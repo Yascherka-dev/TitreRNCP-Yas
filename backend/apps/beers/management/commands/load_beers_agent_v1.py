@@ -5,7 +5,7 @@ BEERS = [
     # ── ALBANIA ──────────────────────────────────────────────────────────────
     {'nom': 'Birra Tirana', 'brasserie': 'Birra Tirana', 'pays': 'albania', 'region': 'Tirana', 'equipe': '', 'style': 'Lager', 'description': "La bière historique de la capitale albanaise, une blonde légère et désaltérante.", 'degre_alcool': '4.2', 'image_url': '', 'generated_by': 'manual'},
     # ── ALGERIA ──────────────────────────────────────────────────────────────
-    {'nom': 'Hamoud Boualem', 'brasserie': 'Hamoud Boualem', 'pays': 'algeria', 'region': 'Alger', 'equipe': '', 'style': 'Limonade', 'description': "La limonade emblématique d'Algérie depuis 1878, boisson nationale sans alcool très appréciée.", 'degre_alcool': '', 'image_url': '', 'generated_by': 'manual'},
+    {'nom': 'Hamoud Boualem', 'brasserie': 'Hamoud Boualem', 'pays': 'algeria', 'region': 'Alger', 'equipe': '', 'style': 'Limonade', 'description': "La limonade emblématique d'Algérie depuis 1878, boisson nationale sans alcool très appréciée.", 'degre_alcool': None, 'image_url': '', 'generated_by': 'manual'},
     # ── ARGENTINA ────────────────────────────────────────────────────────────
     {'nom': 'Quilmes', 'brasserie': 'Cerveceria y Malteria Quilmes', 'pays': 'argentina', 'region': 'Buenos Aires', 'equipe': '', 'style': 'Lager', 'description': "La bière la plus consommée d'Argentine, une lager blonde aux couleurs du pays.", 'degre_alcool': '4.9', 'image_url': '', 'generated_by': 'manual'},
     # ── AUSTRALIA ────────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ BEERS = [
     # ── INDONESIA ────────────────────────────────────────────────────────────
     {'nom': 'Bintang', 'brasserie': 'Multi Bintang Indonesia', 'pays': 'indonesia', 'region': 'Surabaya', 'equipe': '', 'style': 'Lager', 'description': "La bière blonde emblématique d'Indonésie, légère et rafraîchissante.", 'degre_alcool': '4.7', 'image_url': '', 'generated_by': 'manual'},
     # ── IRAN ─────────────────────────────────────────────────────────────────
-    {'nom': 'Doogh', 'brasserie': 'Boisson traditionnelle', 'pays': 'iran', 'region': 'Téhéran', 'equipe': '', 'style': 'Boisson au yaourt', 'description': "Une boisson iranienne au yaourt fermenté, salée et parfumée à la menthe, servie bien fraîche.", 'degre_alcool': '', 'image_url': '', 'generated_by': 'manual'},
+    {'nom': 'Doogh', 'brasserie': 'Boisson traditionnelle', 'pays': 'iran', 'region': 'Téhéran', 'equipe': '', 'style': 'Boisson au yaourt', 'description': "Une boisson iranienne au yaourt fermenté, salée et parfumée à la menthe, servie bien fraîche.", 'degre_alcool': None, 'image_url': '', 'generated_by': 'manual'},
     # ── JAMAICA ──────────────────────────────────────────────────────────────
     {'nom': 'Red Stripe', 'brasserie': 'Desnoes and Geddes', 'pays': 'jamaica', 'region': 'Kingston', 'equipe': '', 'style': 'Lager', 'description': "La bière jamaïcaine la plus connue, une lager blonde à la bouteille trapue.", 'degre_alcool': '4.7', 'image_url': '', 'generated_by': 'manual'},
     # ── JAPAN ────────────────────────────────────────────────────────────────
@@ -57,11 +57,11 @@ BEERS = [
     # ── JORDAN ───────────────────────────────────────────────────────────────
     {'nom': 'Carakale', 'brasserie': 'Carakale Brewing Company', 'pays': 'jordan', 'region': 'Fuheis', 'equipe': '', 'style': 'Pale Ale', 'description': "La première microbrasserie de Jordanie, une bière artisanale houblonnée.", 'degre_alcool': '5.5', 'image_url': '', 'generated_by': 'manual'},
     # ── MALI ─────────────────────────────────────────────────────────────────
-    {'nom': 'Dabileni', 'brasserie': 'Boisson traditionnelle', 'pays': 'mali', 'region': 'Bamako', 'equipe': '', 'style': "Boisson d'hibiscus", 'description': "Une boisson malienne à base de fleurs d'hibiscus infusées et sucrées, servie très fraîche.", 'degre_alcool': '', 'image_url': '', 'generated_by': 'manual'},
+    {'nom': 'Dabileni', 'brasserie': 'Boisson traditionnelle', 'pays': 'mali', 'region': 'Bamako', 'equipe': '', 'style': "Boisson d'hibiscus", 'description': "Une boisson malienne à base de fleurs d'hibiscus infusées et sucrées, servie très fraîche.", 'degre_alcool': None, 'image_url': '', 'generated_by': 'manual'},
     # ── MEXICO ───────────────────────────────────────────────────────────────
     {'nom': 'Corona Extra', 'brasserie': 'Grupo Modelo', 'pays': 'mexico', 'region': 'Mexico', 'equipe': '', 'style': 'Lager', 'description': "La lager mexicaine la plus exportée au monde, légère et servie avec du citron vert.", 'degre_alcool': '4.5', 'image_url': '', 'generated_by': 'manual'},
     # ── MOROCCO ──────────────────────────────────────────────────────────────
-    {'nom': 'Thé à la menthe', 'brasserie': 'Boisson nationale', 'pays': 'morocco', 'region': 'Marrakech', 'equipe': '', 'style': 'Infusion', 'description': "Le thé vert à la menthe sucré, boisson nationale et symbole de l'hospitalité marocaine.", 'degre_alcool': '', 'image_url': '', 'generated_by': 'manual'},
+    {'nom': 'Thé à la menthe', 'brasserie': 'Boisson nationale', 'pays': 'morocco', 'region': 'Marrakech', 'equipe': '', 'style': 'Infusion', 'description': "Le thé vert à la menthe sucré, boisson nationale et symbole de l'hospitalité marocaine.", 'degre_alcool': None, 'image_url': '', 'generated_by': 'manual'},
     # ── NIGERIA ──────────────────────────────────────────────────────────────
     {'nom': 'Star', 'brasserie': 'Nigerian Breweries', 'pays': 'nigeria', 'region': 'Lagos', 'equipe': '', 'style': 'Lager', 'description': "La première lager brassée au Nigéria, blonde et légère.", 'degre_alcool': '5.1', 'image_url': '', 'generated_by': 'manual'},
     # ── PANAMA ───────────────────────────────────────────────────────────────
@@ -73,9 +73,9 @@ BEERS = [
     # ── POLAND ───────────────────────────────────────────────────────────────
     {'nom': 'Żywiec', 'brasserie': 'Grupa Zywiec', 'pays': 'poland', 'region': 'Zywiec', 'equipe': '', 'style': 'Lager', 'description': "Une lager polonaise classique au caractère malté, brassée depuis 1856.", 'degre_alcool': '5.6', 'image_url': '', 'generated_by': 'manual'},
     # ── QATAR ────────────────────────────────────────────────────────────────
-    {'nom': 'Karak', 'brasserie': 'Boisson traditionnelle', 'pays': 'qatar', 'region': 'Doha', 'equipe': '', 'style': 'Thé au lait épicé', 'description': "Le thé noir au lait et aux épices, boisson quotidienne incontournable au Qatar.", 'degre_alcool': '', 'image_url': '', 'generated_by': 'manual'},
+    {'nom': 'Karak', 'brasserie': 'Boisson traditionnelle', 'pays': 'qatar', 'region': 'Doha', 'equipe': '', 'style': 'Thé au lait épicé', 'description': "Le thé noir au lait et aux épices, boisson quotidienne incontournable au Qatar.", 'degre_alcool': None, 'image_url': '', 'generated_by': 'manual'},
     # ── SAUDI ARABIA ─────────────────────────────────────────────────────────
-    {'nom': 'Vimto', 'brasserie': 'Aujan Industries', 'pays': 'saudi arabia', 'region': 'Djeddah', 'equipe': '', 'style': 'Cordial aux fruits', 'description': "Un sirop aux fruits rouges et épices, boisson incontournable des tables saoudiennes pendant le Ramadan.", 'degre_alcool': '', 'image_url': '', 'generated_by': 'manual'},
+    {'nom': 'Vimto', 'brasserie': 'Aujan Industries', 'pays': 'saudi arabia', 'region': 'Djeddah', 'equipe': '', 'style': 'Cordial aux fruits', 'description': "Un sirop aux fruits rouges et épices, boisson incontournable des tables saoudiennes pendant le Ramadan.", 'degre_alcool': None, 'image_url': '', 'generated_by': 'manual'},
     # ── SENEGAL ──────────────────────────────────────────────────────────────
     {'nom': 'Gazelle', 'brasserie': "Brasseries de l'Ouest Africain", 'pays': 'senegal', 'region': 'Dakar', 'equipe': '', 'style': 'Lager', 'description': "La bière blonde nationale du Sénégal, légère et très répandue.", 'degre_alcool': '5.2', 'image_url': '', 'generated_by': 'manual'},
     # ── SERBIA ───────────────────────────────────────────────────────────────

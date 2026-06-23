@@ -9,7 +9,7 @@ class Beer(models.Model):
     equipe       = models.CharField(max_length=200, blank=True)
     style        = models.CharField(max_length=100)
     description  = models.TextField()
-    degre_alcool = models.DecimalField(max_digits=4, decimal_places=1)
+    degre_alcool = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     image_url    = models.URLField(blank=True)
     generated_by = models.CharField(max_length=50, blank=True, default='ia')
     times_served = models.PositiveIntegerField(default=0)
