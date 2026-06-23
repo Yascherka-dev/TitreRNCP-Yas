@@ -27,6 +27,7 @@ interface RawMatch {
 const LEAGUE_BADGES: Record<number, string> = {
   4334: 'https://r2.thesportsdb.com/images/media/league/badge/9f7z9d1742983155.png',  // Ligue 1
   4480: 'https://r2.thesportsdb.com/images/media/league/badge/facv1u1742998896.png',  // UCL
+  4429: 'https://r2.thesportsdb.com/images/media/league/badge/e7er5g1696521789.png',  // WC 2026
   4387: 'https://r2.thesportsdb.com/images/media/league/badge/frdjqy1536585083.png',  // NBA
   4391: 'https://r2.thesportsdb.com/images/media/league/badge/g85fqz1662057187.png',  // NFL
   4380: 'https://r2.thesportsdb.com/images/media/league/badge/4cem2k1619616539.png',  // NHL
@@ -83,6 +84,8 @@ export class MatchesService {
     wales: 'Pays de Galles', austria: 'Autriche', switzerland: 'Suisse',
     denmark: 'Danemark', sweden: 'Suède', norway: 'Norvège', finland: 'Finlande',
     ireland: 'Irlande', luxembourg: 'Luxembourg', iceland: 'Islande',
+    andorra: 'Andorre', 'san marino': 'Saint-Marin', malta: 'Malte',
+    gibraltar: 'Gibraltar', 'faroe islands': 'Îles Féroé',
     // Europe centre/est
     croatia: 'Croatie', serbia: 'Serbie', poland: 'Pologne',
     ukraine: 'Ukraine', hungary: 'Hongrie', romania: 'Roumanie',
@@ -90,6 +93,7 @@ export class MatchesService {
     slovenia: 'Slovénie', bulgaria: 'Bulgarie', greece: 'Grèce',
     albania: 'Albanie', georgia: 'Géorgie', turkey: 'Turquie',
     'bosnia and herzegovina': 'Bosnie', 'north macedonia': 'Macédoine du Nord',
+    macedonia: 'Macédoine', kosovo: 'Kosovo',
     montenegro: 'Monténégro', moldova: 'Moldavie', belarus: 'Biélorussie',
     russia: 'Russie', latvia: 'Lettonie', lithuania: 'Lituanie', estonia: 'Estonie',
     // Amériques
@@ -148,6 +152,12 @@ export class MatchesService {
       'luxembourg':               'lu',
       'monaco':                   'mc',
       'iceland':                  'is',
+      'andorra':                  'ad',
+      'san marino':               'sm',
+      'liechtenstein':            'li',
+      'malta':                    'mt',
+      'gibraltar':                'gi',
+      'faroe islands':            'fo',
       // Europe centrale et orientale
       'czechia':                  'cz',
       'czech republic':           'cz',
@@ -161,8 +171,12 @@ export class MatchesService {
       'serbia':                   'rs',
       'bosnia and herzegovina':   'ba',
       'north macedonia':          'mk',
+      'macedonia':                'mk',
       'montenegro':               'me',
       'albania':                  'al',
+      'kosovo':                   'xk',
+      'moldova':                  'md',
+      'belarus':                  'by',
       'ukraine':                  'ua',
       'russia':                   'ru',
       'latvia':                   'lv',
