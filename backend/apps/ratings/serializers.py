@@ -5,5 +5,5 @@ from .models import Rating
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = '__all__'
-        read_only_fields = ['user', 'date']
+        fields = ['id', 'type', 'reference_id', 'valeur', 'date']
+        read_only_fields = ['date']

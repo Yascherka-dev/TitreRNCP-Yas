@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://titrerncp-yas.onrender.com/api',
+  apiUrl: 'https://RAILWAY_BACKEND_URL/api',
 };

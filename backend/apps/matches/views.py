@@ -4,7 +4,7 @@ from django.db.models import Case, When, Value, IntegerField
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from .models import Match
 from .serializers import MatchSerializer
 from .sports_api import fetch_fixtures, fetch_livescores
@@ -58,7 +58,7 @@ class SynchronizeView(APIView):
     ?date=YYYY-MM-DD → synchro du jour
     Sans paramètre   → saison complète de toutes les ligues configurées
     """
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
 
     def post(self, request):
         date = request.query_params.get('date', None)
@@ -80,31 +80,18 @@ class SynchronizeView(APIView):
 class LivescoresView(APIView):
     """
     GET /api/livescores/
-    Appelle TheSportsDB V2 livescores, met à jour les matchs live en base,
-    et retourne uniquement les matchs actuellement en cours.
+    Lecture seule : renvoie les matchs live et récemment terminés depuis la base.
+    La mise à jour des scores est déléguée à la commande sync_livescores (cron).
     """
     permission_classes = [AllowAny]
 
     def get(self, _request):
-        _cleanup_stale_live_matches()
-
-        updates = fetch_livescores()
-
-        updated_ids = []
-        for upd in updates:
-            Match.objects.filter(external_id=upd['external_id']).update(
-                statut=upd['statut'],
-                score_a=upd['score_a'],
-                score_b=upd['score_b'],
-            )
-            updated_ids.append(upd['external_id'])
-
-        # Retourne live + matchs terminés mis à jour (le frontend les merge)
-        finished_statuts = ['FT', 'AET', 'PEN']
-        qs = Match.objects.filter(
-            statut__in=_LIVE_STATUTS
-        ) | Match.objects.filter(
-            external_id__in=updated_ids,
-            statut__in=finished_statuts,
+        from django.utils import timezone
+        from datetime import timedelta
+        _FINISHED = ['FT', 'AET', 'PEN']
+        recent_cutoff = timezone.now() - timedelta(hours=3)
+        qs = Match.objects.filter(statut__in=_LIVE_STATUTS) | Match.objects.filter(
+            statut__in=_FINISHED,
+            date_heure__gte=recent_cutoff,
         )
         return Response(MatchSerializer(qs.order_by('date_heure'), many=True).data)
