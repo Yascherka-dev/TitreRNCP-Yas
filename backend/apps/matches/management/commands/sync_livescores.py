@@ -1,4 +1,4 @@
-from datetime import timedelta, date
+from datetime import timedelta
 
 import requests
 from django.core.management.base import BaseCommand
@@ -51,7 +51,8 @@ class Command(BaseCommand):
     def _debug_run(self):
         key = _key()
         tracked_ids = {cfg['id'] for cfg in LEAGUES}
-        today = date.today().strftime('%Y-%m-%d')
+        from django.utils.timezone import localtime, now as tz_now
+        today = localtime(tz_now()).strftime('%Y-%m-%d')
 
         self.stdout.write(f'\n=== SPORTSDB_KEY = "{key}" ===')
         self.stdout.write(f'Ligues suivies : {sorted(tracked_ids)}\n')

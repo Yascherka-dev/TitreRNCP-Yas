@@ -7,7 +7,11 @@ V2 (header X-API-KEY) pour les livescores.
 import requests
 from django.conf import settings
 from django.utils.dateparse import parse_datetime
+import datetime as _dt
+
 from django.utils.timezone import make_aware, is_aware
+
+_UTC = _dt.timezone.utc
 
 API_V1 = 'https://www.thesportsdb.com/api/v1/json'
 API_V2 = 'https://www.thesportsdb.com/api/v2/json'
@@ -86,7 +90,7 @@ def _parse_aware(value: str):
     dt = parse_datetime(value or '')
     if dt is None:
         return None
-    return dt if is_aware(dt) else make_aware(dt)
+    return dt if is_aware(dt) else make_aware(dt, timezone=_UTC)
 
 
 def _key() -> str:
@@ -238,7 +242,6 @@ def fetch_livescores() -> list[dict]:
     Combine livescores V2 (matchs en direct) + résultats du jour via eventsday V1.
     Garantit que les matchs terminés dans la journée passent bien en FT.
     """
-    from datetime import date
     results: list[dict] = []
     seen: set[str] = set()
     tracked_league_ids = {cfg['id'] for cfg in LEAGUES}
@@ -263,7 +266,8 @@ def fetch_livescores() -> list[dict]:
         pass
 
     # 2. Résultats du jour (V1) — met à jour les matchs terminés hors livescore
-    today = date.today().strftime('%Y-%m-%d')
+    from django.utils.timezone import localtime, now as tz_now
+    today = localtime(tz_now()).strftime('%Y-%m-%d')
     for sport_label, sports in [('Soccer', {'football'}), ('Basketball', {'basketball'}),
                                   ('Ice Hockey', {'ice_hockey'}), ('Rugby', {'rugby'})]:
         try:
