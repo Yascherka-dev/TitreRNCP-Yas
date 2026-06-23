@@ -77,18 +77,45 @@ export class MatchesService {
 
   private countryLabel(pays: string): string {
     const labels: Record<string, string> = {
+      // Europe ouest
       france: 'France', england: 'Angleterre', spain: 'Espagne',
       germany: 'Allemagne', italy: 'Italie', portugal: 'Portugal',
       netherlands: 'Pays-Bas', belgium: 'Belgique', scotland: 'Écosse',
+      wales: 'Pays de Galles', austria: 'Autriche', switzerland: 'Suisse',
+      denmark: 'Danemark', sweden: 'Suède', norway: 'Norvège', finland: 'Finlande',
+      ireland: 'Irlande', luxembourg: 'Luxembourg', iceland: 'Islande',
+      // Europe centre/est
+      croatia: 'Croatie', serbia: 'Serbie', poland: 'Pologne',
+      ukraine: 'Ukraine', hungary: 'Hongrie', romania: 'Roumanie',
+      'czech republic': 'Tchéquie', czechia: 'Tchéquie', slovakia: 'Slovaquie',
+      slovenia: 'Slovénie', bulgaria: 'Bulgarie', greece: 'Grèce',
+      albania: 'Albanie', georgia: 'Géorgie', turkey: 'Turquie',
+      'bosnia and herzegovina': 'Bosnie', 'north macedonia': 'Macédoine du Nord',
+      montenegro: 'Monténégro', moldova: 'Moldavie', belarus: 'Biélorussie',
+      russia: 'Russie', latvia: 'Lettonie', lithuania: 'Lituanie', estonia: 'Estonie',
+      // Amériques
       usa: 'USA', 'united states': 'USA', canada: 'Canada',
       brazil: 'Brésil', argentina: 'Argentine', mexico: 'Mexique',
-      japan: 'Japon', 'south korea': 'Corée du Sud', australia: 'Australie',
-      morocco: 'Maroc', senegal: 'Sénégal', 'ivory coast': "Côte d'Ivoire",
-      turkey: 'Turquie', switzerland: 'Suisse', denmark: 'Danemark',
-      sweden: 'Suède', croatia: 'Croatie', ukraine: 'Ukraine',
-      poland: 'Pologne', 'czech republic': 'Tchéquie', czechia: 'Tchéquie',
+      colombia: 'Colombie', chile: 'Chili', uruguay: 'Uruguay',
+      ecuador: 'Équateur', venezuela: 'Venezuela', peru: 'Pérou',
+      panama: 'Panama', 'costa rica': 'Costa Rica', honduras: 'Honduras',
+      jamaica: 'Jamaïque', 'el salvador': 'El Salvador', paraguay: 'Paraguay',
+      bolivia: 'Bolivie', 'trinidad and tobago': 'Trinidad',
+      // Afrique
+      morocco: 'Maroc', senegal: 'Sénégal', nigeria: 'Nigéria',
+      ghana: 'Ghana', egypt: 'Égypte', 'ivory coast': "Côte d'Ivoire",
+      cameroon: 'Cameroun', 'south africa': 'Afrique du Sud',
+      algeria: 'Algérie', tunisia: 'Tunisie', mali: 'Mali',
+      'dr congo': 'RD Congo', congo: 'Congo', ethiopia: 'Éthiopie',
+      // Asie / Océanie
+      japan: 'Japon', 'south korea': 'Corée du Sud', 'korea republic': 'Corée du Sud',
+      china: 'Chine', australia: 'Australie', 'saudi arabia': 'Arabie Saoudite',
+      iran: 'Iran', 'ir iran': 'Iran', qatar: 'Qatar',
+      uzbekistan: 'Ouzbékistan', jordan: 'Jordanie', indonesia: 'Indonésie',
+      'new zealand': 'Nouvelle-Zélande', iraq: 'Irak', syria: 'Syrie',
     };
-    return labels[pays.toLowerCase()] ?? pays.charAt(0).toUpperCase() + pays.slice(1);
+    const key = pays.toLowerCase();
+    return labels[key] ?? pays.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   }
 
   private flagUrl(countryName: string): string {
@@ -154,6 +181,17 @@ export class MatchesService {
       'usa':                      'us',
       'united states':            'us',
       'canada':                   'ca',
+      'ecuador':                  'ec',
+      'venezuela':                've',
+      'peru':                     'pe',
+      'panama':                   'pa',
+      'costa rica':               'cr',
+      'honduras':                 'hn',
+      'jamaica':                  'jm',
+      'el salvador':              'sv',
+      'paraguay':                 'py',
+      'bolivia':                  'bo',
+      'trinidad and tobago':      'tt',
       // Afrique
       'morocco':                  'ma',
       'senegal':                  'sn',
@@ -166,14 +204,25 @@ export class MatchesService {
       'south africa':             'za',
       'algeria':                  'dz',
       'tunisia':                  'tn',
+      'mali':                     'ml',
+      'dr congo':                 'cd',
+      'congo':                    'cg',
       // Asie / Océanie
       'japan':                    'jp',
       'south korea':              'kr',
+      'korea republic':           'kr',
       'china':                    'cn',
       'australia':                'au',
       'saudi arabia':             'sa',
+      'iran':                     'ir',
+      'ir iran':                  'ir',
       'qatar':                    'qa',
       'united arab emirates':     'ae',
+      'uzbekistan':               'uz',
+      'jordan':                   'jo',
+      'indonesia':                'id',
+      'new zealand':              'nz',
+      'iraq':                     'iq',
       // Divers
       'europe':                   'eu',
       'world':                    'un',
