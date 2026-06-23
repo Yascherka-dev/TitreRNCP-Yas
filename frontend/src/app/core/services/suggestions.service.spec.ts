@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SuggestionsService } from './suggestions.service';
+import { flagUrl } from '../utils/flag.utils';
 import { environment } from '../../../environments/environment';
 
 const RAW_RECIPE = {
@@ -105,7 +106,7 @@ describe('SuggestionsService', () => {
   });
 
   it('flagUrl() returns a flagcdn URL for known countries', () => {
-    expect(service.flagUrl('france')).toContain('fr');
-    expect(service.flagUrl('spain')).toContain('es');
+    expect(flagUrl('france')).toContain('fr');
+    expect(flagUrl('spain')).toContain('es');
   });
 });
