@@ -21,7 +21,9 @@
       <span class="mc-team-name">{{ match().home.name }}</span>
       <div class="mc-flag">
         <img [src]="match().home.flag" [alt]="match().home.countryName" />
-        <span>{{ match().home.countryName }}</span>
+        @if (match().home.name !== match().home.countryName) {
+          <span>{{ match().home.countryName }}</span>
+        }
       </div>
     </div>
 
@@ -46,7 +48,9 @@
       <span class="mc-team-name">{{ match().away.name }}</span>
       <div class="mc-flag">
         <img [src]="match().away.flag" [alt]="match().away.countryName" />
-        <span>{{ match().away.countryName }}</span>
+        @if (match().away.name !== match().away.countryName) {
+          <span>{{ match().away.countryName }}</span>
+        }
       </div>
     </div>
   </div>

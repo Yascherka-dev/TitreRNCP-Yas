@@ -75,47 +75,52 @@ export class MatchesService {
     return LEAGUE_BADGES[leagueId] ?? '';
   }
 
+  private readonly COUNTRY_LABELS: Record<string, string> = {
+    // Europe ouest
+    france: 'France', england: 'Angleterre', spain: 'Espagne',
+    germany: 'Allemagne', italy: 'Italie', portugal: 'Portugal',
+    netherlands: 'Pays-Bas', belgium: 'Belgique', scotland: 'Écosse',
+    wales: 'Pays de Galles', austria: 'Autriche', switzerland: 'Suisse',
+    denmark: 'Danemark', sweden: 'Suède', norway: 'Norvège', finland: 'Finlande',
+    ireland: 'Irlande', luxembourg: 'Luxembourg', iceland: 'Islande',
+    // Europe centre/est
+    croatia: 'Croatie', serbia: 'Serbie', poland: 'Pologne',
+    ukraine: 'Ukraine', hungary: 'Hongrie', romania: 'Roumanie',
+    'czech republic': 'Tchéquie', czechia: 'Tchéquie', slovakia: 'Slovaquie',
+    slovenia: 'Slovénie', bulgaria: 'Bulgarie', greece: 'Grèce',
+    albania: 'Albanie', georgia: 'Géorgie', turkey: 'Turquie',
+    'bosnia and herzegovina': 'Bosnie', 'north macedonia': 'Macédoine du Nord',
+    montenegro: 'Monténégro', moldova: 'Moldavie', belarus: 'Biélorussie',
+    russia: 'Russie', latvia: 'Lettonie', lithuania: 'Lituanie', estonia: 'Estonie',
+    // Amériques
+    usa: 'USA', 'united states': 'USA', canada: 'Canada',
+    brazil: 'Brésil', argentina: 'Argentine', mexico: 'Mexique',
+    colombia: 'Colombie', chile: 'Chili', uruguay: 'Uruguay',
+    ecuador: 'Équateur', venezuela: 'Venezuela', peru: 'Pérou',
+    panama: 'Panama', 'costa rica': 'Costa Rica', honduras: 'Honduras',
+    jamaica: 'Jamaïque', 'el salvador': 'El Salvador', paraguay: 'Paraguay',
+    bolivia: 'Bolivie', 'trinidad and tobago': 'Trinidad',
+    // Afrique
+    morocco: 'Maroc', senegal: 'Sénégal', nigeria: 'Nigéria',
+    ghana: 'Ghana', egypt: 'Égypte', 'ivory coast': "Côte d'Ivoire",
+    cameroon: 'Cameroun', 'south africa': 'Afrique du Sud',
+    algeria: 'Algérie', tunisia: 'Tunisie', mali: 'Mali',
+    'dr congo': 'RD Congo', congo: 'Congo', ethiopia: 'Éthiopie',
+    // Asie / Océanie
+    japan: 'Japon', 'south korea': 'Corée du Sud', 'korea republic': 'Corée du Sud',
+    china: 'Chine', australia: 'Australie', 'saudi arabia': 'Arabie Saoudite',
+    iran: 'Iran', 'ir iran': 'Iran', qatar: 'Qatar',
+    uzbekistan: 'Ouzbékistan', jordan: 'Jordanie', indonesia: 'Indonésie',
+    'new zealand': 'Nouvelle-Zélande', iraq: 'Irak', syria: 'Syrie',
+  };
+
   private countryLabel(pays: string): string {
-    const labels: Record<string, string> = {
-      // Europe ouest
-      france: 'France', england: 'Angleterre', spain: 'Espagne',
-      germany: 'Allemagne', italy: 'Italie', portugal: 'Portugal',
-      netherlands: 'Pays-Bas', belgium: 'Belgique', scotland: 'Écosse',
-      wales: 'Pays de Galles', austria: 'Autriche', switzerland: 'Suisse',
-      denmark: 'Danemark', sweden: 'Suède', norway: 'Norvège', finland: 'Finlande',
-      ireland: 'Irlande', luxembourg: 'Luxembourg', iceland: 'Islande',
-      // Europe centre/est
-      croatia: 'Croatie', serbia: 'Serbie', poland: 'Pologne',
-      ukraine: 'Ukraine', hungary: 'Hongrie', romania: 'Roumanie',
-      'czech republic': 'Tchéquie', czechia: 'Tchéquie', slovakia: 'Slovaquie',
-      slovenia: 'Slovénie', bulgaria: 'Bulgarie', greece: 'Grèce',
-      albania: 'Albanie', georgia: 'Géorgie', turkey: 'Turquie',
-      'bosnia and herzegovina': 'Bosnie', 'north macedonia': 'Macédoine du Nord',
-      montenegro: 'Monténégro', moldova: 'Moldavie', belarus: 'Biélorussie',
-      russia: 'Russie', latvia: 'Lettonie', lithuania: 'Lituanie', estonia: 'Estonie',
-      // Amériques
-      usa: 'USA', 'united states': 'USA', canada: 'Canada',
-      brazil: 'Brésil', argentina: 'Argentine', mexico: 'Mexique',
-      colombia: 'Colombie', chile: 'Chili', uruguay: 'Uruguay',
-      ecuador: 'Équateur', venezuela: 'Venezuela', peru: 'Pérou',
-      panama: 'Panama', 'costa rica': 'Costa Rica', honduras: 'Honduras',
-      jamaica: 'Jamaïque', 'el salvador': 'El Salvador', paraguay: 'Paraguay',
-      bolivia: 'Bolivie', 'trinidad and tobago': 'Trinidad',
-      // Afrique
-      morocco: 'Maroc', senegal: 'Sénégal', nigeria: 'Nigéria',
-      ghana: 'Ghana', egypt: 'Égypte', 'ivory coast': "Côte d'Ivoire",
-      cameroon: 'Cameroun', 'south africa': 'Afrique du Sud',
-      algeria: 'Algérie', tunisia: 'Tunisie', mali: 'Mali',
-      'dr congo': 'RD Congo', congo: 'Congo', ethiopia: 'Éthiopie',
-      // Asie / Océanie
-      japan: 'Japon', 'south korea': 'Corée du Sud', 'korea republic': 'Corée du Sud',
-      china: 'Chine', australia: 'Australie', 'saudi arabia': 'Arabie Saoudite',
-      iran: 'Iran', 'ir iran': 'Iran', qatar: 'Qatar',
-      uzbekistan: 'Ouzbékistan', jordan: 'Jordanie', indonesia: 'Indonésie',
-      'new zealand': 'Nouvelle-Zélande', iraq: 'Irak', syria: 'Syrie',
-    };
-    const key = pays.toLowerCase();
-    return labels[key] ?? pays.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    return this.COUNTRY_LABELS[pays.toLowerCase()]
+      ?? pays.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  }
+
+  private teamName(equipe: string): string {
+    return this.COUNTRY_LABELS[equipe.toLowerCase()] ?? equipe;
   }
 
   private flagUrl(countryName: string): string {
@@ -252,7 +257,7 @@ export class MatchesService {
       },
       home: {
         id:          0,
-        name:        item.equipe_a ?? '',
+        name:        this.teamName(item.equipe_a ?? ''),
         logo:        item.logo_a ?? '',
         countryCode: item.pays_a ?? '',
         countryName: this.countryLabel(item.pays_a ?? ''),
@@ -262,7 +267,7 @@ export class MatchesService {
       },
       away: {
         id:          0,
-        name:        item.equipe_b ?? '',
+        name:        this.teamName(item.equipe_b ?? ''),
         logo:        item.logo_b ?? '',
         countryCode: item.pays_b ?? '',
         countryName: this.countryLabel(item.pays_b ?? ''),
