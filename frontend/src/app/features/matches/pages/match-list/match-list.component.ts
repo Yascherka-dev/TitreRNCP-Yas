@@ -137,15 +137,22 @@ export class MatchListComponent implements OnInit {
   constructor(private matchesService: MatchesService) {}
 
   ngOnInit() {
-    // Chargement initial
     this.matchesService.getFixtures()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next:  data => { this.matches.set(data); this.loading.set(false); this._updateLiveCount(); },
-        error: ()   => this.loading.set(false),
+        next: data => {
+          this.matches.set(data);
+          this.loading.set(false);
+          this._updateLiveCount();
+          this._startLivePolling();
+        },
+        error: () => this.loading.set(false),
       });
+  }
 
-    // Polling livescores toutes les 60 secondes
+  private _startLivePolling() {
+    // Premier appel immédiat pour corriger les statuts live dès le chargement,
+    // puis toutes les 60s. Séquencé après getFixtures() pour éviter la race condition.
     interval(60_000).pipe(
       startWith(0),
       switchMap(() => this.matchesService.getLivescores()),
