@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, tap, map } from 'rxjs';
 import { Beer, MatchSuggestion, Recipe } from '../models/recipe.model';
 import { environment } from '../../../environments/environment';
+import { flagUrl } from '../utils/flag.utils';
 
 interface RawRecipe {
   id: number;
@@ -91,41 +92,6 @@ export class SuggestionsService {
       );
   }
 
-  flagUrl(pays: string): string {
-    const map: Record<string, string> = {
-      'france': 'fr', 'england': 'gb-eng', 'scotland': 'gb-sct',
-      'wales': 'gb-wls', 'northern ireland': 'gb-nir', 'germany': 'de',
-      'spain': 'es', 'italy': 'it', 'portugal': 'pt', 'netherlands': 'nl',
-      'belgium': 'be', 'austria': 'at', 'switzerland': 'ch', 'denmark': 'dk',
-      'sweden': 'se', 'norway': 'no', 'finland': 'fi', 'ireland': 'ie',
-      'luxembourg': 'lu', 'monaco': 'mc', 'liechtenstein': 'li', 'malta': 'mt',
-      'san marino': 'sm', 'andorra': 'ad', 'iceland': 'is', 'czechia': 'cz',
-      'czech republic': 'cz', 'slovakia': 'sk', 'poland': 'pl', 'hungary': 'hu',
-      'romania': 'ro', 'bulgaria': 'bg', 'slovenia': 'si', 'croatia': 'hr',
-      'serbia': 'rs', 'bosnia and herzegovina': 'ba', 'north macedonia': 'mk',
-      'montenegro': 'me', 'albania': 'al', 'kosovo': 'xk', 'moldova': 'md',
-      'ukraine': 'ua', 'belarus': 'by', 'russia': 'ru', 'latvia': 'lv',
-      'lithuania': 'lt', 'estonia': 'ee', 'cyprus': 'cy', 'greece': 'gr',
-      'israel': 'il', 'turkey': 'tr', 'azerbaijan': 'az', 'armenia': 'am',
-      'georgia': 'ge', 'brazil': 'br', 'argentina': 'ar', 'colombia': 'co',
-      'chile': 'cl', 'uruguay': 'uy', 'mexico': 'mx', 'usa': 'us',
-      'united states': 'us', 'canada': 'ca',
-      'ecuador': 'ec', 'venezuela': 've', 'peru': 'pe', 'panama': 'pa',
-      'costa rica': 'cr', 'honduras': 'hn', 'jamaica': 'jm',
-      'el salvador': 'sv', 'paraguay': 'py', 'bolivia': 'bo',
-      'morocco': 'ma', 'senegal': 'sn', 'nigeria': 'ng', 'ghana': 'gh',
-      'egypt': 'eg', 'ivory coast': 'ci', "côte d'ivoire": 'ci',
-      'cameroon': 'cm', 'south africa': 'za', 'algeria': 'dz',
-      'tunisia': 'tn', 'mali': 'ml', 'dr congo': 'cd', 'congo': 'cg',
-      'japan': 'jp', 'south korea': 'kr', 'korea republic': 'kr',
-      'china': 'cn', 'australia': 'au', 'saudi arabia': 'sa',
-      'iran': 'ir', 'ir iran': 'ir', 'qatar': 'qa', 'kazakhstan': 'kz',
-      'uzbekistan': 'uz', 'jordan': 'jo', 'indonesia': 'id', 'new zealand': 'nz',
-    };
-    const code = map[pays.toLowerCase()] ?? pays.toLowerCase();
-    return `https://flagcdn.com/w40/${code}.png`;
-  }
-
   private toRecipe(r: RawRecipe): Recipe {
     return {
       id:          String(r.id ?? ''),
@@ -135,7 +101,7 @@ export class SuggestionsService {
       region:      r.region ?? '',
       equipe:      r.equipe ?? '',
       typePlat:    (r.type_plat ?? 'salé') as 'salé' | 'sucré',
-      flag:        this.flagUrl(r.pays ?? ''),
+      flag:        flagUrl(r.pays ?? ''),
       description: r.description ?? '',
       prepTime:    r.temps_preparation ?? 30,
       cookTime:    r.temps_cuisson ?? 0,
