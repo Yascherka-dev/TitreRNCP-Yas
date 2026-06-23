@@ -143,6 +143,11 @@ def _to_match_dict(event: dict, league_cfg: dict) -> dict | None:
     else:
         pays_a = _get_team_country(str(event.get('idHomeTeam', '')), event.get('strLeague', ''))
         pays_b = _get_team_country(str(event.get('idAwayTeam', '')), event.get('strLeague', ''))
+        # Pour les tournois internationaux le nom d'équipe = pays quand le lookup échoue
+        if not pays_a:
+            pays_a = _normalise_country(home_name)
+        if not pays_b:
+            pays_b = _normalise_country(away_name)
 
     return {
         'external_id': f'sdb_{event["idEvent"]}',

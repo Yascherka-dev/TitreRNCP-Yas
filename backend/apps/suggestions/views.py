@@ -42,6 +42,12 @@ class SuggestionView(APIView):
         equipe_a = (request.data.get("equipeA") or "").strip()
         equipe_b = (request.data.get("equipeB") or "").strip()
 
+        # Pour les tournois internationaux (WC, CL…), l'équipe = le pays quand pays est vide
+        if not pays_a and equipe_a:
+            pays_a = equipe_a.lower()
+        if not pays_b and equipe_b:
+            pays_b = equipe_b.lower()
+
         if not pays_a or not pays_b:
             return Response(
                 {"error": "paysA et paysB sont requis"},
