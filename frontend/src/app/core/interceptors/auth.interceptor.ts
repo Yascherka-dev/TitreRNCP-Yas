@@ -27,7 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           filter((t) => t !== null),
           take(1),
           switchMap((newToken) => {
-            if (newToken === 'FAILED') return next(req);
+            if (newToken === 'FAILED') return throwError(() => new Error('Session expirée'));
             const retryReq = req.clone({
               setHeaders: { Authorization: `Bearer ${newToken!}` },
             });

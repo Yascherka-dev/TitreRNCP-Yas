@@ -18,8 +18,6 @@ class Match(models.Model):
     logo_b      = models.URLField(blank=True)
     venue       = models.CharField(max_length=200, blank=True)
     thumb_url   = models.URLField(blank=True)
-    watch_url   = models.URLField(blank=True)
-    delivery_url = models.URLField(blank=True)
 
     def __str__(self):
         return f"{self.equipe_a} vs {self.equipe_b} — {self.competition}"

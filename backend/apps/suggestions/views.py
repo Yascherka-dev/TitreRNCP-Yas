@@ -1,5 +1,13 @@
 import random
 
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from apps.beers.models import Beer
+from apps.recipes.models import Recipe
+
 # Anciens noms FR dans la DB beers ↔ noms EN utilisés dans les recettes et les matchs
 _FR_TO_EN: dict[str, str] = {
     'angleterre': 'england',
@@ -38,14 +46,6 @@ _TEAM_PAYS_MAP: dict[str, str] = {
 def _normalise_team_pays(equipe: str) -> str:
     key = equipe.lower().strip()
     return _TEAM_PAYS_MAP.get(key, key)
-
-from rest_framework import status
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from apps.beers.models import Beer
-from apps.recipes.models import Recipe
 
 CLUB_REGION_MAP: dict[str, str] = {
     'paris saint-germain':       'Île-de-France',
