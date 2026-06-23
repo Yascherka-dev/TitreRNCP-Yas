@@ -1,5 +1,24 @@
 import random
 
+# Anciens noms FR dans la DB beers ↔ noms EN utilisés dans les recettes et les matchs
+_FR_TO_EN: dict[str, str] = {
+    'angleterre': 'england',
+    'allemagne':  'germany',
+    'espagne':    'spain',
+    'italie':     'italy',
+    'pays-bas':   'netherlands',
+    'belgique':   'belgium',
+    'brésil':     'brazil',
+    'argentine':  'argentina',
+    'maroc':      'morocco',
+    'sénégal':    'senegal',
+    'japon':      'japan',
+    'mexique':    'mexico',
+    'australie':  'australia',
+    'usa':        'united states',
+}
+_EN_TO_FR: dict[str, str] = {v: k for k, v in _FR_TO_EN.items()}
+
 # Noms officiels FIFA/TheSportsDB → clé pays utilisée en base (lowercase)
 _TEAM_PAYS_MAP: dict[str, str] = {
     'usa':                      'united states',
@@ -107,6 +126,11 @@ class SuggestionView(APIView):
         qs = Beer.objects.filter(equipe=equipe) if equipe else Beer.objects.none()
         if not qs.exists():
             qs = Beer.objects.filter(pays__iexact=pays)
+        # Fallback FR↔EN : anciens beers stockés avec des noms français
+        if not qs.exists():
+            alt = _EN_TO_FR.get(pays) or _FR_TO_EN.get(pays)
+            if alt:
+                qs = Beer.objects.filter(pays__iexact=alt)
         if not qs.exists():
             return None
         beer = random.choice(list(qs))
