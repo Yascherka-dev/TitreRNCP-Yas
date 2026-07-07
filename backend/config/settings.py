@@ -138,7 +138,7 @@ SIMPLE_JWT = {
 # CORS — localhost:4200 en dev, domaine Vercel en prod (via l'env, séparés par virgules)
 
 CORS_ALLOWED_ORIGINS = [
-    o.strip() for o in os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:4200').split(',')
+    o.strip().rstrip('/') for o in os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:4200').split(',')
     if o.strip()
 ]
 
