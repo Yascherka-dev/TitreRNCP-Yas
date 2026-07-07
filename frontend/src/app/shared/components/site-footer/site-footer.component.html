@@ -1,0 +1,33 @@
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+
+    <div class="site-footer__brand">
+      <a class="logo" routerLink="/">
+        <span class="mark" aria-hidden="true"></span>
+        Match <span class="amp">&amp;</span> Munch
+      </a>
+      <p class="site-footer__tagline">
+        On mange quoi devant le match de ce soir ?
+      </p>
+    </div>
+
+    <nav class="site-footer__col" aria-label="Explorer">
+      <h3>Explorer</h3>
+      <a routerLink="/matches">Matchs</a>
+      <a routerLink="/favorites">Mes recettes</a>
+    </nav>
+
+    <nav class="site-footer__col" aria-label="À propos">
+      <h3>À propos</h3>
+      <a routerLink="/">Le concept</a>
+      <a href="#">Mentions légales</a>
+      <a href="#">Contact</a>
+    </nav>
+
+  </div>
+
+  <div class="container site-footer__bottom">
+    <span>© {{ year }} Match &amp; Munch — Projet RNCP</span>
+    <span class="site-footer__made">Fait avec passion pour le sport &amp; la cuisine</span>
+  </div>
+</footer>

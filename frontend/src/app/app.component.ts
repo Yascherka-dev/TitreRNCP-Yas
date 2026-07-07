@@ -7,12 +7,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from './core/services/auth.service';
 import { FavoritesService } from './core/services/favorites.service';
 import { BottomTabBarComponent } from './shared/components/bottom-tab-bar/bottom-tab-bar.component';
+import { SiteFooterComponent } from './shared/components/site-footer/site-footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatButtonModule, MatIconModule, BottomTabBarComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatButtonModule, MatIconModule, BottomTabBarComponent, SiteFooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

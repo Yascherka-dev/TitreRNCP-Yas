@@ -12,13 +12,6 @@
         <a routerLink="/favorites">Mes recettes</a>
       </nav>
       <div class="nav-spacer"></div>
-      <span class="nav-live"><span class="dot"></span>
-        @if (todayMatchCount() && todayMatchCount()! > 0) {
-          {{ todayMatchCount() }} en direct
-        } @else {
-          En direct
-        }
-      </span>
       <a class="btn btn-primary" routerLink="/login">Connexion</a>
     </div>
   </header>

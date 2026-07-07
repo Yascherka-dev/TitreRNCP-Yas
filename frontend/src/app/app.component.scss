@@ -1,11 +1,23 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .nav {
   @media (max-width: 767px) {
     display: none;
   }
 }
 
+// Pousse le footer en bas sur les pages courtes
+main {
+  flex: 1 0 auto;
+}
+
 .page-content {
   max-width: 1240px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem 40px 4rem;
 

@@ -10,7 +10,6 @@
         <a routerLink="/favorites" routerLinkActive="active">Mes recettes</a>
       </nav>
       <div class="nav-spacer"></div>
-      <span class="nav-live"><span class="dot"></span>En direct</span>
       @if (authService.isLoggedIn()) {
         <span class="nav-hello">Bonjour, <strong>{{ authService.currentUser()?.prenom }}</strong></span>
         <button class="btn btn-ghost btn-sm" (click)="authService.logout()">Déconnexion</button>
@@ -26,5 +25,6 @@
 </main>
 
 @if (!isLanding()) {
+  <app-site-footer />
   <app-bottom-tab-bar />
 }
