@@ -35,7 +35,7 @@ jobs:
           cache-dependency-path: backend/requirements.txt
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: python3 -m pip install -r requirements.txt
 
       - name: Run sync_livescores
         env:
@@ -43,4 +43,4 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SPORTSDB_KEY: ${{ secrets.SPORTSDB_KEY }}
           DEBUG: 'False'
-        run: python manage.py sync_livescores
+        run: python3 manage.py sync_livescores
