@@ -1,0 +1,44 @@
+name: Sync matches (fixtures)
+
+# Synchronise le calendrier des matchs depuis TheSportsDB une fois par jour.
+# Remplace l'APScheduler in-process (peu fiable : meurt au redémarrage du conteneur).
+#
+# Secrets requis (Settings → Secrets and variables → Actions) :
+#   SECRET_KEY    — même valeur que sur Railway
+#   DATABASE_URL  — URL publique Postgres Railway (proxy public, pas .railway.internal)
+#   SPORTSDB_KEY  — clé API TheSportsDB
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # tous les jours à 04:00 UTC
+  workflow_dispatch: {}    # déclenchement manuel depuis l'onglet Actions
+
+concurrency:
+  group: sync-matches
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run sync_matches
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SPORTSDB_KEY: ${{ secrets.SPORTSDB_KEY }}
+          DEBUG: 'False'
+        run: python manage.py sync_matches

@@ -1,0 +1,46 @@
+name: Sync livescores
+
+# Met à jour les scores des matchs en cours depuis TheSportsDB.
+#
+# ⚠️ Coût minutes GitHub Actions : ce workflow tourne toutes les 15 min.
+#    Sur le forfait gratuit (2000 min/mois), c'est ~96 exécutions/jour.
+#    Le cache pip garde chaque run court (~30-60 s). Pour réduire encore :
+#    - passer à '*/30 * * * *' (toutes les 30 min), ou
+#    - limiter aux heures de match, ex. '*/15 18-23 * * *' (18h-23h UTC).
+#
+# Secrets requis : SECRET_KEY, DATABASE_URL, SPORTSDB_KEY (voir sync-matches.yml).
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # toutes les 15 minutes
+  workflow_dispatch: {}
+
+concurrency:
+  group: sync-livescores
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run sync_livescores
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SPORTSDB_KEY: ${{ secrets.SPORTSDB_KEY }}
+          DEBUG: 'False'
+        run: python manage.py sync_livescores
