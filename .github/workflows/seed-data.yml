@@ -1,0 +1,44 @@
+name: Seed data (recettes + bières)
+
+# Charge toutes les recettes et bières dans la base Railway.
+# Idempotent (update_or_create) : peut être relancé sans créer de doublons.
+# Déclenchement manuel uniquement (Actions → Run workflow).
+#
+# Secrets requis : SECRET_KEY, DATABASE_URL (public).
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Charger recettes + bières
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DEBUG: 'False'
+        run: |
+          python3 manage.py load_recipes
+          python3 manage.py load_recipes_agent_v1
+          python3 manage.py load_recipes_extra
+          python3 manage.py load_recipes_sucre_patch
+          python3 manage.py load_recipes_wc2026
+          python3 manage.py load_recipes_wc2026_manquants
+          python3 manage.py load_beers_agent_v1
+          python3 manage.py load_beers_europe_wc2026
+          python3 manage.py load_beers_wc2026
