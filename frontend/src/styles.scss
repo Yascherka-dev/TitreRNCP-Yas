@@ -151,25 +151,12 @@ h1,h2,h3,h4,h5,h6 { margin: 0; line-height: 1.2; font-family: var(--font); }
 
 .nav-spacer { flex: 1; }
 
-.nav-live {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12.5px; font-weight: 600; color: var(--ink-2);
-  padding: 8px 12px; border-radius: var(--r-pill);
-  background: color-mix(in oklab, var(--field) 12%, white);
-  border: 1px solid color-mix(in oklab, var(--field) 35%, transparent);
-  .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--field); animation: pulse 1.6s infinite;
-  }
-}
-
 .nav-hello { font-size: 14px; color: var(--ink-2); }
 .nav-hello strong { color: var(--ink); font-weight: 700; }
 
 // ── Responsive global ──────────────────────────────────────────────────────
 @media (max-width: 767px) {
   .container  { padding: 0 24px; }
-  .nav-live   { display: none; }
 }
 
 @media (max-width: 480px) {
@@ -340,28 +327,39 @@ footer {
 }
 
 // ═══════════════════════════════════════════════════════════
+//  MODALE RECETTE — fond (assombrit + floute la page derrière)
+// ═══════════════════════════════════════════════════════════
+.mm-dialog-backdrop {
+  background: rgba(10, 28, 54, 0.55);   // navy-900 @ 55 %
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+// Conteneur d'impression (copie de la recette) — invisible à l'écran
+#mm-print-root { display: none; }
+
+// ═══════════════════════════════════════════════════════════
 //  PRINT — recette (conservé tel quel)
 // ═══════════════════════════════════════════════════════════
 @media print {
   @page { margin: 0; size: A4 portrait; }
 
-  body > *:not(.cdk-overlay-container) { display: none !important; }
-  .cdk-overlay-backdrop { display: none !important; }
-  .cdk-overlay-container,
-  .cdk-global-overlay-wrapper,
-  .cdk-overlay-pane {
-    position: static !important; width: 100% !important;
-    max-width: 100% !important; height: auto !important;
-    transform: none !important; display: block !important;
+  // Material bloque le scroll pendant la modale en décalant <html> vers le haut
+  // (position:fixed; top:-Ypx). Ce décalage tronque le haut à l'impression — on l'annule.
+  html.cdk-global-scrollblock {
+    position: static !important; top: auto !important; left: auto !important;
+    width: auto !important; overflow: visible !important;
   }
-  mat-dialog-container {
-    box-shadow: none !important; border-radius: 0 !important;
-    max-height: none !important; height: auto !important;
-    padding: 0 !important; position: static !important; background: transparent !important;
+
+  // On imprime la COPIE (#mm-print-root, cf. print() du dialog), pas la modale.
+  body.mm-printing > *:not(#mm-print-root) { display: none !important; }
+  #mm-print-root { display: block !important; }
+  // neutralise le conteneur scrollable Material cloné (sinon il retronque)
+  #mm-print-root .mat-mdc-dialog-content,
+  #mm-print-root mat-dialog-content {
+    display: block !important; max-height: none !important; height: auto !important;
+    min-height: 0 !important; overflow: visible !important; padding: 0 !important;
   }
-  mat-dialog-content { max-height: none !important; height: auto !important; min-height: 0 !important; overflow: visible !important; padding: 0 !important; }
-  .mat-mdc-dialog-content,
-  .mat-mdc-dialog-inner-scroll-container { max-height: none !important; height: auto !important; min-height: 0 !important; overflow: visible !important; }
 
   .recipe-dialog__hero-overlay,
   .recipe-dialog__title-row > div:last-child,
@@ -377,8 +375,13 @@ footer {
   }
 
   .recipe-dialog { max-width: 100% !important; width: 100% !important; font-family: 'Figtree', sans-serif !important; padding: 12mm 14mm !important; }
-  .recipe-dialog__hero { height: 190px !important; border-radius: 6px !important; overflow: hidden !important; margin-bottom: 1rem !important; }
-  .recipe-dialog__hero img { width: 100% !important; height: 100% !important; object-fit: cover !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  .recipe-dialog__hero {
+    height: 170px !important; border-radius: 6px !important; overflow: hidden !important; margin-bottom: 1rem !important;
+    background: linear-gradient(135deg, #1E3A5F 0%, #2a5280 100%) !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important;
+  }
+  .recipe-dialog__hero img { width: 120px !important; height: 120px !important; object-fit: contain !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
 
   .recipe-dialog__title-row { margin-bottom: .6rem !important;
     h2 {
@@ -390,8 +393,8 @@ footer {
     }
   }
 
-  .tags { display: flex !important; flex-wrap: wrap !important; gap: .3rem !important; margin-top: .45rem !important; }
-  mat-chip, mat-chip-row, .mat-mdc-chip {
+  .rd-tags { display: flex !important; flex-wrap: wrap !important; gap: .3rem !important; margin-top: .45rem !important; }
+  .rd-tag {
     display: inline-flex !important; align-items: center !important;
     padding: 1px 9px !important; border: 1px solid #1E3A5F !important;
     border-radius: 99px !important; font-family: 'Figtree', sans-serif !important;
@@ -413,12 +416,12 @@ footer {
     border-radius: 7px !important; padding: .45rem .6rem !important;
     display: flex !important; flex-direction: column !important;
     print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important;
-    mat-icon { font-size: .85rem !important; width: .85rem !important; height: .85rem !important; color: #F4801A !important; margin-bottom: .15rem !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+    svg { width: .85rem !important; height: .85rem !important; color: #F4801A !important; stroke: #F4801A !important; margin-bottom: .15rem !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
   }
   .meta-label { font-size: .55rem !important; color: #999 !important; text-transform: uppercase !important; letter-spacing: .05em !important; }
   .meta-value { font-size: .78rem !important; font-weight: 700 !important; color: #1E3A5F !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
 
-  mat-divider { display: block !important; border: none !important; border-top: 1px solid #eee !important; margin: .65rem 0 !important; }
+  .rd-divider { display: block !important; height: 0 !important; border: none !important; border-top: 1px solid #eee !important; margin: .65rem 0 !important; }
 
   .recipe-dialog__section h3 {
     font-family: 'Figtree', sans-serif !important; font-size: .7rem !important;
@@ -426,7 +429,7 @@ footer {
     letter-spacing: .1em !important; margin: 0 0 .6rem !important;
     display: flex !important; align-items: center !important; gap: .3rem !important;
     print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important;
-    mat-icon { font-size: .9rem !important; width: .9rem !important; height: .9rem !important; color: #F4801A !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+    svg { width: .9rem !important; height: .9rem !important; color: #F4801A !important; stroke: #F4801A !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
   }
 
   .recipe-dialog__section:has(.ingredients-list) { background: #FAFAF8 !important; border: 1px solid #eee !important; border-radius: 8px !important; padding: .65rem .9rem !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }

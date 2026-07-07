@@ -6,6 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { DatePipe, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Recipe } from '../../../../core/models/recipe.model';
+import { localRecipeImage } from '../../../../core/utils/recipe-image.util';
 import { RecipeReviewsService } from '../../../../core/services/recipe-reviews.service';
 import { FavoritesService } from '../../../../core/services/favorites.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -30,6 +31,9 @@ export class RecipeDialogComponent {
 
   recipe: Recipe           = inject(MAT_DIALOG_DATA);
   dialogRef                = inject(MatDialogRef<RecipeDialogComponent>);
+
+  /** Même image locale que la carte (déterministe par id). */
+  get heroImage(): string { return localRecipeImage(this.recipe); }
   private reviewsService   = inject(RecipeReviewsService);
   private favoritesService = inject(FavoritesService);
   private authService      = inject(AuthService);
@@ -73,21 +77,25 @@ export class RecipeDialogComponent {
   }
 
   print() {
-    const content     = document.querySelector('mat-dialog-content') as HTMLElement;
-    const innerScroll = document.querySelector('.mat-mdc-dialog-inner-scroll-container') as HTMLElement;
-    [content, innerScroll].forEach(el => {
-      if (!el) return;
-      el.scrollTop = 0;
-      el.style.setProperty('max-height', 'none',    'important');
-      el.style.setProperty('overflow',   'visible', 'important');
-    });
-    window.addEventListener('afterprint', () => {
-      [content, innerScroll].forEach(el => {
-        if (!el) return;
-        el.style.removeProperty('max-height');
-        el.style.removeProperty('overflow');
-      });
-    }, { once: true });
+    // On imprime une COPIE du contenu placée directement dans <body>, plutôt que
+    // la modale dans l'overlay Material (dont le positionnement centré tronque
+    // la recette à l'impression). Fiable, indépendant du scroll et de l'overlay.
+    const source = document.getElementById('print-section');
+    if (!source) { window.print(); return; }
+
+    const printRoot = document.createElement('div');
+    printRoot.id = 'mm-print-root';
+    printRoot.className = 'recipe-dialog';   // réutilise les styles d'impression existants
+    printRoot.innerHTML = source.innerHTML;
+    document.body.appendChild(printRoot);
+    document.body.classList.add('mm-printing');
+
+    const cleanup = () => {
+      printRoot.remove();
+      document.body.classList.remove('mm-printing');
+      window.removeEventListener('afterprint', cleanup);
+    };
+    window.addEventListener('afterprint', cleanup);
     window.print();
   }
 

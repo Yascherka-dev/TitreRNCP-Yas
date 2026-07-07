@@ -2,13 +2,7 @@
 
   <!-- Image hero avec actions intégrées -->
   <div class="recipe-dialog__hero">
-    @if (recipe.imageUrl) {
-      <img [src]="recipe.imageUrl" [alt]="recipe.title" />
-    } @else {
-      <div class="rd-hero-placeholder">
-        <span>🧑‍🍳</span>
-      </div>
-    }
+    <img [src]="heroImage" [alt]="recipe.title" />
     <div class="recipe-dialog__hero-overlay">
       <div class="country-badge">
         <img [src]="recipe.flag" [alt]="recipe.country" />

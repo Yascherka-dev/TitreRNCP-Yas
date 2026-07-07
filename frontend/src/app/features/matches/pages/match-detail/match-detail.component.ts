@@ -229,6 +229,7 @@ export class MatchDetailComponent implements OnInit {
           maxWidth: '560px',
           width: '95vw',
           panelClass: 'recipe-dialog-panel',
+          backdropClass: 'mm-dialog-backdrop',
         });
       });
   }
