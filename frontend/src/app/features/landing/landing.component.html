@@ -1,7 +1,7 @@
 <div class="landing">
 
   <!-- ══ NAV ══ -->
-  <header class="nav landing-nav">
+  <header class="nav">
     <div class="container nav-inner">
       <a class="logo" routerLink="/">
         <span class="mark" aria-hidden="true"></span>
@@ -12,179 +12,169 @@
         <a routerLink="/favorites">Mes recettes</a>
       </nav>
       <div class="nav-spacer"></div>
-      @if (auth.isLoggedIn()) {
-        <a class="btn btn-orange" routerLink="/matches">Mon prochain match</a>
-      } @else {
-        <a class="btn btn-orange" routerLink="/login">Connexion</a>
-      }
+      <a class="btn btn-primary" routerLink="/login">Connexion</a>
     </div>
   </header>
 
   <!-- ══ HERO ══ -->
   <section class="hero">
-    <div class="container hero-grid">
+    <div class="hero-grad"></div>
+    <div class="hero-grid"></div>
+    <div class="motif-layer"></div>
+    <canvas class="hero-particles" #particlesCanvas></canvas>
+    <div class="hero-noise"></div>
 
-      <div class="hero-copy">
-        <p class="kicker">Cinq sports, un dîner</p>
-        <h1>Choisis ton sport.<br>Ton match.<br><span class="ital">Marco fait le reste.</span></h1>
-        <p class="lede">
-          Foot, rugby, hockey, basket, football américain. Tu prends l'affiche qui te
-          plaît, Marco écrit les deux recettes qui vont avec.
-        </p>
+    <!-- Ballon décoratif -->
+    <svg class="hero-ball" viewBox="0 0 100 100" aria-hidden="true">
+      <defs><radialGradient id="ballg" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#d8d8d8"/></radialGradient></defs>
+      <circle cx="50" cy="50" r="44" fill="url(#ballg)" stroke="#111" stroke-width="2"/>
+      <path d="M50 8 L62 22 L56 42 L44 42 L38 22 Z" fill="#111"/>
+      <path d="M92 50 L78 56 L68 44 L76 30" fill="#111"/>
+      <path d="M8 50 L22 56 L32 44 L24 30" fill="#111"/>
+      <path d="M50 92 L38 78 L50 66 L62 78 Z" fill="#111"/>
+    </svg>
 
-        <!-- Le sélecteur : l'étendue de l'app se touche au lieu de se lire. -->
-        <div class="picker">
-          <p class="picker-label" id="picker-label">Commence par un sport</p>
-          <div class="tabs" role="tablist" aria-labelledby="picker-label">
-            @for (sport of sports; track sport.key) {
-              <button
-                type="button"
-                class="tab"
-                role="tab"
-                [attr.aria-selected]="selectedSport() === sport.key"
-                (click)="selectSport(sport.key)">
-                {{ sport.label }}
-              </button>
-            }
-          </div>
-          @if (competitionCount() > 0) {
-            <p class="tally">
-              <strong>{{ competitionCount() }} compétitions</strong> suivies en continu,
-              du Top 14 à la NBA.
-            </p>
-          }
-        </div>
-
+    <div class="hero-stage">
+      <div class="hero-content">
+        <span class="hero-badge">
+          <span class="tick"><span></span><span></span><span></span><span></span></span>
+          Marco est en cuisine · 847 recettes générées aujourd'hui
+        </span>
+        <h1>Le match<br/>commence,<br/><span class="ital">le dîner aussi.</span></h1>
+        <p class="hero-lede">Choisis un match. Marco invente deux recettes — une par pays — en moins de 8 secondes. Tu regardes, tu manges, tu gagnes.</p>
         <div class="hero-ctas">
-          <a class="btn btn-orange btn-lg" routerLink="/matches">Voir les matchs</a>
-          @if (!auth.isLoggedIn()) {
-            <a class="btn btn-ghost-dark btn-lg" routerLink="/register">Créer un compte</a>
-          }
+          <a class="btn btn-orange btn-lg" routerLink="/matches">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg>
+            Choisir un match
+          </a>
+          <a class="btn btn-ghost-dark btn-lg" routerLink="/register">
+            Créer un compte →
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><span class="n">8<span class="ital">s</span></span><span class="l">Marco cuisine</span></div>
+          <div class="stat"><span class="n">124<span class="ital">k</span></span><span class="l">Recettes servies</span></div>
+          <div class="stat"><span class="n">62<span class="ital">pays</span></span><span class="l">Couverts</span></div>
         </div>
       </div>
 
-      <!-- ══ LA CARTE ══ -->
-      <div class="card" aria-live="polite">
-        @if (loadingMatches()) {
-          <div class="card-skeleton" aria-label="Chargement de l'affiche">
-            <span class="sk sk-line"></span>
-            <span class="sk sk-block"></span>
-            <span class="sk sk-line"></span>
+      <!-- Scoreboard flottant -->
+      <div class="hero-scoreboard">
+        <div class="score-card">
+          <div class="score-kicker">
+            <span class="live-dot"></span>
+            Champions League · ce soir
           </div>
-        } @else if (featured()) {
-          @let match = featured()!;
-          <div class="card-head">
-            <span class="comp"><i aria-hidden="true"></i>{{ match.league.name }}</span>
-            <span class="when-day">{{ match.date | date: 'EEEE d MMMM' }}</span>
-          </div>
-
-          <div class="fixture">
-            <div class="team">
-              <img [src]="match.home.flag" [alt]="match.home.countryName" width="44" height="30">
-              <span class="team-name">{{ match.home.name }}</span>
-              <small>{{ match.home.countryName }}</small>
-            </div>
-            <div class="when">
-              <b>{{ match.date | date: 'HH:mm' }}</b>
-              <small>Coup d'envoi</small>
-            </div>
-            <div class="team">
-              <img [src]="match.away.flag" [alt]="match.away.countryName" width="44" height="30">
-              <span class="team-name">{{ match.away.name }}</span>
-              <small>{{ match.away.countryName }}</small>
-            </div>
-          </div>
-
-          @if (loadingSuggestion()) {
-            <div class="plates plates-loading">
-              <p>Marco compose le menu…</p>
-            </div>
-          } @else if (suggestion()) {
-            @let menu = suggestion()!;
-            <div class="plates">
-              <div class="plate">
-                <p class="plate-country">{{ match.home.countryName }}</p>
-                @if (menu.recetteA; as recipe) {
-                  <p class="plate-name">{{ recipe.title }}</p>
-                  <p class="plate-meta">{{ recipe.prepTime + recipe.cookTime }} min · {{ recipe.servings }} personnes</p>
-                } @else {
-                  <p class="plate-empty">Aucune recette pour ce pays</p>
-                }
+          <div class="score-teams">
+            <div class="st">
+              <div class="sc-crest">
+                <img src="https://media.api-sports.io/football/teams/85.png" alt="PSG" />
               </div>
-              <div class="plate">
-                <p class="plate-country">{{ match.away.countryName }}</p>
-                @if (menu.recetteB; as recipe) {
-                  <p class="plate-name">{{ recipe.title }}</p>
-                  <p class="plate-meta">{{ recipe.prepTime + recipe.cookTime }} min · {{ recipe.servings }} personnes</p>
-                } @else {
-                  <p class="plate-empty">Aucune recette pour ce pays</p>
-                }
-              </div>
+              <div class="nm">Paris SG</div>
             </div>
-          }
-        } @else {
-          <div class="card-empty">
-            <p class="card-empty-title">Rien de prévu pour l'instant</p>
-            <p>Aucune rencontre à venir dans ce sport. Choisis-en un autre, ou parcours tout le calendrier.</p>
-            <a class="btn btn-orange" routerLink="/matches">Voir le calendrier</a>
+            <div class="big-time">21:00<small>Coup d'envoi</small></div>
+            <div class="st">
+              <div class="sc-crest">
+                <img src="https://media.api-sports.io/football/teams/157.png" alt="Bayern" />
+              </div>
+              <div class="nm">Bayern</div>
+            </div>
           </div>
-        }
+          <div class="score-hint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4"/><path d="M6 3h12v9a6 6 0 0 1-12 0V3z"/></svg>
+            Marco propose : <span class="ital">Confit de canard</span> × Knödel
+          </div>
+        </div>
       </div>
-
     </div>
-  </section>
 
-  <!-- ══ TROIS TEMPS ══ -->
-  <section class="how">
-    <div class="container">
-      <div class="how-head">
-        <p class="kicker">Trois temps</p>
-        <h2>Du coup de sifflet <span class="ital">à l'assiette.</span></h2>
-      </div>
-      <div class="how-grid">
-        <div class="how-cell">
-          <p class="how-num">i</p>
-          <h3>Tu choisis l'affiche</h3>
-          <p>Le calendrier se synchronise chaque jour. Filtre par sport, compétition, date ou équipe.</p>
-        </div>
-        <div class="how-cell">
-          <p class="how-num">ii</p>
-          <h3>Marco cuisine</h3>
-          <p>Deux recettes ancrées dans les pays qui s'affrontent. Ingrédients listés, timing calé sur le coup d'envoi.</p>
-        </div>
-        <div class="how-cell">
-          <p class="how-num">iii</p>
-          <h3>Tu passes à table</h3>
-          <p>Tu gardes ce qui t'a plu. Tes recettes restent dans ton carnet.</p>
-        </div>
+    <!-- Ticker -->
+    <div class="hero-ticker" aria-hidden="true">
+      <div class="track">
+        <span>⚽ PSG <span class="ital">vs</span> Bayern</span><span class="sep">◆</span>
+        <span>🍲 Confit × Knödel</span><span class="sep">◆</span>
+        <span>⚽ Real Madrid <span class="ital">vs</span> Liverpool</span><span class="sep">◆</span>
+        <span>🍲 Paella × Fish &amp; chips</span><span class="sep">◆</span>
+        <span>⚽ Argentine <span class="ital">vs</span> Brésil</span><span class="sep">◆</span>
+        <span>🍲 Asado × Feijoada</span><span class="sep">◆</span>
+        <span>⚽ Japon <span class="ital">vs</span> Pays-Bas</span><span class="sep">◆</span>
+        <span>🍲 Ramen × Stamppot</span><span class="sep">◆</span>
+        <span>⚽ PSG <span class="ital">vs</span> Bayern</span><span class="sep">◆</span>
+        <span>🍲 Confit × Knödel</span><span class="sep">◆</span>
+        <span>⚽ Real Madrid <span class="ital">vs</span> Liverpool</span><span class="sep">◆</span>
+        <span>🍲 Paella × Fish &amp; chips</span><span class="sep">◆</span>
+        <span>⚽ Argentine <span class="ital">vs</span> Brésil</span><span class="sep">◆</span>
+        <span>🍲 Asado × Feijoada</span><span class="sep">◆</span>
+        <span>⚽ Japon <span class="ital">vs</span> Pays-Bas</span><span class="sep">◆</span>
+        <span>🍲 Ramen × Stamppot</span><span class="sep">◆</span>
       </div>
     </div>
   </section>
 
-  <!-- ══ CLÔTURE ══ -->
-  <section class="end">
+  <!-- ══ COMMENT ÇA MARCHE ══ -->
+  <section class="hiw container">
+    <div class="hiw-head reveal">
+      <span class="kicker">Trois temps, un match, un dîner</span>
+      <h2>Du <span class="ital">coup de sifflet</span> à l'assiette.</h2>
+      <p>Pas de recette au hasard : Marco part des drapeaux, du contexte, de l'heure du match, et compose deux plats qui tiennent la route.</p>
+    </div>
+    <div class="hiw-steps">
+      <div class="hiw-step reveal">
+        <div class="step-num">1</div>
+        <div class="ico-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 13a5 5 0 1 1 10 0"/><path d="M14 9h7l-2 4 2 4h-7"/><circle cx="9" cy="13" r="1.5"/></svg>
+        </div>
+        <h3>Coup d'envoi</h3>
+        <p>Parcours le calendrier, filtre par compétition, date ou équipe. Tout le planning de la semaine est là.</p>
+      </div>
+      <div class="hiw-step reveal d1">
+        <div class="step-num">2</div>
+        <div class="ico-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 13v6a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-6"/><path d="M5 13a4 4 0 0 1-1-8 5 5 0 0 1 9-2 5 5 0 0 1 9 2 4 4 0 0 1-1 8"/><path d="M9 17h6"/></svg>
+        </div>
+        <h3>Marco cuisine</h3>
+        <p>Deux recettes ancrées dans les pays qui s'affrontent. Ingrédients listés, timing calé sur le coup d'envoi.</p>
+      </div>
+      <div class="hiw-step reveal d2">
+        <div class="step-num">3</div>
+        <div class="ico-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 15h18"/><path d="M4 15a8 8 0 0 1 16 0"/><path d="M12 7v-3M10 4h4"/><path d="M3 19h18"/></svg>
+        </div>
+        <h3>À table</h3>
+        <p>Tu sauvegardes tes favoris, tu régénères à l'envi, tu retrouves tout dans ton carnet Match &amp; Munch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ BANNER CTA ══ -->
+  <section class="banner">
     <div class="container">
-      <h2>Un match ce soir ?<br><span class="ital">Marco a une idée.</span></h2>
-      <p>Gratuit, sans inscription. Le compte sert à retrouver tes recettes.</p>
-      <div class="hero-ctas end-ctas">
-        <a class="btn btn-orange btn-lg" routerLink="/matches">Voir les matchs</a>
-        @if (!auth.isLoggedIn()) {
-          <a class="btn btn-ghost-dark btn-lg" routerLink="/register">Créer un compte</a>
-        }
+      <div class="banner-inner reveal">
+        <span class="banner-eyebrow">Prêt pour ce soir ?</span>
+        <h2>Un match ce soir ?<br/><span class="ital">Marco a une idée.</span></h2>
+        <p>Gratuit, sans inscription. Créez un compte pour sauvegarder vos recettes préférées.</p>
+        <div class="banner-ctas">
+          <a class="btn btn-orange btn-lg" routerLink="/matches">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg>
+            Voir les matchs
+          </a>
+          <a class="btn btn-ghost-dark btn-lg" routerLink="/register">Créer un compte gratuit</a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ══ FOOTER ══ -->
-  <footer class="landing-footer">
-    <div class="container footer-row">
+  <footer>
+    <div class="container row">
       <a class="logo" routerLink="/">
         <span class="mark" aria-hidden="true"></span>
         Match <span class="amp">&amp;</span> Munch
       </a>
-      <div class="footer-links">
-        <a routerLink="/matches">Matchs</a>
-        <a routerLink="/favorites">Mes recettes</a>
+      <div class="links">
+        <a href="#">Mentions</a>
+        <a href="#">À propos</a>
+        <a href="#">Contact</a>
       </div>
     </div>
   </footer>
