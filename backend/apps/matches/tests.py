@@ -1,7 +1,11 @@
+from datetime import date
+
+from django.test import SimpleTestCase
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.utils import timezone
 from apps.matches.models import Match
+from apps.matches.sports_api import LEAGUES, current_season
 
 
 class MatchTests(APITestCase):
@@ -51,3 +55,39 @@ class MatchTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         for match in response.data:
             self.assertEqual(match['sport'], 'basketball')
+
+
+class SeasonResolutionTests(SimpleTestCase):
+    """
+    Les saisons ne doivent pas être codées en dur : elles se périmaient
+    silencieusement chaque année et la synchro ne ramenait plus rien.
+    """
+
+    def test_saison_a_cheval_bascule_le_1er_juillet(self):
+        # Ligue 1, Top 14, NHL, NBA, CL : saison 2026-2027 à partir de juillet 2026
+        self.assertEqual(current_season({'season_style': 'split'}, date(2026, 8, 14)), '2026-2027')
+        self.assertEqual(current_season({'season_style': 'split'}, date(2026, 7, 1)), '2026-2027')
+        # Fin juin 2026 : on est encore sur 2025-2026
+        self.assertEqual(current_season({'season_style': 'split'}, date(2026, 6, 30)), '2025-2026')
+
+    def test_saison_calendaire_nfl_bascule_en_mars(self):
+        self.assertEqual(current_season({'season_style': 'calendar'}, date(2026, 8, 14)), '2026')
+        self.assertEqual(current_season({'season_style': 'calendar'}, date(2027, 1, 10)), '2026')
+        self.assertEqual(current_season({'season_style': 'calendar'}, date(2027, 3, 1)), '2027')
+
+    def test_edition_a_venir_six_nations(self):
+        # En août 2026, la prochaine édition est celle de février 2027
+        self.assertEqual(current_season({'season_style': 'next_year'}, date(2026, 8, 14)), '2027')
+        # En mars 2027, on est sur l'édition en cours
+        self.assertEqual(current_season({'season_style': 'next_year'}, date(2027, 3, 1)), '2027')
+
+    def test_saison_figee_conserve_sa_valeur(self):
+        # Coupe du Monde : événement daté, il ne se rejoue pas chaque année
+        cfg = {'season_style': 'fixed', 'season': '2026'}
+        self.assertEqual(current_season(cfg, date(2030, 1, 1)), '2026')
+
+    def test_toutes_les_ligues_configurees_resolvent_une_saison(self):
+        for cfg in LEAGUES:
+            with self.subTest(league=cfg['id']):
+                saison = current_season(cfg, date(2026, 9, 15))
+                self.assertTrue(saison, f"ligue {cfg['id']} ne résout aucune saison")

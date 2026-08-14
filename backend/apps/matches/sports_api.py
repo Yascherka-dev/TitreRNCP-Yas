@@ -19,16 +19,47 @@ TIMEOUT = 15
 
 # ── Ligues configurées ────────────────────────────────────────────────────────
 # country=None → multi-pays (CL, Coupe du monde...) → lookup par équipe
+#
+# season_style détermine comment la saison est calculée à la date du jour.
+# Coder les saisons en dur les périmait en silence : la synchro interrogeait une
+# saison terminée et ne ramenait plus aucun match.
+#   'split'     → saison à cheval sur deux années, bascule le 1er juillet (2026-2027)
+#   'calendar'  → saison sur une année civile, bascule le 1er mars (NFL : 2026)
+#   'next_year' → épreuve jouée en début d'année, on vise la prochaine édition
+#   'fixed'     → événement daté qui ne se rejoue pas (Coupe du Monde), voir 'season'
 LEAGUES = [
-    dict(id=4334, sport='football',          season='2025-2026', country='france'),  # Ligue 1
-    dict(id=4480, sport='football',          season='2025-2026', country=None),      # CL
-    dict(id=4387, sport='basketball',        season='2025-2026', country='usa'),     # NBA
-    dict(id=4391, sport='american_football', season='2025-2026', country='usa'),     # NFL
-    dict(id=4380, sport='ice_hockey',        season='2025-2026', country='usa'),     # NHL
-    dict(id=4430, sport='rugby',             season='2025-2026', country='france'),  # Top 14
-    dict(id=4714, sport='rugby',             season='2026',      country=None),      # Six Nations
-    dict(id=4429, sport='football',          season='2026',      country=None),      # FIFA World Cup 2026
+    dict(id=4334, sport='football',          season_style='split',     country='france'),  # Ligue 1
+    dict(id=4480, sport='football',          season_style='split',     country=None),      # CL
+    dict(id=4387, sport='basketball',        season_style='split',     country='usa'),     # NBA
+    dict(id=4391, sport='american_football', season_style='calendar',  country='usa'),     # NFL
+    dict(id=4380, sport='ice_hockey',        season_style='split',     country='usa'),     # NHL
+    dict(id=4430, sport='rugby',             season_style='split',     country='france'),  # Top 14
+    dict(id=4714, sport='rugby',             season_style='next_year', country=None),      # Six Nations
+    dict(id=4429, sport='football',          season_style='fixed', season='2026', country=None),  # CdM 2026
 ]
+
+# Mois de bascule, choisis d'après les calendriers réels publiés par TheSportsDB.
+_SPLIT_ROLLOVER_MONTH = 7     # Ligue 1 démarre en août, la CL dès juillet
+_CALENDAR_ROLLOVER_MONTH = 3  # la saison NFL 2026 court d'août 2026 à janvier 2027
+
+
+def current_season(cfg: dict, today: _dt.date | None = None) -> str:
+    """Saison à interroger pour cette ligue, à la date du jour."""
+    today = today or _dt.date.today()
+    style = cfg.get('season_style', 'fixed')
+    y = today.year
+
+    if style == 'fixed':
+        return cfg.get('season', '')
+    if style == 'split':
+        start = y if today.month >= _SPLIT_ROLLOVER_MONTH else y - 1
+        return f'{start}-{start + 1}'
+    if style == 'calendar':
+        return str(y if today.month >= _CALENDAR_ROLLOVER_MONTH else y - 1)
+    if style == 'next_year':
+        return str(y + 1 if today.month >= _SPLIT_ROLLOVER_MONTH else y)
+
+    raise ValueError(f'season_style inconnu : {style!r}')
 
 # Cache en mémoire : idTeam (str) → pays normalisé
 _team_country_cache: dict[str, str] = {}
@@ -225,7 +256,7 @@ def fetch_fixtures(date: str | None = None) -> list[dict]:
     # Saison complète
     for cfg in LEAGUES:
         try:
-            data = _v2(f'schedule/league/{cfg["id"]}/{cfg["season"]}')
+            data = _v2(f'schedule/league/{cfg["id"]}/{current_season(cfg)}')
             events = data.get('schedule') or []
             for event in events:
                 m = _to_match_dict(event, cfg)
