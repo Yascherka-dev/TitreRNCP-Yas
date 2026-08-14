@@ -39,6 +39,7 @@ jobs:
           python3 manage.py load_recipes_sucre_patch
           python3 manage.py load_recipes_wc2026
           python3 manage.py load_recipes_wc2026_manquants
+          python3 manage.py load_recipes_europe_est
           python3 manage.py load_beers_agent_v1
           python3 manage.py load_beers_europe_wc2026
           python3 manage.py load_beers_wc2026
