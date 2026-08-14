@@ -19,29 +19,29 @@
   <!-- ══ HERO ══ -->
   <section class="hero">
     <div class="hero-grad"></div>
-    <div class="hero-grid"></div>
-    <div class="motif-layer"></div>
-    <canvas class="hero-particles" #particlesCanvas></canvas>
-    <div class="hero-noise"></div>
-
-    <!-- Ballon décoratif -->
-    <svg class="hero-ball" viewBox="0 0 100 100" aria-hidden="true">
-      <defs><radialGradient id="ballg" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#d8d8d8"/></radialGradient></defs>
-      <circle cx="50" cy="50" r="44" fill="url(#ballg)" stroke="#111" stroke-width="2"/>
-      <path d="M50 8 L62 22 L56 42 L44 42 L38 22 Z" fill="#111"/>
-      <path d="M92 50 L78 56 L68 44 L76 30" fill="#111"/>
-      <path d="M8 50 L22 56 L32 44 L24 30" fill="#111"/>
-      <path d="M50 92 L38 78 L50 66 L62 78 Z" fill="#111"/>
-    </svg>
 
     <div class="hero-stage">
       <div class="hero-content">
-        <span class="hero-badge">
-          <span class="tick"><span></span><span></span><span></span><span></span></span>
-          Marco est en cuisine · 847 recettes générées aujourd'hui
-        </span>
-        <h1>Le match<br/>commence,<br/><span class="ital">le dîner aussi.</span></h1>
-        <p class="hero-lede">Choisis un match. Marco invente deux recettes — une par pays — en moins de 8 secondes. Tu regardes, tu manges, tu gagnes.</p>
+        <h1>Choisis ton sport,<br/>ton match.<br/><span class="ital">Marco fait le reste.</span></h1>
+        <p class="hero-lede">Foot, rugby, hockey, basket, football américain. Tu prends l'affiche qui te plaît, Marco écrit les deux recettes qui vont avec.</p>
+
+        <!-- Sélecteur : l'étendue de l'app se touche au lieu de se lire. -->
+        <div class="sport-picker">
+          <p class="sport-picker-label" id="sport-picker-label">Commence par un sport</p>
+          <div class="sport-tabs" role="tablist" aria-labelledby="sport-picker-label">
+            @for (sport of sports; track sport.key) {
+              <button
+                type="button"
+                class="sport-tab"
+                role="tab"
+                [attr.aria-selected]="selectedSport() === sport.key"
+                (click)="selectSport(sport.key)">
+                {{ sport.label }}
+              </button>
+            }
+          </div>
+        </div>
+
         <div class="hero-ctas">
           <a class="btn btn-orange btn-lg" routerLink="/matches">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z" fill="currentColor"/></svg>
@@ -58,55 +58,72 @@
         </div>
       </div>
 
-      <!-- Scoreboard flottant -->
-      <div class="hero-scoreboard">
+      <!-- Carte du match — fidèle à la maquette : papier blanc, deux plats -->
+      <div class="hero-scoreboard" aria-live="polite">
         <div class="score-card">
-          <div class="score-kicker">
-            <span class="live-dot"></span>
-            Champions League · ce soir
-          </div>
-          <div class="score-teams">
-            <div class="st">
-              <div class="sc-crest">
-                <img src="https://media.api-sports.io/football/teams/85.png" alt="PSG" />
-              </div>
-              <div class="nm">Paris SG</div>
-            </div>
-            <div class="big-time">21:00<small>Coup d'envoi</small></div>
-            <div class="st">
-              <div class="sc-crest">
-                <img src="https://media.api-sports.io/football/teams/157.png" alt="Bayern" />
-              </div>
-              <div class="nm">Bayern</div>
-            </div>
-          </div>
-          <div class="score-hint">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4"/><path d="M6 3h12v9a6 6 0 0 1-12 0V3z"/></svg>
-            Marco propose : <span class="ital">Confit de canard</span> × Knödel
-          </div>
-        </div>
-      </div>
-    </div>
+          @if (loadingMatches()) {
+            <div class="score-empty"><p>Chargement des affiches…</p></div>
+          } @else if (featured()) {
+            @let match = featured()!;
 
-    <!-- Ticker -->
-    <div class="hero-ticker" aria-hidden="true">
-      <div class="track">
-        <span>⚽ PSG <span class="ital">vs</span> Bayern</span><span class="sep">◆</span>
-        <span>🍲 Confit × Knödel</span><span class="sep">◆</span>
-        <span>⚽ Real Madrid <span class="ital">vs</span> Liverpool</span><span class="sep">◆</span>
-        <span>🍲 Paella × Fish &amp; chips</span><span class="sep">◆</span>
-        <span>⚽ Argentine <span class="ital">vs</span> Brésil</span><span class="sep">◆</span>
-        <span>🍲 Asado × Feijoada</span><span class="sep">◆</span>
-        <span>⚽ Japon <span class="ital">vs</span> Pays-Bas</span><span class="sep">◆</span>
-        <span>🍲 Ramen × Stamppot</span><span class="sep">◆</span>
-        <span>⚽ PSG <span class="ital">vs</span> Bayern</span><span class="sep">◆</span>
-        <span>🍲 Confit × Knödel</span><span class="sep">◆</span>
-        <span>⚽ Real Madrid <span class="ital">vs</span> Liverpool</span><span class="sep">◆</span>
-        <span>🍲 Paella × Fish &amp; chips</span><span class="sep">◆</span>
-        <span>⚽ Argentine <span class="ital">vs</span> Brésil</span><span class="sep">◆</span>
-        <span>🍲 Asado × Feijoada</span><span class="sep">◆</span>
-        <span>⚽ Japon <span class="ital">vs</span> Pays-Bas</span><span class="sep">◆</span>
-        <span>🍲 Ramen × Stamppot</span><span class="sep">◆</span>
+            <div class="card-head">
+              <span class="card-comp"><i aria-hidden="true"></i>{{ match.league.name }}</span>
+              <span class="card-day">{{ match.date | date: 'EEE d MMM' }}</span>
+            </div>
+
+            <div class="card-fixture">
+              <div class="card-team">
+                <img [src]="match.home.logo || match.home.flag" [alt]="match.home.name" />
+                <span class="card-team-name">{{ match.home.name }}</span>
+                <small>{{ match.home.countryName }}</small>
+              </div>
+              <div class="card-when">
+                <b>{{ match.date | date: 'HH:mm' }}</b>
+                <small>Coup d'envoi</small>
+              </div>
+              <div class="card-team">
+                <img [src]="match.away.logo || match.away.flag" [alt]="match.away.name" />
+                <span class="card-team-name">{{ match.away.name }}</span>
+                <small>{{ match.away.countryName }}</small>
+              </div>
+            </div>
+
+            @if (loadingSuggestion()) {
+              <div class="card-note">Marco compose le menu…</div>
+            } @else if (suggestion()) {
+              @let menu = suggestion()!;
+              @if (menu.recetteA || menu.recetteB) {
+                <div class="card-plates">
+                  <div class="plate">
+                    <p class="plate-country">{{ match.home.countryName }}</p>
+                    @if (menu.recetteA) {
+                      <p class="plate-name">{{ menu.recetteA.title }}</p>
+                      <p class="plate-meta">{{ menu.recetteA.prepTime + menu.recetteA.cookTime }} min · {{ menu.recetteA.servings }} pers.</p>
+                    } @else {
+                      <p class="plate-meta">Pas encore de recette</p>
+                    }
+                  </div>
+                  <div class="plate">
+                    <p class="plate-country">{{ match.away.countryName }}</p>
+                    @if (menu.recetteB) {
+                      <p class="plate-name">{{ menu.recetteB.title }}</p>
+                      <p class="plate-meta">{{ menu.recetteB.prepTime + menu.recetteB.cookTime }} min · {{ menu.recetteB.servings }} pers.</p>
+                    } @else {
+                      <p class="plate-meta">Pas encore de recette</p>
+                    }
+                  </div>
+                </div>
+              } @else {
+                <div class="card-note">Pas encore de recette pour ces pays.</div>
+              }
+            }
+          } @else {
+            <div class="score-empty">
+              <p>Aucune rencontre à venir dans ce sport.</p>
+              <a routerLink="/matches">Voir tout le calendrier →</a>
+            </div>
+          }
+        </div>
       </div>
     </div>
   </section>

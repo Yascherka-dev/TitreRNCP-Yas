@@ -20,9 +20,10 @@
   z-index: 100;
   background: transparent;
 
-  .nav-inner {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
+  // Pas de filet sous la nav : le hero doit démarrer d'un seul tenant.
+  // La bordure vient de .nav dans styles.scss, pas de .nav-inner.
+  border-bottom: 0;
+  .nav-inner { border-bottom: 0; }
 
   .logo { color: #fff; }
 
@@ -63,42 +64,6 @@
   pointer-events: none;
 }
 
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-}
-
-.hero-noise {
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  pointer-events: none;
-  opacity: .4;
-}
-
-.hero-particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-// Decorative ball
-.hero-ball {
-  position: absolute;
-  width: clamp(180px, 28vw, 360px);
-  right: -5%;
-  top: 8%;
-  opacity: .06;
-  pointer-events: none;
-  animation: ballBounce 8s ease-in-out infinite;
-}
-
 // Stage layout
 .hero-stage {
   position: relative;
@@ -111,59 +76,26 @@
   max-width: 1240px;
   margin: 0 auto;
   width: 100%;
-  padding: 8rem 40px 5rem;
+  padding: 7rem 40px 4rem;
 }
 
 // Hero content (left)
 .hero-content {
   flex: 1;
-  max-width: 600px;
+  max-width: 620px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-}
-
-// Badge with audio visualizer bars
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 1rem 0.45rem 0.75rem;
-  background: rgba(244,128,26,.15);
-  border: 1px solid rgba(244,128,26,.3);
-  border-radius: 100px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--orange-400);
-  letter-spacing: 0.01em;
-}
-
-.tick {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 14px;
-
-  span {
-    display: block;
-    width: 3px;
-    background: var(--orange-500);
-    border-radius: 2px;
-    animation: bar 0.9s ease-in-out infinite alternate;
-
-    &:nth-child(1) { height: 6px;  animation-delay: 0s; }
-    &:nth-child(2) { height: 10px; animation-delay: .15s; }
-    &:nth-child(3) { height: 14px; animation-delay: .3s; }
-    &:nth-child(4) { height: 8px;  animation-delay: .45s; }
-  }
+  gap: 1.5rem;
 }
 
 // Headline
+// Calibré pour « Choisis ton sport, ton match. » : plus long que l'ancien
+// titre, il débordait sur quatre lignes et écrasait le reste du hero.
 .hero-content h1 {
   font-family: var(--font);
-  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-size: clamp(2.3rem, 4.2vw, 3.9rem);
   font-weight: 900;
-  line-height: 1.0;
+  line-height: 1.05;
   letter-spacing: -0.04em;
   color: #fff;
   margin: 0;
@@ -238,162 +170,261 @@
   }
 }
 
-// Scoreboard floating card (right)
+// Carte du match — surface papier posée dans le hero sombre.
+// Elle redéclare sa couleur d'encre : sans ça elle hériterait du blanc
+// du hero et le texte deviendrait illisible sur fond clair.
+// L'animation globale `float` (styles.scss:291) embarque un rotate(1.5deg)
+// permanent : acceptable sur le scoreboard translucide, mais sur une carte
+// papier aux filets nets l'inclinaison se lit comme un défaut de rendu.
+@keyframes card-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
 .hero-scoreboard {
   flex-shrink: 0;
-  animation: float 5s ease-in-out infinite;
+  animation: card-float 5s ease-in-out infinite;
 }
 
 .score-card {
-  background: rgba(255,255,255,.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: var(--r-xl);
-  padding: 1.5rem 1.75rem;
-  width: 300px;
-  box-shadow: var(--shadow-md), var(--shadow-glow);
+  width: 380px;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: 0 30px 70px -28px rgba(0, 0, 0, .6);
 }
 
-.score-kicker {
+.card-head {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: rgba(255,255,255,.5);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 1.25rem;
-}
-
-.live-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--field);
-  border-radius: 50%;
-  box-shadow: 0 0 0 0 color-mix(in oklab, var(--field) 40%, transparent);
-  animation: pulse 2s ease-out infinite;
-  flex-shrink: 0;
-}
-
-.score-teams {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  padding: 0.9rem 1.3rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
-.st {
+.card-comp {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  text-align: center;
+  color: var(--ink);
+  min-width: 0;
+
+  i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--orange-500);
+    flex: none;
+  }
 }
 
-.sc-crest {
-  width: 52px;
-  height: 52px;
-  background: rgba(255,255,255,.08);
-  border-radius: var(--r-md);
+.card-day { flex: none; }
+
+.card-fixture {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  gap: 1rem;
+  padding: 1.4rem 1.3rem 1.2rem;
+}
+
+.card-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 1;
+  min-width: 0;
 
   img {
-    width: 100%;
-    height: 100%;
+    width: 42px;
+    height: 42px;
     object-fit: contain;
   }
-}
-
-.nm {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: rgba(255,255,255,.9);
-}
-
-.big-time {
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: -0.04em;
-  text-align: center;
-  line-height: 1;
 
   small {
-    display: block;
     font-size: 0.62rem;
-    font-weight: 500;
-    color: rgba(255,255,255,.4);
-    letter-spacing: 0.06em;
+    font-weight: 600;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
-    margin-top: 0.25rem;
+    color: var(--ink-3);
+    text-align: center;
   }
 }
 
-.score-hint {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.card-team-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.card-when {
+  flex: none;
+  text-align: center;
+
+  b {
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  small {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+}
+
+// Les deux plats, séparés par un filet — comme sur la maquette.
+.card-plates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border-top: 1px solid var(--line);
+}
+
+.plate {
+  background: var(--paper);
+  padding: 0.95rem 1.1rem 1.1rem;
+}
+
+.plate-country {
+  margin: 0 0 0.4rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.plate-name {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--orange-600);
+  font-size: 1.15rem;
+  line-height: 1.18;
+}
+
+.plate-meta {
+  margin: 0.5rem 0 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.card-note {
+  padding: 1rem 1.3rem 1.2rem;
+  border-top: 1px solid var(--line);
   font-size: 0.78rem;
-  color: rgba(255,255,255,.5);
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255,255,255,.08);
+  color: var(--ink-3);
+  text-align: center;
+}
 
-  svg { flex-shrink: 0; opacity: .6; }
+.score-empty {
+  padding: 2rem 1.3rem;
+  text-align: center;
 
-  .ital {
-    font-family: var(--serif);
-    font-style: italic;
-    color: var(--orange-400);
+  p {
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+
+  a {
+    color: var(--orange-600);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+
+    &:hover { text-decoration: underline; }
   }
 }
 
 // ──────────────────────────────────────────────
-//  TICKER
+//  SÉLECTEUR DE SPORT
+//  Un clic recompose le scoreboard : l'étendue de l'app se touche
+//  au lieu de se lire.
 // ──────────────────────────────────────────────
-.hero-ticker {
-  position: relative;
-  z-index: 10;
-  background: rgba(0,0,0,.3);
-  border-top: 1px solid rgba(255,255,255,.06);
-  overflow: hidden;
-  padding: 0.75rem 0;
-  flex-shrink: 0;
-}
-
-.hero-ticker .track {
+.sport-picker {
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  white-space: nowrap;
-  animation: marquee 30s linear infinite;
-  width: max-content;
+  flex-direction: column;
+  gap: 0.8rem;
+}
 
-  span {
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: rgba(255,255,255,.55);
-    letter-spacing: 0.02em;
+.sport-picker-label {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
 
-    .ital {
-      font-family: var(--serif);
-      font-style: italic;
-      color: rgba(255,255,255,.4);
-    }
+.sport-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sport-tab {
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.6rem 1.05rem;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: none;
+  color: rgba(255, 255, 255, 0.72);
+  transition:
+    border-color var(--dur-fast) var(--ease-soft),
+    color var(--dur-fast) var(--ease-soft),
+    background var(--dur-fast) var(--ease-soft);
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.42);
+    color: #fff;
   }
 
-  .sep {
-    color: var(--orange-500);
-    opacity: .5;
-    font-size: 0.55rem;
+  &[aria-selected='true'] {
+    background: var(--orange-500);
+    border-color: var(--orange-500);
+    color: #fff;
   }
 }
 
+// ── États du scoreboard ───────────────────────
+.score-loading,
+.score-empty {
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+  padding: 1.5rem 0;
+
+  p { margin: 0 0 0.75rem; }
+
+  a {
+    color: var(--orange-400);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover { text-decoration: underline; }
+  }
+}
 // ──────────────────────────────────────────────
 //  COMMENT ÇA MARCHE
 // ──────────────────────────────────────────────
@@ -576,6 +607,10 @@ footer {
   background: var(--navy-900);
   padding: 1.75rem 0;
   border-top: 1px solid rgba(255,255,255,.07);
+  // styles.scss:310 pose `margin-top: 60px` sur tous les footers. Ici la
+  // bannière et le footer sont en navy : ces 60px laissaient passer une
+  // bande crème, le fond de .landing.
+  margin-top: 0;
 
   .row {
     display: flex;
@@ -657,11 +692,6 @@ footer {
     gap: 16px;
   }
 
-  .hero-badge {
-    font-size: 0.72rem;
-    padding: 6px 12px 6px 10px;
-  }
-
   .hero-content h1 {
     font-size: clamp(2.2rem, 10vw, 3rem);
     line-height: 1.05;
@@ -704,22 +734,15 @@ footer {
 
   .score-card {
     width: 100%;
-    padding: 24px;
     box-sizing: border-box;
   }
 
-  .score-kicker  { margin-bottom: 16px; }
-  .score-teams   { margin-bottom: 16px; }
-
-  .sc-crest {
-    width: 40px;
-    height: 40px;
+  .card-team img {
+    width: 36px;
+    height: 36px;
   }
 
-  .big-time { font-size: 1.35rem; }
-
-  // ── Ballon déco : masqué ──────────────────────
-  .hero-ball { display: none; }
+  .card-when b { font-size: 1.2rem; }
 
   // ── Section "Comment ça marche" ───────────────
   // 48px haut/bas = 6×8 · container gère les sides
@@ -773,4 +796,15 @@ footer {
   }
 
   footer .links { gap: 16px; }
+}
+
+// ──────────────────────────────────────────────
+//  MOUVEMENT RÉDUIT
+//  Les animations bar / float / pulse sont définies globalement ;
+//  on les neutralise ici pour qui les refuse.
+// ──────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .hero-scoreboard { animation: none; }
+
+  .sport-tab { transition: none; }
 }
