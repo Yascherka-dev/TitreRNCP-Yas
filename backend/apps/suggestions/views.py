@@ -72,6 +72,16 @@ CLUB_REGION_MAP: dict[str, str] = {
 }
 
 
+def _id_of(recipe_dict: dict | None) -> int | None:
+    """Identifiant d'une recette déjà servie, pour ne pas la resservir en face."""
+    if not recipe_dict:
+        return None
+    try:
+        return int(recipe_dict.get('id'))
+    except (TypeError, ValueError):
+        return None
+
+
 class SuggestionView(APIView):
     permission_classes = [AllowAny]
 
@@ -98,16 +108,27 @@ class SuggestionView(APIView):
         region_a = CLUB_REGION_MAP.get(equipe_a.lower(), '') if same_country else ''
         region_b = CLUB_REGION_MAP.get(equipe_b.lower(), '') if same_country else ''
 
+        # 95 % des matchs opposent deux équipes du même pays (ligues domestiques,
+        # NBA, NFL, NHL). Le second camp évite le plat déjà servi au premier,
+        # sans quoi les deux colonnes affichent la même recette.
+        recette_a      = self._pick_recipe(equipe_a, pays_a, Recipe.TYPE_SALE,  region_a)
+        recette_b      = self._pick_recipe(equipe_b, pays_b, Recipe.TYPE_SALE,  region_b, _id_of(recette_a))
+        peche_mignon_a = self._pick_recipe(equipe_a, pays_a, Recipe.TYPE_SUCRE, region_a)
+        peche_mignon_b = self._pick_recipe(equipe_b, pays_b, Recipe.TYPE_SUCRE, region_b, _id_of(peche_mignon_a))
+
         return Response({
-            "recette_a":      self._pick_recipe(equipe_a, pays_a, Recipe.TYPE_SALE,  region_a),
-            "recette_b":      self._pick_recipe(equipe_b, pays_b, Recipe.TYPE_SALE,  region_b),
-            "peche_mignon_a": self._pick_recipe(equipe_a, pays_a, Recipe.TYPE_SUCRE, region_a),
-            "peche_mignon_b": self._pick_recipe(equipe_b, pays_b, Recipe.TYPE_SUCRE, region_b),
+            "recette_a":      recette_a,
+            "recette_b":      recette_b,
+            "peche_mignon_a": peche_mignon_a,
+            "peche_mignon_b": peche_mignon_b,
             "biere_a":        self._pick_beer(equipe_a, pays_a),
             "biere_b":        self._pick_beer(equipe_b, pays_b),
         })
 
-    def _pick_recipe(self, equipe: str, pays: str, type_plat: str, region: str = '') -> dict | None:
+    def _pick_recipe(
+        self, equipe: str, pays: str, type_plat: str,
+        region: str = '', exclude_id: int | None = None,
+    ) -> dict | None:
         # 1. Par équipe exacte
         qs = Recipe.objects.filter(equipe__iexact=equipe, type_plat=type_plat) if equipe else Recipe.objects.none()
         # 2. Par région (matchs domestiques)
@@ -118,7 +139,16 @@ class SuggestionView(APIView):
             qs = Recipe.objects.filter(pays__iexact=pays, type_plat=type_plat)
         if not qs.exists():
             return None
-        recipe = random.choice(list(qs))
+
+        candidats = list(qs)
+        # L'exclusion ne s'applique que s'il reste un choix : mieux vaut répéter
+        # un plat que renvoyer une carte vide.
+        if exclude_id is not None:
+            restants = [r for r in candidats if r.pk != exclude_id]
+            if restants:
+                candidats = restants
+
+        recipe = random.choice(candidats)
         Recipe.objects.filter(pk=recipe.pk).update(times_served=recipe.times_served + 1)
         return self._recipe_dict(recipe)
 

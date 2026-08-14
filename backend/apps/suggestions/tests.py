@@ -57,3 +57,37 @@ class SuggestionTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNone(response.data['recette_a'])
         self.assertIsNone(response.data['recette_b'])
+
+
+class SameCountryVarietyTests(APITestCase):
+    """
+    95 % des matchs à venir opposent deux équipes du même pays : ligues
+    domestiques, NBA, NFL, NHL. Sans précaution, les deux camps recevaient
+    le même plat, ce qui vide la proposition de son sens.
+    """
+
+    def setUp(self):
+        for i in range(1, 4):
+            Recipe.objects.create(titre=f'Salé {i}',  pays='usa', description='x',
+                                  temps_preparation=10, type_plat=Recipe.TYPE_SALE)
+            Recipe.objects.create(titre=f'Sucré {i}', pays='usa', description='x',
+                                  temps_preparation=10, type_plat=Recipe.TYPE_SUCRE)
+
+    def test_deux_plats_differents_pour_un_match_domestique(self):
+        for _ in range(15):  # le tirage est aléatoire : on répète
+            r = self.client.post('/api/suggestions/', {
+                'paysA': 'usa', 'paysB': 'usa',
+                'equipeA': 'Los Angeles Lakers', 'equipeB': 'Boston Celtics',
+            })
+            self.assertEqual(r.status_code, status.HTTP_200_OK)
+            self.assertNotEqual(r.data['recette_a']['id'], r.data['recette_b']['id'])
+            self.assertNotEqual(r.data['peche_mignon_a']['id'], r.data['peche_mignon_b']['id'])
+
+    def test_un_seul_plat_disponible_reste_servi_des_deux_cotes(self):
+        # Mieux vaut répéter que renvoyer une carte vide.
+        Recipe.objects.filter(pays='usa').delete()
+        Recipe.objects.create(titre='Unique', pays='usa', description='x',
+                              temps_preparation=10, type_plat=Recipe.TYPE_SALE)
+        r = self.client.post('/api/suggestions/', {'paysA': 'usa', 'paysB': 'usa'})
+        self.assertEqual(r.data['recette_a']['titre'], 'Unique')
+        self.assertEqual(r.data['recette_b']['titre'], 'Unique')
