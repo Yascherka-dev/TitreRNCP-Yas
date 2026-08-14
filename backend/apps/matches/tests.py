@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.utils import timezone
 from apps.matches.models import Match
-from apps.matches.sports_api import LEAGUES, current_season
+from apps.matches.sports_api import LEAGUES, current_season, normalise_country
 
 
 class MatchTests(APITestCase):
@@ -91,3 +91,30 @@ class SeasonResolutionTests(SimpleTestCase):
             with self.subTest(league=cfg['id']):
                 saison = current_season(cfg, date(2026, 9, 15))
                 self.assertTrue(saison, f"ligue {cfg['id']} ne résout aucune saison")
+
+
+class CountryNormalisationTests(SimpleTestCase):
+    """
+    TheSportsDB et le catalogue de recettes n'orthographient pas les pays
+    pareil. Sans alias, les matchs concernés sortaient sans recette, en
+    silence : aucune erreur, juste une suggestion vide.
+    """
+
+    def test_alias_vers_le_nom_du_catalogue(self):
+        self.assertEqual(normalise_country('The Netherlands'), 'netherlands')
+        self.assertEqual(normalise_country('Czechia'), 'czech republic')
+
+    def test_insensible_a_la_casse_et_aux_espaces(self):
+        self.assertEqual(normalise_country('  THE NETHERLANDS  '), 'netherlands')
+
+    def test_pays_sans_alias_inchange(self):
+        self.assertEqual(normalise_country('France'), 'france')
+        self.assertEqual(normalise_country('Bulgaria'), 'bulgaria')
+
+    def test_valeur_vide(self):
+        self.assertEqual(normalise_country(''), '')
+        self.assertEqual(normalise_country(None), '')
+
+    def test_irlande_du_nord_reste_distincte(self):
+        # L'Ulster a sa propre cuisine : l'aliaser vers 'ireland' serait faux.
+        self.assertEqual(normalise_country('Northern Ireland'), 'northern ireland')

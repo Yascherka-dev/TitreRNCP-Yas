@@ -150,8 +150,25 @@ def _map_sport(raw: str) -> str:
     return _SPORT_MAP.get(raw, raw.lower() if raw else 'football')
 
 
-def _normalise_country(name: str) -> str:
-    return (name or '').strip().lower()
+# TheSportsDB et le catalogue de recettes n'orthographient pas les pays pareil.
+# Sans ces alias, les matchs concernés sortent sans recette en silence : la
+# suggestion est vide, aucune erreur n'est levée.
+# N'aliaser que de vraies variantes d'un même pays — jamais deux pays voisins.
+_COUNTRY_ALIASES = {
+    'the netherlands': 'netherlands',
+    'holland':         'netherlands',
+    'czechia':         'czech republic',
+}
+
+
+def normalise_country(name: str | None) -> str:
+    """Nom de pays en minuscules, ramené à l'orthographe du catalogue."""
+    cleaned = (name or '').strip().lower()
+    return _COUNTRY_ALIASES.get(cleaned, cleaned)
+
+
+# Ancien nom, conservé pour les appels internes existants.
+_normalise_country = normalise_country
 
 
 def _build_team_country_map(league_name: str) -> dict[str, str]:
