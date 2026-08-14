@@ -143,6 +143,21 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
+# Durcissement HTTPS — actif uniquement hors DEBUG, pour ne pas casser le dev local.
+
+if not DEBUG:
+    # Railway termine le TLS en amont : sans cet en-tête, Django croit recevoir du
+    # HTTP et SECURE_SSL_REDIRECT provoque une boucle de redirection infinie.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # 1 an. Ne pas activer includeSubDomains/preload sans maîtriser tous les sous-domaines.
+    SECURE_HSTS_SECONDS = 31536000
+
+
 # Validation des mots de passe
 
 AUTH_PASSWORD_VALIDATORS = [
