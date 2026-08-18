@@ -91,3 +91,31 @@ class SameCountryVarietyTests(APITestCase):
         r = self.client.post('/api/suggestions/', {'paysA': 'usa', 'paysB': 'usa'})
         self.assertEqual(r.data['recette_a']['titre'], 'Unique')
         self.assertEqual(r.data['recette_b']['titre'], 'Unique')
+
+
+class SameCountryBeerVarietyTests(APITestCase):
+    """
+    Même problème que pour les plats : sur un match domestique, les deux camps
+    recevaient la même bière. 260 des 274 matchs à venir étaient concernés.
+    """
+
+    def setUp(self):
+        for i in range(1, 4):
+            Beer.objects.create(nom=f'Bière {i}', brasserie='B', pays='usa',
+                                style='Lager', description='x',
+                                degre_alcool=Decimal('5.0'))
+
+    def test_deux_bieres_differentes_pour_un_match_domestique(self):
+        for _ in range(15):
+            r = self.client.post('/api/suggestions/', {
+                'paysA': 'usa', 'paysB': 'usa',
+                'equipeA': 'Los Angeles Lakers', 'equipeB': 'Boston Celtics',
+            })
+            self.assertEqual(r.status_code, status.HTTP_200_OK)
+            self.assertNotEqual(r.data['biere_a']['id'], r.data['biere_b']['id'])
+
+    def test_une_seule_biere_disponible_reste_servie_des_deux_cotes(self):
+        Beer.objects.filter(pays='usa').exclude(nom='Bière 1').delete()
+        r = self.client.post('/api/suggestions/', {'paysA': 'usa', 'paysB': 'usa'})
+        self.assertEqual(r.data['biere_a']['nom'], 'Bière 1')
+        self.assertEqual(r.data['biere_b']['nom'], 'Bière 1')

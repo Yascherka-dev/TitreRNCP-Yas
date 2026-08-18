@@ -116,13 +116,16 @@ class SuggestionView(APIView):
         peche_mignon_a = self._pick_recipe(equipe_a, pays_a, Recipe.TYPE_SUCRE, region_a)
         peche_mignon_b = self._pick_recipe(equipe_b, pays_b, Recipe.TYPE_SUCRE, region_b, _id_of(peche_mignon_a))
 
+        biere_a = self._pick_beer(equipe_a, pays_a)
+        biere_b = self._pick_beer(equipe_b, pays_b, _id_of(biere_a))
+
         return Response({
             "recette_a":      recette_a,
             "recette_b":      recette_b,
             "peche_mignon_a": peche_mignon_a,
             "peche_mignon_b": peche_mignon_b,
-            "biere_a":        self._pick_beer(equipe_a, pays_a),
-            "biere_b":        self._pick_beer(equipe_b, pays_b),
+            "biere_a":        biere_a,
+            "biere_b":        biere_b,
         })
 
     def _pick_recipe(
@@ -152,7 +155,7 @@ class SuggestionView(APIView):
         Recipe.objects.filter(pk=recipe.pk).update(times_served=recipe.times_served + 1)
         return self._recipe_dict(recipe)
 
-    def _pick_beer(self, equipe: str, pays: str) -> dict | None:
+    def _pick_beer(self, equipe: str, pays: str, exclude_id: int | None = None) -> dict | None:
         qs = Beer.objects.filter(equipe=equipe) if equipe else Beer.objects.none()
         if not qs.exists():
             qs = Beer.objects.filter(pays__iexact=pays)
@@ -163,7 +166,15 @@ class SuggestionView(APIView):
                 qs = Beer.objects.filter(pays__iexact=alt)
         if not qs.exists():
             return None
-        beer = random.choice(list(qs))
+
+        candidats = list(qs)
+        # Comme pour les plats : on n'exclut que s'il reste un choix.
+        if exclude_id is not None:
+            restants = [b for b in candidats if b.pk != exclude_id]
+            if restants:
+                candidats = restants
+
+        beer = random.choice(candidats)
         Beer.objects.filter(pk=beer.pk).update(times_served=beer.times_served + 1)
         return self._beer_dict(beer)
 

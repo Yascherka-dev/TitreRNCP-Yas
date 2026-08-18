@@ -44,3 +44,4 @@ jobs:
           python3 manage.py load_beers_agent_v1
           python3 manage.py load_beers_europe_wc2026
           python3 manage.py load_beers_wc2026
+          python3 manage.py load_beers_socle_prod
