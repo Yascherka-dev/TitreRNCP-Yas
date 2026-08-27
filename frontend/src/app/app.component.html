@@ -24,7 +24,11 @@
   <router-outlet />
 </main>
 
+<!-- Un seul footer pour toute l'application, landing comprise.
+     Sur mobile il cède la place au tab-bar — sauf sur la landing, qui n'en a
+     pas : la classe le lui fait réapparaître. -->
+<app-site-footer [class.on-landing]="isLanding()" />
+
 @if (!isLanding()) {
-  <app-site-footer />
   <app-bottom-tab-bar />
 }

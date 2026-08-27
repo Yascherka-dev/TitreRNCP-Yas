@@ -1,0 +1,167 @@
+from django.db import models
+
+
+class Beer(models.Model):
+    nom          = models.CharField(max_length=200)
+    brasserie    = models.CharField(max_length=200)
+    pays         = models.CharField(max_length=50, db_index=True)
+    region       = models.CharField(max_length=100, blank=True)
+    equipe       = models.CharField(max_length=200, blank=True)
+    style        = models.CharField(max_length=100)
+    description  = models.TextField()
+    degre_alcool = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    image_url    = models.URLField(blank=True)
+    generated_by = models.CharField(max_length=50, blank=True, default='ia')
+    times_served = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name        = "Bière"
+        verbose_name_plural = "Bières"
+        ordering            = ['pays', 'nom']
+
+    def __str__(self) -> str:
+        return f"{self.nom} ({self.pays}) — {self.degre_alcool}°"
+from django.db import models
+from django.conf import settings
+
+
+class Comment(models.Model):
+    TYPE_CHOICES = [('match', 'Match'), ('recette', 'Recette')]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    reference_id = models.CharField(max_length=100)
+    contenu = models.TextField()
+    date_soumission = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} — {self.type} #{self.reference_id}"
+from django.db import models
+from django.conf import settings
+
+
+class Favorite(models.Model):
+    TYPE_CHOICES = [('match', 'Match'), ('recette', 'Recette'), ('equipe', 'Équipe')]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    reference_id = models.CharField(max_length=100)
+    date_ajout = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'type', 'reference_id')
+
+    def __str__(self):
+        return f"{self.user} — {self.type} #{self.reference_id}"
+from django.db import models
+
+
+class Match(models.Model):
+    external_id = models.CharField(max_length=50, unique=True)
+    sport       = models.CharField(max_length=50, default='football')
+    competition = models.CharField(max_length=100)
+    league_id   = models.IntegerField(null=True, blank=True)
+    equipe_a    = models.CharField(max_length=100)
+    equipe_b    = models.CharField(max_length=100)
+    pays_a      = models.CharField(max_length=50, blank=True)
+    pays_b      = models.CharField(max_length=50, blank=True)
+    date_heure  = models.DateTimeField()
+    statut      = models.CharField(max_length=10, default='NS')
+    score_a     = models.IntegerField(null=True, blank=True)
+    score_b     = models.IntegerField(null=True, blank=True)
+    logo_a      = models.URLField(blank=True)
+    logo_b      = models.URLField(blank=True)
+    venue       = models.CharField(max_length=200, blank=True)
+    thumb_url   = models.URLField(blank=True)
+
+    def __str__(self):
+        return f"{self.equipe_a} vs {self.equipe_b} — {self.competition}"
+from django.db import models
+from django.conf import settings
+
+
+class Rating(models.Model):
+    TYPE_CHOICES = [('match', 'Match'), ('recette', 'Recette')]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ratings')
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    reference_id = models.CharField(max_length=100)
+    valeur = models.PositiveSmallIntegerField()  # 1 à 5
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'type', 'reference_id')
+
+    def __str__(self):
+        return f"{self.user} — {self.type} #{self.reference_id} : {self.valeur}/5"
+from django.db import models
+
+
+class Recipe(models.Model):
+    SOURCE_IA     = 'ia'
+    SOURCE_MANUAL = 'manual'
+    SOURCE_CHOICES = [(SOURCE_IA, 'IA'), (SOURCE_MANUAL, 'Manuel')]
+
+    TYPE_SALE  = 'salé'
+    TYPE_SUCRE = 'sucré'
+    TYPE_CHOICES = [(TYPE_SALE, 'Salé'), (TYPE_SUCRE, 'Sucré')]
+
+    titre             = models.CharField(max_length=200)
+    pays              = models.CharField(max_length=50)
+    region            = models.CharField(max_length=100, blank=True)
+    equipe            = models.CharField(max_length=150, blank=True)
+    description       = models.TextField()
+    temps_preparation = models.PositiveIntegerField(help_text="En minutes")
+    temps_cuisson     = models.PositiveIntegerField(default=0, help_text="En minutes")
+    nb_personnes      = models.PositiveIntegerField(default=4)
+    type_plat         = models.CharField(max_length=10, choices=TYPE_CHOICES, default=TYPE_SALE)
+    difficulte        = models.CharField(max_length=20, default='Facile')
+    ingredients       = models.JSONField(default=list)
+    etapes            = models.JSONField(default=list)
+    tags              = models.JSONField(default=list)
+    image_url         = models.URLField(max_length=500, blank=True)
+    generated_by      = models.CharField(max_length=10, choices=SOURCE_CHOICES, default=SOURCE_MANUAL)
+    times_served      = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.titre} ({self.pays})"
+# Cette app n'a pas de modèle : les suggestions sont calculées à la volée
+# par SuggestionView à partir de Recipe et Beer, et mises en cache côté client.
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db import models
+
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("L'email est obligatoire")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, password, **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = [('user', 'Utilisateur'), ('admin', 'Administrateur')]
+
+    email = models.EmailField(unique=True)
+    nom = models.CharField(max_length=100)
+    prenom = models.CharField(max_length=100)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
+    date_inscription = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nom', 'prenom']
+
+    def __str__(self):
+        return self.email

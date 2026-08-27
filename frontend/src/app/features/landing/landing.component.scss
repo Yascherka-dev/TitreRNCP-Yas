@@ -601,42 +601,6 @@
 }
 
 // ──────────────────────────────────────────────
-//  FOOTER
-// ──────────────────────────────────────────────
-footer {
-  background: var(--navy-900);
-  padding: 1.75rem 0;
-  border-top: 1px solid rgba(255,255,255,.07);
-  // styles.scss:310 pose `margin-top: 60px` sur tous les footers. Ici la
-  // bannière et le footer sont en navy : ces 60px laissaient passer une
-  // bande crème, le fond de .landing.
-  margin-top: 0;
-
-  .row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-
-  .logo { color: rgba(255,255,255,.8); }
-
-  .links {
-    display: flex;
-    gap: 1.5rem;
-
-    a {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,.35);
-      text-decoration: none;
-      transition: color .15s;
-      &:hover { color: rgba(255,255,255,.7); }
-    }
-  }
-}
-
-// ──────────────────────────────────────────────
 //  RESPONSIVE
 // ──────────────────────────────────────────────
 @media (max-width: 1024px) {

@@ -8,9 +8,23 @@
   color: rgba(255, 255, 255, .7);
   border-top: 1px solid rgba(255, 255, 255, .07);
 
+  // styles.scss:310 pose `margin-top: 60px` sur tous les <footer>. Le
+  // `margin-top: auto` du :host ne l'annule pas : il porte sur l'élément
+  // <app-site-footer>, pas sur le <footer> qu'il contient. Sans ceci, une
+  // bande de fond apparaît entre la page et le pied de page.
+  margin-top: 0;
+
   // Le tab-bar mobile remplace le footer sur petit écran (comme la nav)
   @media (max-width: 767px) {
     display: none;
+  }
+}
+
+// La landing n'affiche pas le tab-bar : sans cette exception, elle se
+// retrouverait sans aucun pied de page sur mobile.
+:host(.on-landing) .site-footer {
+  @media (max-width: 767px) {
+    display: block;
   }
 }
 
