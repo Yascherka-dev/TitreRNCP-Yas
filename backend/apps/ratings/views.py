@@ -9,7 +9,7 @@ from apps.cible_serializer import filtrer_par_cible
 from .models import Rating
 from .serializers import RatingSerializer
 
-CIBLES = ('match', 'recette', 'biere')
+CIBLES = ('user', 'match', 'recette', 'biere')
 
 
 class RatingListView(generics.ListCreateAPIView):

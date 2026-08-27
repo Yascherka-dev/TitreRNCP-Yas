@@ -47,6 +47,7 @@ export interface MatchSuggestion {
 export interface RecipeComment {
   id: string;
   recipeId: string;
+  authorId: number;
   author: string;
   content: string;
   rating: number;

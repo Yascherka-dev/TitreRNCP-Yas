@@ -9,5 +9,5 @@ class RatingSerializer(CibleReferenceSerializerMixin, serializers.ModelSerialize
 
     class Meta:
         model = Rating
-        fields = ['id', 'type', 'reference_id', 'valeur', 'date']
-        read_only_fields = ['date']
+        fields = ['id', 'user', 'type', 'reference_id', 'valeur', 'date']
+        read_only_fields = ['user', 'date']

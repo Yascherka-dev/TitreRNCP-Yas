@@ -16,6 +16,20 @@ import { switchMap } from 'rxjs/operators';
 // Quand leur valeur change, Angular met à jour l'affichage automatiquement.
 // ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Profil de l'utilisateur connecté.
+ *
+ * `id` est optionnel : une session ouverte avant l'ajout de ce champ garde en
+ * localStorage un profil qui n'en contient pas. Il est renseigné dès le
+ * prochain appel à /api/auth/me/.
+ */
+export interface CurrentUser {
+  id?: number;
+  email: string;
+  nom: string;
+  prenom: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
@@ -30,7 +44,7 @@ export class AuthService {
   // Initialisé immédiatement depuis localStorage (clé "current_user").
   // Résultat : le prénom s'affiche dès le chargement, sans attendre de requête HTTP.
   // Le constructor fait ensuite une vraie vérification côté serveur en arrière-plan.
-  currentUser = signal<{ email: string; nom: string; prenom: string } | null>(
+  currentUser = signal<CurrentUser | null>(
     this.storedUser(),
   );
 
@@ -38,7 +52,7 @@ export class AuthService {
 
   // Lit et désérialise les infos utilisateur depuis localStorage.
   // Retourne null si la clé n'existe pas ou si le JSON est corrompu.
-  private storedUser(): { email: string; nom: string; prenom: string } | null {
+  private storedUser(): CurrentUser | null {
     try {
       const raw = localStorage.getItem('current_user');
       return raw ? JSON.parse(raw) : null;
@@ -50,7 +64,7 @@ export class AuthService {
   // Sérialise et sauvegarde les infos utilisateur dans localStorage.
   // Appelé après chaque login ou réponse réussie de /api/auth/me/.
   // Appelé avec null au logout pour tout effacer.
-  private saveUser(user: { email: string; nom: string; prenom: string } | null) {
+  private saveUser(user: CurrentUser | null) {
     if (user) {
       localStorage.setItem('current_user', JSON.stringify(user));
     } else {
@@ -72,7 +86,7 @@ export class AuthService {
     //                      puis l'erreur arrive ici → on ne touche à rien (déjà nettoyé)
     if (this.isLoggedIn()) {
       this.http
-        .get<{ email: string; nom: string; prenom: string }>(
+        .get<CurrentUser>(
           `${this.apiUrl}/auth/me/`,
         )
         .pipe(catchError(() => of(null)))
@@ -120,7 +134,7 @@ export class AuthService {
         // switchMap = "annule la requête précédente et enchaîne une nouvelle"
         // Ici : dès que le login réussit, on va chercher le profil
         switchMap(() =>
-          this.http.get<{ email: string; nom: string; prenom: string }>(
+          this.http.get<CurrentUser>(
             `${this.apiUrl}/auth/me/`,
           ),
         ),

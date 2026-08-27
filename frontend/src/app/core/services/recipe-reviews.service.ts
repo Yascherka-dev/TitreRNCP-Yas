@@ -3,10 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap, map, catchError, of, switchMap } from 'rxjs';
 import { RecipeComment } from '../models/recipe.model';
 import { environment } from '../../../environments/environment';
+import { AuthService } from './auth.service';
 
 interface ApiComment {
   id: number;
   user: number;
+  auteur: string;
   type: string;
   reference_id: string;
   contenu: string;
@@ -24,10 +26,14 @@ interface ApiRating {
 @Injectable({ providedIn: 'root' })
 export class RecipeReviewsService {
   private http   = inject(HttpClient);
+  private auth   = inject(AuthService);
   private apiUrl = environment.apiUrl;
 
   private allComments = signal<RecipeComment[]>([]);
-  private allRatings  = signal<Record<string, { value: number; apiId: number | null }>>({});
+  // Toutes les notes de chaque recette, indexées par auteur : c'est ce qui
+  // permet d'afficher la note de l'auteur sous son commentaire, et de retrouver
+  // la sienne parmi celles des autres.
+  private allRatings = signal<Record<string, ApiRating[]>>({});
 
   loadReviews(recipeId: string): void {
     this.http
@@ -45,13 +51,8 @@ export class RecipeReviewsService {
       .get<ApiRating[]>(`${this.apiUrl}/ratings/?type=recette&reference_id=${recipeId}`)
       .pipe(catchError(() => of([])))
       .subscribe(items => {
-        if (items.length > 0) {
-          const r = items[0];
-          this.allRatings.update(ratings => ({
-            ...ratings,
-            [recipeId]: { value: r.valeur, apiId: r.id },
-          }));
-        }
+        this.allRatings.update(ratings => ({ ...ratings, [recipeId]: items }));
+        this.rafraichirNotesDesCommentaires(recipeId);
       });
   }
 
@@ -61,22 +62,49 @@ export class RecipeReviewsService {
       .sort((a, b) => b.date.getTime() - a.date.getTime());
   }
 
+  /** La note de l'utilisateur connecté sur cette recette, 0 s'il n'en a pas mis. */
   ratingFor(recipeId: string): number {
-    return this.allRatings()[recipeId]?.value ?? 0;
+    return this.maNote(recipeId)?.valeur ?? 0;
+  }
+
+  private maNote(recipeId: string): ApiRating | undefined {
+    const moi = this.auth.currentUser()?.id;
+    if (moi === undefined) return undefined;
+    return (this.allRatings()[recipeId] ?? []).find(r => r.user === moi);
+  }
+
+  private noteDe(recipeId: string, userId: number): number {
+    return (this.allRatings()[recipeId] ?? []).find(r => r.user === userId)?.valeur ?? 0;
+  }
+
+  /**
+   * Commentaires et notes arrivent par deux requêtes parallèles : celle des
+   * notes peut répondre en second. Les commentaires déjà affichés doivent
+   * alors récupérer l'étoilage de leur auteur.
+   */
+  private rafraichirNotesDesCommentaires(recipeId: string): void {
+    this.allComments.update(list =>
+      list.map(c => c.recipeId === recipeId
+        ? { ...c, rating: this.noteDe(recipeId, c.authorId) }
+        : c));
   }
 
   setRating(recipeId: string, value: number): Observable<void> {
-    const existing = this.allRatings()[recipeId];
-    if (existing?.apiId) {
-      return this.http
-        .delete<void>(`${this.apiUrl}/ratings/${existing.apiId}/`)
-        .pipe(
-          tap(() => this.allRatings.update(r => ({ ...r, [recipeId]: { value: 0, apiId: null } }))),
-          switchMap(() => this.postRating(recipeId, value)),
-          catchError(() => of(undefined)),
-        );
-    }
-    return this.postRating(recipeId, value);
+    const ancienne = this.maNote(recipeId);
+    if (!ancienne) return this.postRating(recipeId, value);
+
+    // Une seule note par utilisateur et par recette : la base le garantit.
+    // Modifier revient donc à supprimer puis réécrire.
+    return this.http
+      .delete<void>(`${this.apiUrl}/ratings/${ancienne.id}/`)
+      .pipe(
+        tap(() => this.allRatings.update(ratings => ({
+          ...ratings,
+          [recipeId]: (ratings[recipeId] ?? []).filter(r => r.id !== ancienne.id),
+        }))),
+        switchMap(() => this.postRating(recipeId, value)),
+        catchError(() => of(undefined)),
+      );
   }
 
   private postRating(recipeId: string, value: number): Observable<void> {
@@ -87,10 +115,13 @@ export class RecipeReviewsService {
         valeur: value,
       })
       .pipe(
-        tap(r => this.allRatings.update(ratings => ({
-          ...ratings,
-          [recipeId]: { value: r.valeur, apiId: r.id },
-        }))),
+        tap(r => {
+          this.allRatings.update(ratings => ({
+            ...ratings,
+            [recipeId]: [...(ratings[recipeId] ?? []).filter(x => x.user !== r.user), r],
+          }));
+          this.rafraichirNotesDesCommentaires(recipeId);
+        }),
         map(() => undefined),
         catchError(() => of(undefined)),
       );
@@ -127,9 +158,10 @@ export class RecipeReviewsService {
     return {
       id:       String(c.id),
       recipeId: c.reference_id,
-      author:   'Vous',
+      authorId: c.user,
+      author:   c.user === this.auth.currentUser()?.id ? 'Vous' : (c.auteur || 'Anonyme'),
       content:  c.contenu,
-      rating:   0,
+      rating:   this.noteDe(c.reference_id, c.user),
       date:     new Date(c.date_soumission),
     };
   }

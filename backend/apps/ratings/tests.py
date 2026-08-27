@@ -92,3 +92,32 @@ class RatingIntegriteTests(APITestCase):
         Rating.objects.create(user=self.user, match=self.match, valeur=4)
         self.assertIn(self.user, self.match.utilisateurs_notes.all())
         self.assertIn(self.match, self.user.matchs_notes.all())
+
+
+class RatingAuteurTests(APITestCase):
+    """
+    Sans l'auteur dans la réponse, le front prenait la première note venue
+    pour celle de l'utilisateur courant.
+    """
+
+    def setUp(self):
+        self.user = creer_utilisateur('note@test.com', nom='Cherkaoui', prenom='Yasmina')
+        self.autre = creer_utilisateur('autre@test.com', nom='Martin', prenom='Léa')
+        self.recette = creer_recette()
+
+    def test_la_reponse_expose_l_auteur_de_la_note(self):
+        Rating.objects.create(user=self.autre, recette=self.recette, valeur=2)
+        Rating.objects.create(user=self.user, recette=self.recette, valeur=5)
+        response = self.client.get(
+            f'/api/ratings/?type=recette&reference_id={self.recette.pk}')
+        par_user = {r['user']: r['valeur'] for r in response.data}
+        self.assertEqual(par_user[self.user.pk], 5)
+        self.assertEqual(par_user[self.autre.pk], 2)
+
+    def test_l_auteur_n_est_pas_modifiable_par_le_client(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post('/api/ratings/', {
+            'type': 'recette', 'reference_id': str(self.recette.pk),
+            'valeur': 4, 'user': self.autre.pk})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['user'], self.user.pk)

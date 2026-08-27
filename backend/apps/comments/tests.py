@@ -104,3 +104,41 @@ class CommentIntegriteTests(APITestCase):
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 Comment.objects.create(user=self.user, contenu='Sans cible')
+
+
+class CommentAuteurTests(APITestCase):
+    """
+    Le front doit pouvoir dire qui a écrit quoi, et relier une note à son
+    commentaire. Sans l'auteur dans la réponse, il ne peut ni l'un ni l'autre :
+    il affichait « Vous » pour tout le monde et une note figée à zéro.
+    """
+
+    def setUp(self):
+        self.user = creer_utilisateur('auteur@test.com', nom='Cherkaoui', prenom='Yasmina')
+        self.autre = creer_utilisateur('autre@test.com', nom='Martin', prenom='Léa')
+        self.recette = creer_recette()
+
+    def test_la_reponse_expose_l_auteur(self):
+        Comment.objects.create(user=self.user, recette=self.recette, contenu='Excellent plat')
+        response = self.client.get(
+            f'/api/comments/?type=recette&reference_id={self.recette.pk}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['user'], self.user.pk)
+        self.assertEqual(response.data[0]['auteur'], 'Yasmina')
+
+    def test_chaque_commentaire_porte_son_propre_auteur(self):
+        Comment.objects.create(user=self.user, recette=self.recette, contenu='À moi')
+        Comment.objects.create(user=self.autre, recette=self.recette, contenu='À elle')
+        response = self.client.get(
+            f'/api/comments/?type=recette&reference_id={self.recette.pk}')
+        auteurs = {c['auteur'] for c in response.data}
+        self.assertEqual(auteurs, {'Yasmina', 'Léa'})
+
+    def test_l_auteur_n_est_pas_modifiable_par_le_client(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post('/api/comments/', {
+            'type': 'recette', 'reference_id': str(self.recette.pk),
+            'contenu': 'Test', 'user': self.autre.pk, 'auteur': 'Quelqu’un d’autre'})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['user'], self.user.pk)
+        self.assertEqual(response.data['auteur'], 'Yasmina')

@@ -6,7 +6,7 @@ from apps.cible_serializer import filtrer_par_cible
 from .models import Comment
 from .serializers import CommentSerializer
 
-CIBLES = ('match', 'recette', 'biere')
+CIBLES = ('user', 'match', 'recette', 'biere')
 
 
 class CommentListView(generics.ListCreateAPIView):
