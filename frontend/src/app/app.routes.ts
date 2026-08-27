@@ -42,6 +42,20 @@ export const routes: Routes = [
     ),
 },
   {
+    path: 'mentions-legales',
+    loadComponent: () =>
+      import('./features/legal/legal-notice.component').then(
+        m => m.LegalNoticeComponent
+      ),
+  },
+  {
+    path: 'partenaires/:slug',
+    loadComponent: () =>
+      import('./features/partners/partner-bridge.component').then(
+        m => m.PartnerBridgeComponent
+      ),
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then(

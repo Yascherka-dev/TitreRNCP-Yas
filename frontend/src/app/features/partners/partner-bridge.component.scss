@@ -1,0 +1,156 @@
+// ══════════════════════════════════════════════
+//  PAGE-RELAIS PARTENAIRE
+//  Identité Match & Munch, jamais celle du partenaire.
+// ══════════════════════════════════════════════
+
+.bridge {
+  padding: clamp(28px, 6vh, 56px) 0 clamp(56px, 10vh, 96px);
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: clamp(20px, 3vh, 32px);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: none;
+
+  &:hover { color: var(--navy-700); }
+}
+
+.card {
+  max-width: 620px;
+  margin: 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: clamp(28px, 5vw, 48px);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-lg);
+  margin: 0 auto clamp(18px, 3vh, 26px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: var(--shadow-sm);
+}
+
+.kicker {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+h1 {
+  margin: 10px 0 0;
+  font-size: clamp(28px, 4.5vw, 40px);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.08;
+  color: var(--ink);
+}
+
+.lede {
+  margin: 18px auto 0;
+  max-width: 46ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-2);
+
+  strong { color: var(--ink); font-weight: 700; }
+}
+
+.ital {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--orange-600);
+}
+
+.amp {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--orange-500);
+}
+
+.dishes {
+  list-style: none;
+  margin: 18px auto 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+
+  li {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--orange-600);
+    font-size: 17px;
+    background: var(--cream);
+    border-radius: var(--r-pill);
+    padding: 6px 16px;
+  }
+}
+
+// L'avertissement est au centre de la page, pas relégué en pied.
+.notice {
+  margin-top: clamp(24px, 4vh, 34px);
+  text-align: left;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+
+  // Enfant direct uniquement : le libellé « Démonstration ». Sans ce `>`,
+  // tout <strong> écrit dans le paragraphe hérite du style de libellé et
+  // casse la phrase en morceaux.
+  > strong {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    // Libellé de bloc, pas un mot-accent : il n'entre pas dans la règle
+    // « italique serif = orange » et gagne à rester sur le bleu de marque.
+    color: var(--navy-700);
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-2);
+
+    strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+  }
+}
+
+.site {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.actions {
+  margin-top: clamp(24px, 4vh, 32px);
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 560px) {
+  .actions .btn { width: 100%; justify-content: center; }
+}

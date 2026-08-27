@@ -12,72 +12,7 @@ import { MatchSuggestion } from '../../../../core/models/recipe.model';
 import { RecipeCardComponent } from '../../../recipes/components/recipe-card/recipe-card.component';
 import { BeerCardComponent } from '../../../beers/components/beer-card/beer-card.component';
 import { MarcoLoaderComponent, ChefScript } from '../../../../shared/components/marco-loader/marco-loader.component';
-
-interface PartnerLink {
-  name: string;
-  tagline: string;
-  ctaLabel: string;
-  url: string;
-  color: string;
-  emoji: string;
-  badge?: string;
-}
-
-const FOOD_PARTNERS: PartnerLink[] = [
-  {
-    name: 'HelloFresh',
-    tagline: 'Kit repas livré : ingrédients frais + recette étape par étape.',
-    ctaLabel: 'Commander le kit',
-    url: '#',
-    color: '#6DB33F',
-    emoji: '📦',
-    badge: 'Partenaire',
-  },
-  {
-    name: 'Uber Eats',
-    tagline: 'Le plat déjà préparé, livré en moins de 30 min.',
-    ctaLabel: 'Commander maintenant',
-    url: '#',
-    color: '#06C167',
-    emoji: '🛵',
-  },
-  {
-    name: 'Carrefour Drive',
-    tagline: 'Tous les ingrédients en un clic, retrait en 2h.',
-    ctaLabel: 'Faire mes courses',
-    url: '#',
-    color: '#004E9F',
-    emoji: '🛒',
-  },
-];
-
-const STREAMING_PARTNERS: PartnerLink[] = [
-  {
-    name: 'Canal+',
-    tagline: 'Champions League, Ligue 1 — en direct et en exclusivité.',
-    ctaLabel: 'Regarder le match',
-    url: '#',
-    color: '#000000',
-    emoji: '📺',
-    badge: 'Exclusif',
-  },
-  {
-    name: 'beIN Sports',
-    tagline: 'La Liga, Serie A et bien plus — live & replay.',
-    ctaLabel: 'Accéder au direct',
-    url: '#',
-    color: '#D4002D',
-    emoji: '⚽',
-  },
-  {
-    name: 'DAZN',
-    tagline: 'Le sport en streaming, sans engagement.',
-    ctaLabel: 'Voir le match',
-    url: '#',
-    color: '#F8E220',
-    emoji: '▶️',
-  },
-];
+import { FOOD_PARTNERS, STREAMING_PARTNERS } from '../../../../core/data/partners.constant';
 
 @Component({
   selector: 'app-match-detail',

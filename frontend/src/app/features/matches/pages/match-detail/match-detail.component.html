@@ -183,7 +183,9 @@
       </div>
       <div class="plat-list">
         @for (p of streamingPartners; track p.name) {
-          <a [href]="p.url" class="plat" target="_blank" rel="noopener">
+          <a class="plat"
+             [routerLink]="['/partenaires', p.slug]"
+             [queryParams]="{ match: match()!.id }">
             <div class="plat-logo" [style.background]="p.color">
               <span>{{ p.emoji }}</span>
             </div>
@@ -208,7 +210,9 @@
       </div>
       <div class="plat-list">
         @for (p of foodPartners; track p.name) {
-          <a [href]="p.url" class="plat" target="_blank" rel="noopener">
+          <a class="plat"
+             [routerLink]="['/partenaires', p.slug]"
+             [queryParams]="{ match: match()!.id }">
             <div class="plat-logo" [style.background]="p.color">
               <span>{{ p.emoji }}</span>
             </div>

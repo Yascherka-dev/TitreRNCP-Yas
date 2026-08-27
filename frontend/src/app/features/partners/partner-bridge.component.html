@@ -1,0 +1,73 @@
+@if (partner(); as p) {
+  <div class="bridge container">
+
+    <a class="back" [routerLink]="match() ? ['/matches', match()!.id] : ['/matches']">
+      ← {{ match() ? 'Retour au match' : 'Retour aux matchs' }}
+    </a>
+
+    <div class="card">
+      <div class="logo" [style.background]="p.color">
+        <span aria-hidden="true">{{ p.emoji }}</span>
+      </div>
+
+      <p class="kicker">Vous quittez Match <span class="amp">&amp;</span> Munch</p>
+      <h1>{{ p.name }}</h1>
+
+      @if (match(); as m) {
+        <p class="lede">
+          {{ p.name }} <span class="ital">{{ p.action }}</span> pour
+          <strong>{{ m.home.name }}</strong> × <strong>{{ m.away.name }}</strong>,
+          {{ m.date | date: 'EEEE d MMMM' }} à {{ m.date | date: 'HH:mm' }}.
+        </p>
+
+        @if (dishes().length) {
+          <ul class="dishes">
+            @for (d of dishes(); track d) {
+              <li>{{ d }}</li>
+            }
+          </ul>
+        }
+      } @else {
+        <p class="lede">{{ p.tagline }}</p>
+      }
+
+      <!-- Le point important : dire que c'est simulé, sans le cacher en bas de page. -->
+      <div class="notice" role="note">
+        <strong>Démonstration</strong>
+        @if (p.fictional) {
+          <p>
+            {{ p.name }} est une <strong>enseigne fictive</strong>, imaginée pour illustrer
+            un modèle économique envisagé pour Match <span class="amp">&amp;</span> Munch :
+            la livraison des ingrédients de la recette. Ni l'enseigne ni l'offre n'existent.
+          </p>
+        } @else {
+          <p>
+            Match <span class="amp">&amp;</span> Munch n'a aucun partenariat commercial avec
+            {{ p.name }}. Dans une version réelle, ce bouton ouvrirait
+            <span class="site">{{ p.site }}</span>. Cette page existe pour montrer le parcours
+            complet sans vous envoyer sur un lien mort.
+          </p>
+        }
+      </div>
+
+      <div class="actions">
+        @if (match(); as m) {
+          <a class="btn btn-orange btn-lg" [routerLink]="['/matches', m.id]">Revenir au match</a>
+        }
+        <a class="btn btn-ghost btn-lg" routerLink="/matches">Voir tous les matchs</a>
+      </div>
+    </div>
+
+  </div>
+} @else {
+  <div class="bridge container">
+    <div class="card">
+      <p class="kicker">Partenaire inconnu</p>
+      <h1>Cette page n'existe pas</h1>
+      <p class="lede">Le partenaire demandé ne fait pas partie de ceux présentés sur les fiches match.</p>
+      <div class="actions">
+        <a class="btn btn-orange btn-lg" routerLink="/matches">Voir les matchs</a>
+      </div>
+    </div>
+  </div>
+}
