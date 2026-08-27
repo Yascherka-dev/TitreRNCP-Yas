@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -18,6 +19,19 @@ class Match(models.Model):
     logo_b      = models.URLField(blank=True)
     venue       = models.CharField(max_length=200, blank=True)
     thumb_url   = models.URLField(blank=True)
+
+
+    # -- Relations ManyToMany (tables de liaison portées par Favorite/Rating) --
+    # `through_fields` lève l'ambiguïté : Favorite et Rating portent trois clés
+    # étrangères de cible, il faut désigner laquelle mène jusqu'ici.
+    utilisateurs_favoris = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='favorites.Favorite',
+        through_fields=('match', 'user'),
+        related_name='matchs_favoris', blank=True)
+    utilisateurs_notes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='ratings.Rating',
+        through_fields=('match', 'user'),
+        related_name='matchs_notes', blank=True)
 
     def __str__(self):
         return f"{self.equipe_a} vs {self.equipe_b} — {self.competition}"

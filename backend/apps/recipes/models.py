@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -26,6 +27,19 @@ class Recipe(models.Model):
     image_url         = models.URLField(max_length=500, blank=True)
     generated_by      = models.CharField(max_length=10, choices=SOURCE_CHOICES, default=SOURCE_MANUAL)
     times_served      = models.PositiveIntegerField(default=0)
+
+
+    # -- Relations ManyToMany (tables de liaison portées par Favorite/Rating) --
+    # `through_fields` lève l'ambiguïté : Favorite et Rating portent trois clés
+    # étrangères de cible, il faut désigner laquelle mène jusqu'ici.
+    utilisateurs_favoris = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='favorites.Favorite',
+        through_fields=('recette', 'user'),
+        related_name='recettes_favorites', blank=True)
+    utilisateurs_notes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='ratings.Rating',
+        through_fields=('recette', 'user'),
+        related_name='recettes_notees', blank=True)
 
     def __str__(self):
         return f"{self.titre} ({self.pays})"

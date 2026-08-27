@@ -5,7 +5,6 @@ from django.utils import timezone
 
 from apps.matches.sports_api import fetch_fixtures
 from apps.matches.models import Match
-from apps.references import purge_dead_references
 
 # Fenêtre conservée en base — alignée sur ce qu'affiche MatchListView (J-30 / J+60).
 # Tout ce qui est hors fenêtre est invisible dans l'app : inutile de le stocker.
@@ -51,18 +50,24 @@ class Command(BaseCommand):
 
         # Purge des matchs hors fenêtre (désactivée si on cible un jour précis)
         if not date and not options.get('no_purge'):
-            purged, _ = Match.objects.exclude(
+            _, par_modele = Match.objects.exclude(
                 date_heure__date__gte=start,
                 date_heure__date__lte=end,
             ).delete()
-            self.stdout.write(self.style.WARNING(f'{purged} match(s) hors fenêtre purgé(s).'))
 
-            # Les favoris visant ces matchs viennent de perdre leur cible.
-            # Aucune clé étrangère ne les supprime : on s'en charge ici.
-            morts = purge_dead_references()
-            total = sum(morts.values())
-            if total:
-                detail = ', '.join(f'{n} {libelle}' for libelle, n in morts.items() if n)
+            matchs = par_modele.get('matches.Match', 0)
+            self.stdout.write(self.style.WARNING(f'{matchs} match(s) hors fenêtre purgé(s).'))
+
+            # Les favoris, notes et commentaires visant ces matchs sont partis
+            # avec eux : les clés étrangères s'en chargent en cascade. Le
+            # nettoyage manuel qui suivait cette purge n'a plus lieu d'être.
+            en_cascade = {
+                libelle.split('.')[-1].lower(): nombre
+                for libelle, nombre in par_modele.items()
+                if libelle != 'matches.Match' and nombre
+            }
+            if en_cascade:
+                detail = ', '.join(f'{n} {libelle}' for libelle, n in en_cascade.items())
                 self.stdout.write(self.style.WARNING(
-                    f'{total} référence(s) devenue(s) orpheline(s) supprimée(s) : {detail}.'
+                    f'Supprimé(s) en cascade : {detail}.'
                 ))

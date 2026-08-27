@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -18,6 +19,19 @@ class Beer(models.Model):
         verbose_name        = "Bière"
         verbose_name_plural = "Bières"
         ordering            = ['pays', 'nom']
+
+
+    # -- Relations ManyToMany (tables de liaison portées par Favorite/Rating) --
+    # `through_fields` lève l'ambiguïté : Favorite et Rating portent trois clés
+    # étrangères de cible, il faut désigner laquelle mène jusqu'ici.
+    utilisateurs_favoris = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='favorites.Favorite',
+        through_fields=('biere', 'user'),
+        related_name='bieres_favorites', blank=True)
+    utilisateurs_notes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='ratings.Rating',
+        through_fields=('biere', 'user'),
+        related_name='bieres_notees', blank=True)
 
     def __str__(self) -> str:
         return f"{self.nom} ({self.pays}) — {self.degre_alcool}°"
