@@ -10,6 +10,14 @@ class CommentTests(APITestCase):
         self.user  = User.objects.create_user(email='comment@test.com', password='pass1234', nom='A', prenom='B')
         self.other = User.objects.create_user(email='other@test.com',   password='pass1234', nom='C', prenom='D')
 
+        # Les références polymorphes sont désormais validées à l'écriture
+        # (apps/references.py) : les recettes visées par ces tests doivent
+        # exister. 999999 reste volontairement absent, il sert aux cas d'échec.
+        from apps.recipes.models import Recipe
+        for pk in [1, 2, 5, 6]:
+            Recipe.objects.create(pk=pk, titre=f'Recette {pk}', pays='france',
+                                  description='x', temps_preparation=10)
+
     def test_list_comments_is_public(self):
         response = self.client.get('/api/comments/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)

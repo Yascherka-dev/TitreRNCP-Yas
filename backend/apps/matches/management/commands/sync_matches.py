@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from apps.matches.sports_api import fetch_fixtures
 from apps.matches.models import Match
+from apps.references import purge_dead_references
 
 # Fenêtre conservée en base — alignée sur ce qu'affiche MatchListView (J-30 / J+60).
 # Tout ce qui est hors fenêtre est invisible dans l'app : inutile de le stocker.
@@ -55,3 +56,13 @@ class Command(BaseCommand):
                 date_heure__date__lte=end,
             ).delete()
             self.stdout.write(self.style.WARNING(f'{purged} match(s) hors fenêtre purgé(s).'))
+
+            # Les favoris visant ces matchs viennent de perdre leur cible.
+            # Aucune clé étrangère ne les supprime : on s'en charge ici.
+            morts = purge_dead_references()
+            total = sum(morts.values())
+            if total:
+                detail = ', '.join(f'{n} {libelle}' for libelle, n in morts.items() if n)
+                self.stdout.write(self.style.WARNING(
+                    f'{total} référence(s) devenue(s) orpheline(s) supprimée(s) : {detail}.'
+                ))
