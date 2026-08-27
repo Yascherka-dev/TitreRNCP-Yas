@@ -2,9 +2,9 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
 import { Beer } from '../../../../core/models/recipe.model';
 
 const BEER_IMGS: Record<string, string> = {
-  tulipe: '/assets/images/beer/beer-tulipe.png',
-  chope:  '/assets/images/beer/beer-chope.png',
-  ballon: '/assets/images/beer/beer-ballon.png',
+  tulipe: '/assets/images/beer/beer-tulipe.webp',
+  chope:  '/assets/images/beer/beer-chope.webp',
+  ballon: '/assets/images/beer/beer-ballon.webp',
 };
 
 @Component({

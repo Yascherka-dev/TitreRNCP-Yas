@@ -22,7 +22,7 @@ export interface ChefScript {
     <div class="loader-wrap">
       <header class="head">
         <div class="avatar">
-          <img [src]="done() ? '/assets/images/marco/marco-thumbs.png' : '/assets/images/marco/marco-cooking.png'"
+          <img [src]="done() ? '/assets/images/marco/marco-thumbs.webp' : '/assets/images/marco/marco-cooking.webp'"
                alt="Marco" class="avatar-img" />
         </div>
         <div class="meta">

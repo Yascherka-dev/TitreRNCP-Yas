@@ -195,5 +195,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Clés API externes (lues depuis .env)
 
-ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY', '')
-SPORTSDB_KEY      = os.getenv('SPORTSDB_KEY', '')
+SPORTSDB_KEY = os.getenv('SPORTSDB_KEY', '')

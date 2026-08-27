@@ -1,7 +1,8 @@
 name: Sync matches (fixtures)
 
 # Synchronise le calendrier des matchs depuis TheSportsDB une fois par jour.
-# Remplace l'APScheduler in-process (peu fiable : meurt au redémarrage du conteneur).
+# La synchro tourne ici plutôt que dans le process gunicorn : un scheduler
+# in-process meurt à chaque redémarrage du conteneur.
 #
 # Secrets requis (Settings → Secrets and variables → Actions) :
 #   SECRET_KEY    — même valeur que sur Railway

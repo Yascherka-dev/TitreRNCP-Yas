@@ -10,8 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RecipeDialogComponent } from '../../../features/recipes/components/recipe-dialog/recipe-dialog.component';
 
-const SALE_IMGS  = [1,2,3,4,5,6].map(n => `/assets/images/food/sale-0${n}.png`);
-const SUCRE_IMGS = [1,2,3,4,5].map(n => `/assets/images/food/sucre-0${n}.png`);
+const SALE_IMGS  = [1,2,3,4,5,6].map(n => `/assets/images/food/sale-0${n}.webp`);
+const SUCRE_IMGS = [1,2,3,4,5].map(n => `/assets/images/food/sucre-0${n}.webp`);
 
 export function localImageFor(recipe: Recipe): string {
   const pool = recipe.typePlat === 'sucré' ? SUCRE_IMGS : SALE_IMGS;
