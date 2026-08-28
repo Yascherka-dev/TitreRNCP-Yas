@@ -273,11 +273,17 @@
   .split {
     display: flex;
     flex-direction: column;
-    position: fixed;
-    inset: 0;
     background: var(--mm-primary);
-    overflow-y: auto;
-    z-index: 10;
+
+    // Bord à bord sans quitter le flux. `position: fixed; inset: 0` figeait la
+    // hauteur au viewport d'ouverture : dès que le clavier virtuel apparaît, le
+    // bouton de validation passe sous l'écran et plus rien ne défile — ni le
+    // bloc, ni la page.
+    margin: calc(-1 * var(--page-pad-top)) calc(-1 * var(--page-pad-x))
+            calc(-1 * var(--page-pad-bottom));
+    min-height: 100vh;
+    min-height: 100dvh; // suit les barres d'interface mobiles
+    overflow: visible;  // annule l'overflow: hidden du bloc de base
   }
 
   .partner { display: none; }

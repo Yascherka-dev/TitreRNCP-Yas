@@ -16,16 +16,24 @@ main {
 }
 
 .page-content {
+  // Exposés en variables : une page qui veut s'afficher bord à bord peut les
+  // annuler par des marges négatives sans recopier des valeurs qui finiraient
+  // par diverger.
+  --page-pad-x: 40px;
+  --page-pad-top: 2rem;
+  --page-pad-bottom: 4rem;
+
   max-width: 1240px;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem 40px 4rem;
-
-  @media (max-width: 600px) {
-    padding: 1.5rem 16px 3rem;
-  }
+  padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom);
 
   @media (max-width: 767px) {
-    padding-bottom: 80px;
+    --page-pad-bottom: 80px;
+  }
+
+  @media (max-width: 600px) {
+    --page-pad-x: 16px;
+    --page-pad-top: 1.5rem;
   }
 }
