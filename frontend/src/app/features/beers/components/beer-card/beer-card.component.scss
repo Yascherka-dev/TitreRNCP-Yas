@@ -154,54 +154,6 @@
   color: rgba(255, 255, 255, .4);
 }
 
-// ── CTAs ──────────────────────────────────────
-.bb-ctas {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.bb-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 22px;
-  background: var(--orange-500);
-  color: #fff;
-  border: none;
-  border-radius: var(--r-pill);
-  font-family: var(--font);
-  font-size: 0.9rem;
-  font-weight: 800;
-  cursor: pointer;
-  letter-spacing: .01em;
-  transition: background var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-soft);
-
-  &:hover { background: var(--orange-400); transform: translateY(-2px); }
-  &:active { transform: scale(.97); }
-}
-
-.bb-btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  padding: 12px 22px;
-  background: transparent;
-  color: rgba(255, 255, 255, .82);
-  border: 1.5px solid rgba(255, 255, 255, .2);
-  border-radius: var(--r-pill);
-  font-family: var(--font);
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: border-color var(--dur-fast), color var(--dur-fast), background var(--dur-fast);
-
-  &:hover {
-    border-color: rgba(255, 255, 255, .5);
-    color: #fff;
-    background: rgba(255, 255, 255, .06);
-  }
-}
-
 // ── Alcohol warning ───────────────────────────
 .bb-warning {
   display: flex;
@@ -267,9 +219,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bb-glass    { animation: none; }
-  .bb-btn-primary,
-  .bb-btn-ghost { transition: none; }
+  .bb-glass { animation: none; }
 }
 
 @media (max-width: 767px) {
@@ -279,16 +229,5 @@
     p { font-size: 0.7rem; }
 
     strong { font-size: 0.62rem; }
-  }
-
-  .bb-ctas {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .bb-btn-primary,
-  .bb-btn-ghost {
-    text-align: center;
-    justify-content: center;
   }
 }
