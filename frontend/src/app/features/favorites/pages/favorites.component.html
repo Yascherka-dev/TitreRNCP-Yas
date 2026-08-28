@@ -136,7 +136,9 @@
 
     <div class="fav-grid">
       @for (recipe of filteredRecipes(); track recipe.id) {
-        <article class="rc" (click)="openRecipe(recipe)" role="button" tabindex="0" (keydown.enter)="openRecipe(recipe)">
+        <article class="rc" (click)="openRecipe(recipe)" role="button" tabindex="0"
+                (keydown.enter)="openRecipe(recipe)"
+                (keydown.space)="$event.preventDefault(); openRecipe(recipe)">
 
           <!-- Image area -->
           <div class="rc__img">
