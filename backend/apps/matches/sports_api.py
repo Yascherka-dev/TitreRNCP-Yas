@@ -4,6 +4,8 @@ V1 (clé dans l'URL) pour les fixtures saisonnières.
 V2 (header X-API-KEY) pour les livescores.
 """
 
+import logging
+
 import requests
 from django.conf import settings
 from django.utils.dateparse import parse_datetime
@@ -12,6 +14,8 @@ import datetime as _dt
 from django.utils.timezone import make_aware, is_aware
 
 _UTC = _dt.timezone.utc
+
+logger = logging.getLogger(__name__)
 
 API_V1 = 'https://www.thesportsdb.com/api/v1/json'
 API_V2 = 'https://www.thesportsdb.com/api/v2/json'
@@ -181,6 +185,9 @@ def _build_team_country_map(league_name: str) -> dict[str, str]:
             for t in teams
         }
     except Exception:
+        logger.warning(
+            "Pays des équipes indisponible pour la ligue %s — "
+            "les matchs seront rattachés sans pays.", league_name, exc_info=True)
         return {}
 
 
@@ -267,7 +274,9 @@ def fetch_fixtures(date: str | None = None) -> list[dict]:
                     if m:
                         results.append(m)
         except Exception:
-            pass
+            logger.warning(
+                "Récupération des matchs du %s impossible auprès de TheSportsDB.",
+                date, exc_info=True)
         return results
 
     # Saison complète
@@ -280,6 +289,13 @@ def fetch_fixtures(date: str | None = None) -> list[dict]:
                 if m:
                     results.append(m)
         except Exception:
+            # Une ligue en échec ne doit pas emporter les autres, mais elle
+            # doit se voir : sans trace, une synchronisation vide passerait
+            # pour une absence de matchs.
+            logger.warning(
+                "Calendrier indisponible pour la ligue %s (saison %s) — "
+                "les autres ligues continuent.",
+                cfg['id'], current_season(cfg), exc_info=True)
             continue
 
     return results
@@ -311,7 +327,9 @@ def fetch_livescores() -> list[dict]:
             })
             seen.add(ext_id)
     except Exception:
-        pass
+        logger.warning(
+            "Scores en direct indisponibles — repli sur les résultats du jour.",
+            exc_info=True)
 
     # 2. Résultats du jour (V1) — met à jour les matchs terminés hors livescore
     from django.utils.timezone import localtime, now as tz_now
@@ -338,6 +356,9 @@ def fetch_livescores() -> list[dict]:
                 })
                 seen.add(ext_id)
         except Exception:
+            logger.warning(
+                "Résultats du jour indisponibles pour %s.",
+                sport_label, exc_info=True)
             continue
 
     return results

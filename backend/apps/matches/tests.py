@@ -1,5 +1,9 @@
-from datetime import date
+from datetime import date, timedelta
+from io import StringIO
 
+import requests
+
+from django.core.management import call_command
 from django.test import SimpleTestCase
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -118,3 +122,135 @@ class CountryNormalisationTests(SimpleTestCase):
     def test_irlande_du_nord_reste_distincte(self):
         # L'Ulster a sa propre cuisine : l'aliaser vers 'ireland' serait faux.
         self.assertEqual(normalise_country('Northern Ireland'), 'northern ireland')
+
+
+class EchecReseauTests(SimpleTestCase):
+    """
+    TheSportsDB peut tomber, changer de format ou expirer. La synchronisation
+    doit alors continuer sur les autres ligues — mais l'échec doit laisser une
+    trace : sans elle, une synchronisation vide passe pour une absence de
+    matchs, et personne ne cherche la panne.
+    """
+
+    def test_une_ligue_en_echec_n_emporte_pas_les_autres(self):
+        from unittest.mock import patch
+        from apps.matches import sports_api
+
+        appels = {'n': 0}
+
+        def _v2_capricieux(chemin):
+            appels['n'] += 1
+            if appels['n'] == 1:
+                raise requests.RequestException('502 Bad Gateway')
+            return {'schedule': []}
+
+        with patch.object(sports_api, '_v2', side_effect=_v2_capricieux):
+            with self.assertLogs('apps.matches.sports_api', level='WARNING') as journal:
+                resultats = sports_api.fetch_fixtures()
+
+        # Toutes les ligues ont été tentées malgré le premier échec.
+        self.assertEqual(appels['n'], len(sports_api.LEAGUES))
+        self.assertEqual(resultats, [])
+        # Et l'échec est nommé, avec la ligue concernée.
+        self.assertTrue(any('Calendrier indisponible' in m for m in journal.output))
+
+    def test_l_echec_des_scores_en_direct_est_journalise(self):
+        from unittest.mock import patch
+        from apps.matches import sports_api
+
+        with patch.object(sports_api, '_v2', side_effect=requests.RequestException('timeout')), \
+             patch.object(sports_api, '_v1', return_value={'events': []}):
+            with self.assertLogs('apps.matches.sports_api', level='WARNING') as journal:
+                resultats = sports_api.fetch_livescores()
+
+        self.assertEqual(resultats, [])
+        self.assertTrue(any('Scores en direct indisponibles' in m for m in journal.output))
+
+    def test_l_echec_d_une_journee_est_journalise(self):
+        from unittest.mock import patch
+        from apps.matches import sports_api
+
+        with patch.object(sports_api, '_v1', side_effect=requests.RequestException('404')):
+            with self.assertLogs('apps.matches.sports_api', level='WARNING') as journal:
+                resultats = sports_api.fetch_fixtures(date='2026-08-28')
+
+        self.assertEqual(resultats, [])
+        self.assertTrue(any('Récupération des matchs' in m for m in journal.output))
+
+    def test_un_score_illisible_ne_fait_pas_tomber_la_synchro(self):
+        from apps.matches.sports_api import _parse_score
+
+        self.assertEqual(_parse_score('3'), 3)
+        self.assertIsNone(_parse_score(None))
+        self.assertIsNone(_parse_score('—'))
+
+
+class SynchronisationTests(APITestCase):
+    """
+    La commande sync_matches n'écrit que les matchs de la fenêtre affichée
+    (J-30 / J+60) et purge le reste. Depuis le passage aux clés étrangères,
+    les favoris, notes et commentaires des matchs purgés partent en cascade.
+    """
+
+    def _fixture(self, external_id, jours):
+        """Un match brut tel que sports_api le renvoie, décalé de N jours."""
+        return {
+            'external_id': external_id,
+            'sport': 'football',
+            'competition': 'French Ligue 1',
+            'equipe_a': 'Lille',
+            'equipe_b': 'Paris Saint-Germain',
+            'pays_a': 'france',
+            'pays_b': 'france',
+            'date_heure': timezone.now() + timedelta(days=jours),
+            'statut': 'NS',
+        }
+
+    def test_seuls_les_matchs_de_la_fenetre_sont_enregistres(self):
+        from unittest.mock import patch
+
+        fixtures = [
+            self._fixture('sdb_dans', 5),      # dans la fenêtre
+            self._fixture('sdb_trop_loin', 200),  # au-delà de J+60
+            self._fixture('sdb_trop_vieux', -200),  # avant J-30
+        ]
+        with patch('apps.matches.management.commands.sync_matches.fetch_fixtures',
+                   return_value=fixtures):
+            call_command('sync_matches', '--no-purge', stdout=StringIO())
+
+        enregistres = set(Match.objects.values_list('external_id', flat=True))
+        self.assertEqual(enregistres, {'sdb_dans'})
+
+    def test_la_purge_emporte_les_favoris_du_match_supprime(self):
+        from unittest.mock import patch
+        from apps.fabriques import creer_utilisateur
+        from apps.favorites.models import Favorite
+
+        hors_fenetre = Match.objects.create(
+            external_id='sdb_perime', sport='football', competition='Ligue 1',
+            equipe_a='A', equipe_b='B', pays_a='france', pays_b='france',
+            date_heure=timezone.now() - timedelta(days=300), statut='FT')
+        favori = Favorite.objects.create(
+            user=creer_utilisateur('purge@test.com'), match=hors_fenetre)
+
+        with patch('apps.matches.management.commands.sync_matches.fetch_fixtures',
+                   return_value=[]):
+            call_command('sync_matches', stdout=StringIO())
+
+        self.assertFalse(Match.objects.filter(pk=hors_fenetre.pk).exists())
+        # Plus besoin de nettoyage manuel : la clé étrangère l'a emporté.
+        self.assertFalse(Favorite.objects.filter(pk=favori.pk).exists())
+
+    def test_une_date_ciblee_desactive_la_purge(self):
+        from unittest.mock import patch
+
+        garde = Match.objects.create(
+            external_id='sdb_ancien', sport='football', competition='Ligue 1',
+            equipe_a='A', equipe_b='B', pays_a='france', pays_b='france',
+            date_heure=timezone.now() - timedelta(days=300), statut='FT')
+
+        with patch('apps.matches.management.commands.sync_matches.fetch_fixtures',
+                   return_value=[]):
+            call_command('sync_matches', '--date', '2026-08-28', stdout=StringIO())
+
+        self.assertTrue(Match.objects.filter(pk=garde.pk).exists())

@@ -196,3 +196,48 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Clés API externes (lues depuis .env)
 
 SPORTSDB_KEY = os.getenv('SPORTSDB_KEY', '')
+
+
+# ── Journalisation ───────────────────────────────────────────────────────────
+# Sans elle, une panne de TheSportsDB passait inaperçue : la synchronisation
+# renvoyait zéro match et les tâches planifiées affichaient un compte à zéro
+# sans jamais dire pourquoi.
+#
+# Tout part sur la sortie standard : Railway la collecte, il n'y a pas de
+# fichier à faire tourner ni de volume à prévoir.
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '{levelname} {asctime} {name} — {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        # En développement, DEBUG noierait la console sous les requêtes SQL.
+        'level': 'INFO',
+    },
+    'loggers': {
+        # Le code du projet : c'est ici qu'on veut voir les échecs d'intégration.
+        'apps': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Les erreurs serveur non rattrapées, avec leur trace.
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
