@@ -5,6 +5,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { DatePipe, Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { Recipe } from '../../../../core/models/recipe.model';
 import { localRecipeImage } from '../../../../core/utils/recipe-image.util';
 import { RecipeReviewsService } from '../../../../core/services/recipe-reviews.service';
@@ -57,6 +58,7 @@ export class RecipeDialogComponent {
   pendingRating = signal(0);
   commentText   = signal('');
   submitError   = signal('');
+  submitting = signal(false);
 
   isFavorite = computed(() =>
     this.favoritesService.isFavorite('recette', this.recipe.id)
@@ -117,12 +119,37 @@ export class RecipeDialogComponent {
       this.submitError.set('Votre avis doit contenir au moins 10 caractères.');
       return;
     }
+    if (!this.authService.isLoggedIn()) {
+      this.submitError.set('Connectez-vous pour laisser un avis.');
+      return;
+    }
+
     const rating  = this.pendingRating();
     const content = this.commentText();
-    this.reviewsService.setRating(this.recipe.id, rating).subscribe();
-    this.reviewsService.addComment(this.recipe.id, content).subscribe();
-    this.pendingRating.set(0);
-    this.commentText.set('');
+
     this.submitError.set('');
+    this.submitting.set(true);
+
+    // Le formulaire n'est vidé qu'une fois les deux écritures confirmées :
+    // auparavant il l'était aussitôt, et un échec effaçait l'avis sans
+    // l'enregistrer ni prévenir.
+    forkJoin([
+      this.reviewsService.setRating(this.recipe.id, rating),
+      this.reviewsService.addComment(this.recipe.id, content),
+    ]).subscribe({
+      next: () => {
+        this.pendingRating.set(0);
+        this.commentText.set('');
+        this.submitting.set(false);
+      },
+      error: (err) => {
+        this.submitting.set(false);
+        this.submitError.set(
+          err?.status === 401
+            ? 'Votre session a expiré. Reconnectez-vous pour publier votre avis.'
+            : "Votre avis n'a pas pu être enregistré. Réessayez dans un instant."
+        );
+      },
+    });
   }
 }

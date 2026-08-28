@@ -103,7 +103,7 @@ export class RecipeReviewsService {
           [recipeId]: (ratings[recipeId] ?? []).filter(r => r.id !== ancienne.id),
         }))),
         switchMap(() => this.postRating(recipeId, value)),
-        catchError(() => of(undefined)),
+        // Pas de catchError : un echec d'ecriture doit remonter au composant.
       );
   }
 
@@ -123,7 +123,6 @@ export class RecipeReviewsService {
           this.rafraichirNotesDesCommentaires(recipeId);
         }),
         map(() => undefined),
-        catchError(() => of(undefined)),
       );
   }
 
@@ -140,7 +139,6 @@ export class RecipeReviewsService {
           this.allComments.update(list => [comment, ...list]);
         }),
         map(() => undefined),
-        catchError(() => of(undefined)),
       );
   }
 
@@ -150,7 +148,6 @@ export class RecipeReviewsService {
       .pipe(
         tap(() => this.allComments.update(list => list.filter(c => c.id !== commentId))),
         map(() => undefined),
-        catchError(() => of(undefined)),
       );
   }
 
