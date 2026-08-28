@@ -44,3 +44,9 @@ backend/apps/*/management/commands/generate_*.py
 
 # Artefacts de build Django
 backend/staticfiles/
+
+# Couverture de tests — artefacts locaux, régénérés à chaque exécution
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
