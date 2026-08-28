@@ -12,7 +12,7 @@
       <div class="nav-spacer"></div>
       @if (authService.isLoggedIn()) {
         <span class="nav-hello">Bonjour, <strong>{{ authService.currentUser()?.prenom }}</strong></span>
-        <button class="btn btn-ghost btn-sm" (click)="authService.logout()">Déconnexion</button>
+        <app-account-menu />
       } @else {
         <a class="btn btn-primary" routerLink="/login">Connexion</a>
       }

@@ -31,6 +31,12 @@ html {
   --line:       #E7E3DB;
   --line-2:     #DDD6C7;
 
+  // Actions irréversibles (suppression de compte). Assez sombre pour rester
+  // lisible sur --paper : contraste 5,9:1.
+  --danger:     #A3282B;
+  --danger-700: #8C2124;
+  --danger-50:  #FCEFEF;
+
   --shadow-sm:   0 1px 0 rgba(15,39,71,.04), 0 2px 6px rgba(15,39,71,.05);
   --shadow-md:   0 2px 0 rgba(15,39,71,.04), 0 18px 40px -18px rgba(15,39,71,.25);
   --shadow-glow: 0 30px 80px -30px rgba(244,128,26,.55), 0 2px 0 rgba(15,39,71,.06);

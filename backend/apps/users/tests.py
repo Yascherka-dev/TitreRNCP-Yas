@@ -90,3 +90,60 @@ class InscriptionSecuriteTests(APITestCase):
         message = r.data['email'][0]
         self.assertIn('compte', message.lower())
         self.assertNotIn('objet user', message.lower())
+
+
+class SuppressionDuCompteTests(APITestCase):
+    """
+    Les mentions légales annoncent que les données sont « supprimées avec le
+    compte ». Le droit à l'effacement s'exerce donc depuis l'application.
+
+    Le mot de passe est redemandé : une session laissée ouverte ne doit pas
+    suffire à effacer un compte.
+    """
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='asupprimer@test.com', password='MarcoCuisine2026',
+            nom='Cherkaoui', prenom='Yasmina')
+        self.client.force_authenticate(user=self.user)
+
+    def test_suppression_avec_le_bon_mot_de_passe(self):
+        r = self.client.delete('/api/auth/me/', {'password': 'MarcoCuisine2026'}, format='json')
+        self.assertEqual(r.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(User.objects.filter(pk=self.user.pk).exists())
+
+    def test_mot_de_passe_incorrect_refuse(self):
+        r = self.client.delete('/api/auth/me/', {'password': 'PasLeBon2026'}, format='json')
+        self.assertEqual(r.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(User.objects.filter(pk=self.user.pk).exists())
+
+    def test_mot_de_passe_manquant_refuse(self):
+        r = self.client.delete('/api/auth/me/', {}, format='json')
+        self.assertEqual(r.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(User.objects.filter(pk=self.user.pk).exists())
+
+    def test_suppression_refusee_sans_authentification(self):
+        self.client.force_authenticate(user=None)
+        r = self.client.delete('/api/auth/me/', {'password': 'MarcoCuisine2026'}, format='json')
+        self.assertEqual(r.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertTrue(User.objects.filter(pk=self.user.pk).exists())
+
+    def test_les_contributions_partent_avec_le_compte(self):
+        from apps.comments.models import Comment
+        from apps.fabriques import creer_recette
+        from apps.favorites.models import Favorite
+        from apps.ratings.models import Rating
+
+        recette = creer_recette()
+        Favorite.objects.create(user=self.user, recette=recette)
+        Comment.objects.create(user=self.user, recette=recette, contenu='Excellent')
+        Rating.objects.create(user=self.user, recette=recette, valeur=5)
+
+        r = self.client.delete('/api/auth/me/', {'password': 'MarcoCuisine2026'}, format='json')
+
+        self.assertEqual(r.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Favorite.objects.count(), 0)
+        self.assertEqual(Comment.objects.count(), 0)
+        self.assertEqual(Rating.objects.count(), 0)
+        # La recette, elle, ne appartient à personne : elle reste.
+        self.assertTrue(recette.__class__.objects.filter(pk=recette.pk).exists())

@@ -1,6 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, catchError, of } from 'rxjs';
+import { tap, catchError, of, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { switchMap } from 'rxjs/operators';
 
@@ -165,5 +165,19 @@ export class AuthService {
     this.saveUser(null);
     this.isLoggedIn.set(false);
     this.currentUser.set(null);
+  }
+
+  /**
+   * Droit à l'effacement : supprime le compte et tout ce qui en dépend.
+   *
+   * Le mot de passe est redemandé côté serveur — une session laissée ouverte
+   * ne doit pas suffire à effacer un compte. L'échec doit remonter : c'est ce
+   * qui permet d'afficher « mot de passe incorrect » plutôt que de laisser
+   * croire à une suppression.
+   */
+  deleteAccount(password: string): Observable<void> {
+    return this.http
+      .delete<void>(`${this.apiUrl}/auth/me/`, { body: { password } })
+      .pipe(tap(() => this.logout()));
   }
 }

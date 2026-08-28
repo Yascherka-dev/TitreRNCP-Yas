@@ -1,0 +1,139 @@
+// ══════════════════════════════════════════════
+//  Menu du compte — Stadium v2
+// ══════════════════════════════════════════════
+
+:host {
+  position: relative;
+  display: inline-block;
+}
+
+// ── Déclencheur : pastille + chevron ──────────
+.account-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color .18s ease, box-shadow .18s ease;
+
+  &:hover,
+  &.is-open {
+    border-color: var(--line-2);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--orange-500);
+    outline-offset: 2px;
+  }
+}
+
+.account-initiale {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-pill);
+  background: var(--navy-800);
+  color: var(--paper);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+
+  svg { width: 16px; height: 16px; }
+}
+
+.account-chevron {
+  width: 14px;
+  height: 14px;
+  transition: transform .18s ease;
+
+  .is-open & { transform: rotate(180deg); }
+}
+
+// ── Panneau ───────────────────────────────────
+.account-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 40;
+  min-width: 232px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  box-shadow: var(--shadow-md);
+  animation: account-apparition .16s ease-out;
+}
+
+.account-bonjour {
+  margin: 0;
+  padding: 10px 12px 12px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-3);
+
+  strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 2px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .14s ease, color .14s ease;
+
+  svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+  &:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--orange-500);
+    outline-offset: -2px;
+  }
+}
+
+@keyframes account-apparition {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account-panel   { animation: none; }
+  .account-trigger,
+  .account-chevron,
+  .account-item    { transition: none; }
+}
+
+// ── Mobile : le panneau reste dans l'écran ────
+@media (max-width: 480px) {
+  .account-panel {
+    right: -4px;
+    min-width: 208px;
+  }
+}

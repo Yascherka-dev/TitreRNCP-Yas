@@ -42,6 +42,14 @@ export const routes: Routes = [
     ),
 },
   {
+    path: 'parametres',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/settings/settings.component').then(
+        m => m.SettingsComponent
+      ),
+  },
+  {
     path: 'mentions-legales',
     loadComponent: () =>
       import('./features/legal/legal-notice.component').then(

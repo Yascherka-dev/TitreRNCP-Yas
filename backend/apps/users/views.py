@@ -50,3 +50,32 @@ class MeView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+    def delete(self, request):
+        """
+        Droit à l'effacement (RGPD) : le compte et tout ce qui en dépend.
+
+        Le mot de passe est redemandé plutôt que de se fier au seul jeton :
+        une session laissée ouverte sur un poste partagé ne doit pas suffire
+        à effacer un compte, l'action étant irréversible.
+
+        Les favoris, commentaires et notes partent avec l'utilisateur — les
+        clés étrangères s'en chargent en cascade, comme l'annoncent les
+        mentions légales.
+        """
+        password = request.data.get('password')
+
+        if not password:
+            return Response(
+                {'password': ["Saisissez votre mot de passe pour confirmer la suppression."]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not request.user.check_password(password):
+            return Response(
+                {'password': ["Mot de passe incorrect."]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        request.user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

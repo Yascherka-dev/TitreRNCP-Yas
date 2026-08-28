@@ -8,12 +8,13 @@ import { AuthService } from './core/services/auth.service';
 import { FavoritesService } from './core/services/favorites.service';
 import { BottomTabBarComponent } from './shared/components/bottom-tab-bar/bottom-tab-bar.component';
 import { SiteFooterComponent } from './shared/components/site-footer/site-footer.component';
+import { AccountMenuComponent } from './shared/components/account-menu/account-menu.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatButtonModule, MatIconModule, BottomTabBarComponent, SiteFooterComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatButtonModule, MatIconModule, BottomTabBarComponent, SiteFooterComponent, AccountMenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

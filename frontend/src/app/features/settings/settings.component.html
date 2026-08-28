@@ -1,0 +1,76 @@
+<section class="settings">
+
+  <header class="settings-head">
+    <h1>Paramètres du <span class="accent">compte</span>.</h1>
+    <p class="settings-sub">Vos informations et la gestion de vos données.</p>
+  </header>
+
+  <!-- ── Informations ─────────────────────────── -->
+  <article class="card">
+    <h2>Vos informations</h2>
+    <dl class="infos">
+      <div>
+        <dt>Prénom</dt>
+        <dd>{{ utilisateur()?.prenom }}</dd>
+      </div>
+      <div>
+        <dt>Nom</dt>
+        <dd>{{ utilisateur()?.nom }}</dd>
+      </div>
+      <div>
+        <dt>Adresse e-mail</dt>
+        <dd>{{ utilisateur()?.email }}</dd>
+      </div>
+    </dl>
+    <p class="note">
+      Pour rectifier ces informations, contactez l'éditeur via les
+      <a routerLink="/mentions-legales">mentions légales</a>.
+    </p>
+  </article>
+
+  <!-- ── Suppression ──────────────────────────── -->
+  <article class="card card--danger">
+    <h2>Supprimer mon compte</h2>
+    <p class="note">
+      La suppression est <strong>définitive</strong>. Votre compte, vos favoris,
+      vos commentaires et vos notes seront effacés et ne pourront pas être
+      restaurés.
+    </p>
+
+    @if (!zoneOuverte()) {
+      <button type="button" class="btn-danger-ghost" (click)="ouvrirLaZone()">
+        Je veux supprimer mon compte
+      </button>
+    } @else {
+      <form class="suppression" (ngSubmit)="supprimer()">
+        <label for="confirm-pw">
+          Saisissez votre mot de passe pour confirmer
+        </label>
+        <input
+          id="confirm-pw"
+          type="password"
+          name="motDePasse"
+          autocomplete="current-password"
+          [ngModel]="motDePasse()"
+          (ngModelChange)="motDePasse.set($event)"
+          [disabled]="suppression()"
+          placeholder="••••••••" />
+
+        @if (erreur()) {
+          <p class="erreur" role="alert">{{ erreur() }}</p>
+        }
+
+        <div class="actions">
+          <button type="button" class="btn-neutre"
+                  [disabled]="suppression()" (click)="annuler()">
+            Annuler
+          </button>
+          <button type="submit" class="btn-danger" [disabled]="suppression()">
+            {{ suppression() ? 'Suppression…' : 'Supprimer définitivement' }}
+          </button>
+        </div>
+      </form>
+    }
+  </article>
+
+</section>
