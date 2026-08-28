@@ -9,7 +9,7 @@ Pour chaque match sélectionné, deux recettes inspirées des pays des équipes 
 - **Backend** — Django 6 + Django REST Framework
 - **BDD** — PostgreSQL (Railway addon)
 - **Auth** — JWT via djangorestframework-simplejwt
-- **API Football** — football-data.org v4 (Ligue 1 + Champions League)
+- **Données sportives** — TheSportsDB (API v1 et v2) : football, basket, hockey, rugby
 
 ## Lancer en local
 
@@ -52,39 +52,53 @@ DB_PORT=5432
 CORS_ALLOWED_ORIGINS=http://localhost:4200
 ALLOWED_HOSTS=localhost,127.0.0.1
 
-API_FOOTBALL_KEY=       # football-data.org
-ANTHROPIC_API_KEY=      # Claude API (suggestions, optionnel en dev)
+SPORTSDB_KEY=           # TheSportsDB (synchro des matchs et scores)
 ```
 
 > PostgreSQL doit tourner en local avec une base `matchmuunch` créée au préalable (`createdb matchmuunch`).
 
 ## Endpoints principaux
 
-| Méthode | Route | Description |
-|---|---|---|
-| POST | `/api/auth/register/` | Inscription |
-| POST | `/api/auth/login/` | Connexion (retourne JWT) |
-| GET | `/api/matches/` | Liste des matchs (filtrables par date) |
-| POST | `/api/matches/synchroniser/` | Synchro depuis football-data.org |
-| POST | `/api/suggestions/` | Recettes suggérées pour un match |
-| GET/POST | `/api/favorites/` | Favoris (auth requise) |
+| Méthode | Route | Accès | Description |
+|---|---|---|---|
+| POST | `/api/auth/register/` | public | Inscription |
+| POST | `/api/auth/login/` | public | Connexion, retourne les jetons JWT |
+| POST | `/api/auth/token/refresh/` | public | Renouvelle le jeton d'accès |
+| GET | `/api/auth/me/` | connecté | Profil de l'utilisateur |
+| DELETE | `/api/auth/me/` | connecté | Supprime le compte, mot de passe exigé |
+| GET | `/api/matches/` | public | Liste des matchs, filtrable par date et sport |
+| GET | `/api/matches/livescores/` | public | Scores en direct |
+| POST | `/api/matches/synchroniser/` | administrateur | Synchro depuis TheSportsDB |
+| POST | `/api/suggestions/` | public | Recettes et bières suggérées pour un match |
+| GET | `/api/recipes/` | public | Catalogue des recettes |
+| GET | `/api/beers/` | public | Catalogue des bières |
+| GET/POST | `/api/favorites/` | connecté | Favoris — match, recette ou bière |
+| DELETE | `/api/favorites/{id}/` | connecté | Retire un favori |
+| GET | `/api/comments/` | public | Commentaires, filtrables par cible |
+| POST | `/api/comments/` | connecté | Dépose un commentaire |
+| GET | `/api/ratings/` | public | Notes, filtrables par cible |
+| POST | `/api/ratings/` | connecté | Note de 1 à 5, une seule par cible |
 
 ## Structure
 
 ```
 backend/
 ├── apps/
-│   ├── matches/        # Modèle Match, synchro API football
-│   ├── recipes/        # Modèle Recipe, commande load_recipes
-│   ├── suggestions/    # Endpoint suggestions (→ Claude API)
-│   ├── users/          # Auth custom
-│   ├── favorites/
-│   ├── comments/
-│   └── ratings/
+│   ├── cible.py        # Socle des références : match, recette ou bière
+│   ├── references.py   # Traduction (type, reference_id) ↔ clé étrangère
+│   ├── matches/        # Modèle Match, intégration TheSportsDB, synchro
+│   ├── recipes/        # Modèle Recipe, commandes de chargement
+│   ├── beers/          # Modèle Beer
+│   ├── suggestions/    # Moteur : équipe → région → pays, sans stockage
+│   ├── users/          # Utilisateur sur mesure, authentification JWT
+│   ├── favorites/      # Association porteuse (date d'ajout)
+│   ├── comments/       # Entité : plusieurs commentaires par cible
+│   └── ratings/        # Association porteuse (note de 1 à 5)
 └── config/             # settings, urls, wsgi
 
 frontend/src/app/
-├── core/               # Models, services, intercepteurs, guards
-├── features/           # landing, matches, auth, recipes
-└── shared/             # Skeleton loaders
+├── core/               # Modèles, services, intercepteur JWT, guards
+├── features/           # landing, matches, recipes, favorites, auth,
+│                       #   settings, legal, partners
+└── shared/             # Menu compte, tab-bar, footer, squelettes
 ```

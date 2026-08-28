@@ -1,0 +1,121 @@
+name: Tests
+
+# Joue les tests backend et frontend à chaque poussée et sur chaque pull request.
+#
+# Aucun secret n'est nécessaire : les tests tournent sur une base PostgreSQL
+# jetable, montée pour l'occasion, et n'appellent jamais TheSportsDB — les
+# accès réseau sont simulés. La SECRET_KEY est une valeur de test.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch: {}
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  backend:
+    name: Backend — Django
+    runs-on: ubuntu-latest
+
+    # Base jetable : même moteur qu'en production, détruite avec le job.
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: matchmuunch
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt coverage
+
+      - name: Vérifications Django
+        env:
+          SECRET_KEY: cle-de-test-sans-valeur-en-production
+          DEBUG: 'False'
+          DB_NAME: matchmuunch
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: '5432'
+        run: python manage.py check
+
+      - name: Tests et couverture
+        env:
+          SECRET_KEY: cle-de-test-sans-valeur-en-production
+          DEBUG: 'False'
+          DB_NAME: matchmuunch
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: '5432'
+        run: |
+          coverage run --source='apps' \
+            --omit='*/migrations/*,*/management/commands/load_*,*/tests.py,*/fabriques.py' \
+            manage.py test
+          coverage report --skip-empty
+          # Le projet s'est fixé 80 % : sous ce seuil, la CI échoue.
+          coverage report --skip-empty --fail-under=80
+
+      - name: Migrations manquantes ?
+        env:
+          SECRET_KEY: cle-de-test-sans-valeur-en-production
+          DEBUG: 'False'
+          DB_NAME: matchmuunch
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: '5432'
+        run: python manage.py makemigrations --check --dry-run
+
+  frontend:
+    name: Frontend — Angular
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Tests unitaires
+        run: npx ng test --watch=false --browsers=ChromeHeadless
+
+      - name: Build de production
+        run: npm run build
