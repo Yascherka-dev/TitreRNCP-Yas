@@ -30,8 +30,16 @@ export class LoginComponent {
         // Connexion réussie → aller sur les matchs
         this.router.navigate(['/matches']);
       },
-      error: () => {
-        this.error.set('Email ou mot de passe incorrect.');
+      error: (err) => {
+        // 429 : la limite de tentatives est atteinte. Annoncer « mot de passe
+        // incorrect » enverrait la personne corriger ce qui est peut-être juste.
+        // Les autres cas restent volontairement vagues : préciser que l'email
+        // est inconnu révélerait quels comptes existent.
+        this.error.set(
+          err?.status === 429
+            ? "Trop de tentatives de connexion. Patientez quelques minutes avant de réessayer."
+            : 'Email ou mot de passe incorrect.'
+        );
         this.loading.set(false);
       },
     });

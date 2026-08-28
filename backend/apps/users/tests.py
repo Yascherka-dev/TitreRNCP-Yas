@@ -6,7 +6,7 @@ from apps.users.models import User
 class AuthTests(APITestCase):
 
     def test_register_creates_user_and_returns_tokens(self):
-        data = {'email': 'new@test.com', 'password': 'secret123', 'nom': 'Dupont', 'prenom': 'Jean'}
+        data = {'email': 'new@test.com', 'password': 'MarcoCuisine2026', 'nom': 'Dupont', 'prenom': 'Jean'}
         response = self.client.post('/api/auth/register/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn('access', response.data)
@@ -50,3 +50,43 @@ class AuthTests(APITestCase):
     def test_me_requires_authentication(self):
         response = self.client.get('/api/auth/me/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class InscriptionSecuriteTests(APITestCase):
+    """
+    AUTH_PASSWORD_VALIDATORS est configuré dans settings.py mais le serializer
+    ne l'appelait jamais : « password » et « 12345678 » passaient.
+    """
+
+    BASE = {'email': 'nouveau@test.com', 'nom': 'Dupont', 'prenom': 'Thomas'}
+
+    def _inscrire(self, password, **extra):
+        return self.client.post('/api/auth/register/',
+                                {**self.BASE, **extra, 'password': password}, format='json')
+
+    def test_mot_de_passe_courant_refuse(self):
+        r = self._inscrire('password')
+        self.assertEqual(r.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('password', r.data)
+
+    def test_mot_de_passe_tout_en_chiffres_refuse(self):
+        r = self._inscrire('12345678')
+        self.assertEqual(r.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('password', r.data)
+
+    def test_mot_de_passe_trop_proche_de_l_email_refuse(self):
+        r = self._inscrire('nouveau@test.com')
+        self.assertEqual(r.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('password', r.data)
+
+    def test_mot_de_passe_solide_accepte(self):
+        r = self._inscrire('MarcoCuisine2026')
+        self.assertEqual(r.status_code, status.HTTP_201_CREATED)
+
+    def test_message_lisible_quand_l_email_est_deja_pris(self):
+        self._inscrire('MarcoCuisine2026')
+        r = self._inscrire('AutreMotDePasse99')
+        self.assertEqual(r.status_code, status.HTTP_400_BAD_REQUEST)
+        message = r.data['email'][0]
+        self.assertIn('compte', message.lower())
+        self.assertNotIn('objet user', message.lower())
