@@ -149,7 +149,13 @@ if not DEBUG:
     # Railway termine le TLS en amont : sans cet en-tête, Django croit recevoir du
     # HTTP et SECURE_SSL_REDIRECT provoque une boucle de redirection infinie.
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
+
+    # Activée partout sauf là où on la désactive explicitement. Le client de
+    # test de Django parle en HTTP : avec la redirection, chaque requête reçoit
+    # un 301 au lieu de la vue, et toute la suite de tests échoue. L'intégration
+    # continue tourne avec DEBUG=False — au plus près de la production — et pose
+    # donc SECURE_SSL_REDIRECT=False pour atteindre les vues.
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True'
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

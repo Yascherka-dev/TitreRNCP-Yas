@@ -59,6 +59,9 @@ jobs:
         env:
           SECRET_KEY: cle-de-test-sans-valeur-en-production
           DEBUG: 'False'
+          # DEBUG=False active la redirection HTTPS : le client de test parle
+          # en HTTP et recevrait un 301 au lieu des vues.
+          SECURE_SSL_REDIRECT: 'False'
           DB_NAME: matchmuunch
           DB_USER: postgres
           DB_PASSWORD: postgres
@@ -70,6 +73,9 @@ jobs:
         env:
           SECRET_KEY: cle-de-test-sans-valeur-en-production
           DEBUG: 'False'
+          # DEBUG=False active la redirection HTTPS : le client de test parle
+          # en HTTP et recevrait un 301 au lieu des vues.
+          SECURE_SSL_REDIRECT: 'False'
           DB_NAME: matchmuunch
           DB_USER: postgres
           DB_PASSWORD: postgres
@@ -87,6 +93,9 @@ jobs:
         env:
           SECRET_KEY: cle-de-test-sans-valeur-en-production
           DEBUG: 'False'
+          # DEBUG=False active la redirection HTTPS : le client de test parle
+          # en HTTP et recevrait un 301 au lieu des vues.
+          SECURE_SSL_REDIRECT: 'False'
           DB_NAME: matchmuunch
           DB_USER: postgres
           DB_PASSWORD: postgres
