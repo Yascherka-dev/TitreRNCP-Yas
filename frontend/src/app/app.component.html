@@ -11,7 +11,6 @@
       </nav>
       <div class="nav-spacer"></div>
       @if (authService.isLoggedIn()) {
-        <span class="nav-hello">Bonjour, <strong>{{ authService.currentUser()?.prenom }}</strong></span>
         <app-account-menu />
       } @else {
         <a class="btn btn-primary" routerLink="/login">Connexion</a>
