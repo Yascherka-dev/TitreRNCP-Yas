@@ -41,5 +41,9 @@ class Recipe(models.Model):
         through_fields=('recette', 'user'),
         related_name='recettes_notees', blank=True)
 
+    class Meta:
+        verbose_name = "Recette"
+        verbose_name_plural = "Recettes"
+
     def __str__(self):
         return f"{self.titre} ({self.pays})"

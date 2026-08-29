@@ -33,5 +33,9 @@ class Match(models.Model):
         through_fields=('match', 'user'),
         related_name='matchs_notes', blank=True)
 
+    class Meta:
+        verbose_name = "Match"
+        verbose_name_plural = "Matchs"
+
     def __str__(self):
         return f"{self.equipe_a} vs {self.equipe_b} — {self.competition}"
